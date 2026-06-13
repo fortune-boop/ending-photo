@@ -201,24 +201,39 @@ html,body{ width:100%; height:100%; background:var(--dark); overflow:hidden; }
 .ec-next.visible{ display:block; }
 .ec-next.go{ background:var(--gold); color:var(--dark); border-bottom-color:#b06010; }
 
-/* 결과 카드 - 시네마틱 엔딩크레딧 (배경 이미지 적용) */
+/* 결과 카드 - 시네마틱 엔딩크레딧 (상/하단 띠 + 콘텐츠 영역 분리) */
 #ecResult{ display:none; }
 .ec-resultcard{
-  background-image:url('ec_assets/ec_bg.png');
-  background-size:cover; background-position:center;
-  aspect-ratio:862/1824;
-  border-radius:18px;
-  padding:23% 11% 17%; text-align:center; position:relative; overflow:hidden;
+  border-radius:18px; overflow:hidden;
   box-shadow:0 8px 28px rgba(0,0,0,.55);
   font-family:Georgia,'Noto Serif KR',serif;
-  display:flex; flex-direction:column; justify-content:flex-start;
+  border:1.5px solid rgba(154,122,58,.35);
 }
+.ec-rtop{
+  width:100%; aspect-ratio:862/364;
+  background-image:url('ec_assets/ec_top.png');
+  background-size:cover; background-position:center;
+}
+.ec-rbottom{
+  width:100%; aspect-ratio:862/438;
+  background-image:url('ec_assets/ec_bottom.png');
+  background-size:cover; background-position:center;
+}
+.ec-rcontent{
+  background:linear-gradient(180deg,#e8d8bc,#dcc8a4);
+  padding:22px 18px 26px; text-align:center;
+}
+
+/* 오프닝: 무드 일러스트 + STARRING을 나란히 */
+.ec-opening{ display:flex; gap:14px; align-items:center; margin-bottom:18px; text-align:left; }
 .ec-moodimg{
-  width:62%; max-width:230px; aspect-ratio:1; margin:0 auto 14px;
-  border:2px solid rgba(154,122,58,.5); border-radius:8px; overflow:hidden;
-  box-shadow:0 4px 14px rgba(0,0,0,.4);
+  flex-shrink:0; width:38%; aspect-ratio:1;
+  border:2px solid rgba(138,106,48,.5); border-radius:10px; overflow:hidden;
+  box-shadow:0 4px 12px rgba(0,0,0,.25);
 }
 .ec-moodimg img{ width:100%; height:100%; object-fit:cover; display:block; }
+.ec-opening-text{ flex:1; }
+.ec-opening-text .ec-rlabel{ margin-bottom:6px; }
 
 .ec-table{ display:flex; flex-direction:column; gap:12px; align-items:center; }
 .ec-row{ display:flex; flex-direction:column; align-items:center; gap:4px; }
@@ -227,12 +242,12 @@ html,body{ width:100%; height:100%; background:var(--dark); overflow:hidden; }
 .ec-rvalue.it{ font-style:italic; }
 .ec-divider{ width:34px; height:1px; background:rgba(138,106,48,.35); }
 .ec-wishcard{
-  background:rgba(255,248,238,.35); border:1px solid rgba(138,106,48,.35); border-radius:10px;
-  padding:12px 16px; max-width:280px;
+  background:rgba(255,252,244,.85); border:1.5px solid rgba(138,106,48,.4); border-radius:10px;
+  padding:14px 16px; max-width:280px; box-shadow:0 2px 8px rgba(0,0,0,.08);
 }
 .ec-wishcard .ec-rlabel{ margin-bottom:6px; }
 .ec-wishcard .ec-rvalue{ color:#b06010; font-size:12.5px; }
-.ec-finalline{ color:rgba(58,42,20,.7); font-size:11px; font-style:italic; line-height:1.6; font-family:'Noto Sans KR',sans-serif; }
+.ec-finalline{ color:rgba(58,42,20,.75); font-size:11px; font-style:italic; line-height:1.6; font-family:'Noto Sans KR',sans-serif; }
 
 .ec-rend{ font-size:15px; color:var(--gold); margin:6px 0; font-style:italic; font-family:Georgia,'Noto Serif KR',serif; letter-spacing:1px; }
 .ec-rfoot{ font-size:8px; color:#9a7a3a; letter-spacing:2px; font-family:'Press Start 2P',monospace; }
@@ -512,24 +527,34 @@ html,body{ width:100%; height:100%; background:var(--dark); overflow:hidden; }
     <!-- RESULT -->
     <div id="ecResult">
       <div class="ec-resultcard" id="ecCard">
-        <div class="ec-moodimg" id="ecMoodImgWrap"><img id="ecMoodImg" src="" alt=""></div>
-
-        <div class="ec-table">
-          <div class="ec-row"><div class="ec-rlabel">STARRING</div><div class="ec-rvalue" id="ecR_starring">YOU & YOUR FAVORITE PERSON</div></div>
-          <div class="ec-divider"></div>
-          <div class="ec-row"><div class="ec-rlabel">GENRE</div><div class="ec-rvalue it" id="ecR_genre">Holiday Road Movie</div></div>
-          <div class="ec-row"><div class="ec-rlabel">BEST SCENE</div><div class="ec-rvalue" id="ecR_scene">오늘의 웃음과 대화</div></div>
-          <div class="ec-row"><div class="ec-rlabel">MOOD OF THE YEAR</div><div class="ec-rvalue" id="ecR_mood">—</div></div>
-          <div class="ec-divider"></div>
-          <div class="ec-row"><div class="ec-rlabel">SPECIAL THANKS TO</div><div class="ec-rvalue" id="ecR_thanks">오늘 함께한 당신에게</div></div>
-          <div class="ec-row"><div class="ec-rlabel">SOUNDTRACK</div><div class="ec-rvalue it" id="ecR_bgm">—</div></div>
-          <div class="ec-divider"></div>
-          <div class="ec-wishcard">
-            <div class="ec-rlabel">NEXT YEAR'S WISH</div>
-            <div class="ec-rvalue" id="ecR_wish">—</div>
+        <div class="ec-rtop"></div>
+        <div class="ec-rcontent">
+          <div class="ec-opening">
+            <div class="ec-moodimg" id="ecMoodImgWrap"><img id="ecMoodImg" src="" alt=""></div>
+            <div class="ec-opening-text">
+              <div class="ec-rlabel">STARRING</div>
+              <div class="ec-rvalue" id="ecR_starring">YOU & YOUR FAVORITE PERSON</div>
+              <div class="ec-divider" style="margin:10px 0"></div>
+              <div class="ec-rlabel">GENRE</div>
+              <div class="ec-rvalue it" id="ecR_genre">Holiday Road Movie</div>
+            </div>
           </div>
-          <div class="ec-finalline" id="ecR_final">내년에도 좋은 장면을 많이 남기길.</div>
+
+          <div class="ec-table">
+            <div class="ec-row"><div class="ec-rlabel">BEST SCENE</div><div class="ec-rvalue" id="ecR_scene">오늘의 웃음과 대화</div></div>
+            <div class="ec-row"><div class="ec-rlabel">MOOD OF THE YEAR</div><div class="ec-rvalue" id="ecR_mood">—</div></div>
+            <div class="ec-divider"></div>
+            <div class="ec-row"><div class="ec-rlabel">SPECIAL THANKS TO</div><div class="ec-rvalue" id="ecR_thanks">오늘 함께한 당신에게</div></div>
+            <div class="ec-row"><div class="ec-rlabel">SOUNDTRACK</div><div class="ec-rvalue it" id="ecR_bgm">—</div></div>
+            <div class="ec-divider"></div>
+            <div class="ec-wishcard">
+              <div class="ec-rlabel">NEXT YEAR'S WISH</div>
+              <div class="ec-rvalue" id="ecR_wish">—</div>
+            </div>
+            <div class="ec-finalline" id="ecR_final">내년에도 좋은 장면을 많이 남기길.</div>
+          </div>
         </div>
+        <div class="ec-rbottom"></div>
       </div>
 
       <div class="ec-sharebar">
@@ -1351,94 +1376,109 @@ function loadImg(src){
 
 function ecRenderCanvas(){
   var cv=document.getElementById('canvas');
-  var W=862, H=1824; // 배경 이미지 원본 비율
-  cv.width=W; cv.height=H;
+  var W=862;
   var ctx=cv.getContext('2d');
   var cx=W/2;
 
   var mood=ecAnswers[2];
   var moodSrc=ecMoodImgMap[mood] || '';
 
-  return loadImg('ec_assets/ec_bg.png').then(function(bgImg){
-    return (moodSrc?loadImg(moodSrc):Promise.resolve(null)).then(function(moodImg){
-      ctx.drawImage(bgImg,0,0,W,H);
+  return Promise.all([
+    loadImg('ec_assets/ec_top.png'),
+    loadImg('ec_assets/ec_bottom.png'),
+    moodSrc?loadImg(moodSrc):Promise.resolve(null)
+  ]).then(function(imgs){
+    var topImg=imgs[0], bottomImg=imgs[1], moodImg=imgs[2];
+    var topH = W*(topImg.height/topImg.width);
+    var bottomH = W*(bottomImg.height/bottomImg.width);
 
-      // 콘텐츠 영역: 이미지 상의 빈 카드 영역 (대략 비율 기준)
-      var areaTop = H*0.205;
-      var areaBottom = H*0.875;
-      var areaLeft = W*0.085;
-      var areaRight = W*0.915;
-      var areaW = areaRight-areaLeft;
-      var y = areaTop + 30;
+    var contentMaxH = 1600;
+    cv.width=W; cv.height=topH+contentMaxH+bottomH;
+    ctx.fillStyle='#dcc8a4'; ctx.fillRect(0,0,W,cv.height);
+    ctx.drawImage(topImg,0,0,W,topH);
 
-      ctx.textAlign='center';
+    var pad=40;
+    var areaW=W-pad*2;
+    ctx.textAlign='left';
+    var y=topH+44;
 
-      // 무드 일러스트
-      if(moodImg){
-        var imgSize = areaW*0.62;
-        var ix = cx - imgSize/2;
-        ctx.save();
-        roundRect(ctx, ix, y, imgSize, imgSize, 10);
-        ctx.clip();
-        ctx.drawImage(moodImg, ix, y, imgSize, imgSize);
-        ctx.restore();
-        ctx.strokeStyle='rgba(154,122,58,.5)'; ctx.lineWidth=2;
-        roundRect(ctx, ix, y, imgSize, imgSize, 10); ctx.stroke();
-        y += imgSize + 28;
+    var imgSize=areaW*0.38;
+    if(moodImg){
+      ctx.save();
+      roundRect(ctx,pad,y,imgSize,imgSize,8); ctx.clip();
+      ctx.drawImage(moodImg,pad,y,imgSize,imgSize);
+      ctx.restore();
+      ctx.strokeStyle='rgba(138,106,48,.5)'; ctx.lineWidth=2;
+      roundRect(ctx,pad,y,imgSize,imgSize,8); ctx.stroke();
+    }
+    var textX = pad+imgSize+18;
+    var textW = areaW-imgSize-18;
+    var ty=y+22;
+    ctx.fillStyle='#8a6a30'; ctx.font='9px "Press Start 2P", monospace';
+    ctx.fillText('STARRING', textX, ty); ty+=24;
+    ctx.fillStyle='#3a2a14'; ctx.font='bold 18px "Noto Sans KR", sans-serif';
+    ecWrapText(ctx,document.getElementById('ecR_starring').textContent,textW).forEach(function(l){ctx.fillText(l,textX,ty); ty+=26;});
+    ty+=10;
+    ctx.strokeStyle='rgba(138,106,48,.35)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(textX,ty); ctx.lineTo(textX+50,ty); ctx.stroke(); ty+=24;
+    ctx.fillStyle='#8a6a30'; ctx.font='9px "Press Start 2P", monospace';
+    ctx.fillText('GENRE', textX, ty); ty+=24;
+    ctx.fillStyle='#3a2a14'; ctx.font='italic bold 18px "Noto Sans KR", sans-serif';
+    ecWrapText(ctx,document.getElementById('ecR_genre').textContent,textW).forEach(function(l){ctx.fillText(l,textX,ty); ty+=26;});
+
+    y += Math.max(imgSize, ty-y) + 36;
+
+    ctx.textAlign='center';
+    var wish=document.getElementById('ecR_wish').textContent;
+    var rows=[
+      {label:'BEST SCENE',         value:document.getElementById('ecR_scene').textContent, italic:false, size:20},
+      {label:'MOOD OF THE YEAR',   value:document.getElementById('ecR_mood').textContent, italic:false, size:20},
+      {divider:true},
+      {label:'SPECIAL THANKS TO',  value:document.getElementById('ecR_thanks').textContent, italic:false, size:20},
+      {label:'SOUNDTRACK',         value:document.getElementById('ecR_bgm').textContent, italic:true, size:20},
+      {divider:true}
+    ];
+    rows.forEach(function(r){
+      if(r.divider){
+        ctx.strokeStyle='rgba(138,106,48,.35)'; ctx.lineWidth=1;
+        ctx.beginPath(); ctx.moveTo(cx-24,y); ctx.lineTo(cx+24,y); ctx.stroke();
+        y+=26; return;
       }
-
-      var wish=document.getElementById('ecR_wish').textContent;
-      var rows=[
-        {label:'STARRING',          value:document.getElementById('ecR_starring').textContent, italic:false, size:22},
-        {divider:true},
-        {label:'GENRE',              value:document.getElementById('ecR_genre').textContent, italic:true, size:20},
-        {label:'BEST SCENE',         value:document.getElementById('ecR_scene').textContent, italic:false, size:20},
-        {label:'MOOD OF THE YEAR',   value:document.getElementById('ecR_mood').textContent, italic:false, size:20},
-        {divider:true},
-        {label:'SPECIAL THANKS TO',  value:document.getElementById('ecR_thanks').textContent, italic:false, size:20},
-        {label:'SOUNDTRACK',         value:document.getElementById('ecR_bgm').textContent, italic:true, size:20},
-        {divider:true}
-      ];
-
-      rows.forEach(function(r){
-        if(r.divider){
-          ctx.strokeStyle='rgba(138,106,48,.35)'; ctx.lineWidth=1;
-          ctx.beginPath(); ctx.moveTo(cx-24,y); ctx.lineTo(cx+24,y); ctx.stroke();
-          y+=26;
-          return;
-        }
-        ctx.fillStyle='#8a6a30'; ctx.font='10px "Press Start 2P", monospace';
-        ctx.fillText(r.label, cx, y); y+=22;
-
-        ctx.fillStyle='#3a2a14';
-        ctx.font='bold '+(r.italic?'italic ':'')+r.size+'px "Noto Sans KR", sans-serif';
-        var lines=ecWrapText(ctx, r.value, areaW-20);
-        lines.forEach(function(line){ ctx.fillText(line, cx, y); y+=r.size+8; });
-        y+=14;
-      });
-
-      // 소원 카드
-      var wishLines=ecWrapText(ctx, wish, areaW-60);
-      var wishBoxH = 50 + wishLines.length*26;
-      var wishBoxW = Math.min(areaW*0.9, areaW);
-      ctx.fillStyle='rgba(255,248,238,.35)';
-      ctx.strokeStyle='rgba(138,106,48,.35)'; ctx.lineWidth=1.5;
-      roundRect(ctx, cx-wishBoxW/2, y-22, wishBoxW, wishBoxH, 10);
-      ctx.fill(); ctx.stroke();
-
-      ctx.fillStyle='#8a6a30'; ctx.font='9px "Press Start 2P", monospace';
-      ctx.fillText("NEXT YEAR'S WISH", cx, y); y+=26;
-      ctx.fillStyle='#b06010'; ctx.font='bold 20px "Noto Sans KR", sans-serif';
-      wishLines.forEach(function(line){ ctx.fillText(line, cx, y); y+=26; });
-      y+=30;
-
-      // 마지막 줄
-      var finalLine=document.getElementById('ecR_final').textContent;
-      ctx.fillStyle='rgba(58,42,20,.7)'; ctx.font='italic 17px "Noto Sans KR", sans-serif';
-      ecWrapText(ctx, finalLine, areaW-20).forEach(function(line){ ctx.fillText(line, cx, y); y+=24; });
-
-      return cv.toDataURL('image/jpeg',0.92);
+      ctx.fillStyle='#8a6a30'; ctx.font='10px "Press Start 2P", monospace';
+      ctx.fillText(r.label, cx, y); y+=22;
+      ctx.fillStyle='#3a2a14'; ctx.font='bold '+(r.italic?'italic ':'')+r.size+'px "Noto Sans KR", sans-serif';
+      ecWrapText(ctx,r.value,areaW-20).forEach(function(l){ ctx.fillText(l,cx,y); y+=r.size+8; });
+      y+=14;
     });
+
+    var wishLines=ecWrapText(ctx, wish, areaW-80);
+    var wishBoxH = 50 + wishLines.length*26;
+    var wishBoxW = Math.min(areaW*0.92, areaW);
+    ctx.fillStyle='rgba(255,252,244,.9)';
+    ctx.strokeStyle='rgba(138,106,48,.4)'; ctx.lineWidth=1.5;
+    roundRect(ctx, cx-wishBoxW/2, y-22, wishBoxW, wishBoxH, 10);
+    ctx.fill(); ctx.stroke();
+    ctx.fillStyle='#8a6a30'; ctx.font='9px "Press Start 2P", monospace';
+    ctx.fillText("NEXT YEAR'S WISH", cx, y); y+=26;
+    ctx.fillStyle='#b06010'; ctx.font='bold 20px "Noto Sans KR", sans-serif';
+    wishLines.forEach(function(l){ ctx.fillText(l,cx,y); y+=26; });
+    y+=34;
+
+    var finalLine=document.getElementById('ecR_final').textContent;
+    ctx.fillStyle='rgba(58,42,20,.75)'; ctx.font='italic 17px "Noto Sans KR", sans-serif';
+    ecWrapText(ctx, finalLine, areaW-20).forEach(function(l){ ctx.fillText(l,cx,y); y+=24; });
+
+    y += 30;
+
+    var usedContentH = y - topH;
+    var finalH = topH + usedContentH + bottomH;
+    var tmp=document.createElement('canvas');
+    tmp.width=W; tmp.height=finalH;
+    var tctx=tmp.getContext('2d');
+    tctx.drawImage(cv, 0,0,W,topH+usedContentH, 0,0,W,topH+usedContentH);
+    tctx.drawImage(bottomImg, 0, topH+usedContentH, W, bottomH);
+
+    return tmp.toDataURL('image/jpeg',0.92);
   });
 }
 
