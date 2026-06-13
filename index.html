@@ -201,33 +201,38 @@ html,body{ width:100%; height:100%; background:var(--dark); overflow:hidden; }
 .ec-next.visible{ display:block; }
 .ec-next.go{ background:var(--gold); color:var(--dark); border-bottom-color:#b06010; }
 
-/* 결과 카드 - 시네마틱 엔딩크레딧 */
+/* 결과 카드 - 시네마틱 엔딩크레딧 (배경 이미지 적용) */
 #ecResult{ display:none; }
 .ec-resultcard{
-  background:radial-gradient(ellipse at center, #1a0f08 0%, #0a0604 75%);
-  border:1.5px solid rgba(154,122,58,.4); border-radius:18px;
-  padding:34px 22px 28px; text-align:center; position:relative; overflow:hidden;
+  background-image:url('ec_assets/ec_bg.png');
+  background-size:cover; background-position:center;
+  aspect-ratio:862/1824;
+  border-radius:18px;
+  padding:23% 11% 17%; text-align:center; position:relative; overflow:hidden;
   box-shadow:0 8px 28px rgba(0,0,0,.55);
   font-family:Georgia,'Noto Serif KR',serif;
+  display:flex; flex-direction:column; justify-content:flex-start;
 }
-.ec-rprod{ color:#9a7a3a; font-size:9px; letter-spacing:5px; margin-bottom:4px; font-family:'Press Start 2P',monospace; }
-.ec-rdiv{ width:54px; height:1px; background:#9a7a3a; opacity:.5; margin:10px auto 18px; }
-.ec-rtitle{ color:var(--gold); font-size:21px; letter-spacing:3px; font-weight:400; margin-bottom:6px; text-shadow:0 0 16px rgba(232,160,32,.35); }
-.ec-rsub{ color:#9a7a3a; font-size:9px; letter-spacing:4px; margin-bottom:28px; font-family:'Press Start 2P',monospace; }
+.ec-moodimg{
+  width:62%; max-width:230px; aspect-ratio:1; margin:0 auto 14px;
+  border:2px solid rgba(154,122,58,.5); border-radius:8px; overflow:hidden;
+  box-shadow:0 4px 14px rgba(0,0,0,.4);
+}
+.ec-moodimg img{ width:100%; height:100%; object-fit:cover; display:block; }
 
-.ec-table{ display:flex; flex-direction:column; gap:16px; align-items:center; }
-.ec-row{ display:flex; flex-direction:column; align-items:center; gap:5px; }
-.ec-rlabel{ font-size:8px; letter-spacing:3px; color:#9a7a3a; font-family:'Press Start 2P',monospace; }
-.ec-rvalue{ font-size:14px; color:#f5ead0; font-weight:400; line-height:1.6; font-family:'Noto Sans KR',sans-serif; }
+.ec-table{ display:flex; flex-direction:column; gap:12px; align-items:center; }
+.ec-row{ display:flex; flex-direction:column; align-items:center; gap:4px; }
+.ec-rlabel{ font-size:7.5px; letter-spacing:3px; color:#8a6a30; font-family:'Press Start 2P',monospace; }
+.ec-rvalue{ font-size:12.5px; color:#3a2a14; font-weight:700; line-height:1.6; font-family:'Noto Sans KR',sans-serif; }
 .ec-rvalue.it{ font-style:italic; }
-.ec-divider{ width:34px; height:1px; background:rgba(154,122,58,.3); }
+.ec-divider{ width:34px; height:1px; background:rgba(138,106,48,.35); }
 .ec-wishcard{
-  background:rgba(232,160,32,.06); border:1px solid rgba(232,160,32,.25); border-radius:10px;
-  padding:14px 18px; max-width:280px;
+  background:rgba(255,248,238,.35); border:1px solid rgba(138,106,48,.35); border-radius:10px;
+  padding:12px 16px; max-width:280px;
 }
-.ec-wishcard .ec-rlabel{ margin-bottom:7px; }
-.ec-wishcard .ec-rvalue{ color:var(--gold); font-size:13px; }
-.ec-finalline{ color:rgba(245,234,208,.6); font-size:11.5px; font-style:italic; line-height:1.7; font-family:'Noto Sans KR',sans-serif; }
+.ec-wishcard .ec-rlabel{ margin-bottom:6px; }
+.ec-wishcard .ec-rvalue{ color:#b06010; font-size:12.5px; }
+.ec-finalline{ color:rgba(58,42,20,.7); font-size:11px; font-style:italic; line-height:1.6; font-family:'Noto Sans KR',sans-serif; }
 
 .ec-rend{ font-size:15px; color:var(--gold); margin:6px 0; font-style:italic; font-family:Georgia,'Noto Serif KR',serif; letter-spacing:1px; }
 .ec-rfoot{ font-size:8px; color:#9a7a3a; letter-spacing:2px; font-family:'Press Start 2P',monospace; }
@@ -507,10 +512,7 @@ html,body{ width:100%; height:100%; background:var(--dark); overflow:hidden; }
     <!-- RESULT -->
     <div id="ecResult">
       <div class="ec-resultcard" id="ecCard">
-        <div class="ec-rprod">A TEXAS ROADHOUSE PRODUCTION</div>
-        <div class="ec-rdiv"></div>
-        <div class="ec-rtitle">TO BE CONTINUED...</div>
-        <div class="ec-rsub">CHRISTMAS · A HOLIDAY STORY</div>
+        <div class="ec-moodimg" id="ecMoodImgWrap"><img id="ecMoodImg" src="" alt=""></div>
 
         <div class="ec-table">
           <div class="ec-row"><div class="ec-rlabel">STARRING</div><div class="ec-rvalue" id="ecR_starring">YOU & YOUR FAVORITE PERSON</div></div>
@@ -527,11 +529,6 @@ html,body{ width:100%; height:100%; background:var(--dark); overflow:hidden; }
             <div class="ec-rvalue" id="ecR_wish">—</div>
           </div>
           <div class="ec-finalline" id="ecR_final">내년에도 좋은 장면을 많이 남기길.</div>
-        </div>
-
-        <div class="ec-rfooter">
-          <div class="ec-rend">✦ And Happily Ever After ✦</div>
-          <div class="ec-rfoot">TEXAS ROADHOUSE · CHRISTMAS</div>
         </div>
       </div>
 
@@ -1212,6 +1209,14 @@ var ecMoodMap = {
   '새로운 걸 많이 했다':'🤠 Adventurous — 도전의 한 해', '먹고 버텼다':'🥩 Comfort Mode — 먹으면서 버텼다',
   '생각보다 괜찮았다':'✨ Surprisingly Good — 나쁘지 않았어'
 };
+// STEP2 기분별 매칭 일러스트
+var ecMoodImgMap = {
+  '살아남았다':'ec_assets/mood_fighter.png',
+  '꽤 행복했다':'ec_assets/mood_happy.png',
+  '새로운 걸 많이 했다':'ec_assets/mood_adventure.png',
+  '먹고 버텼다':'ec_assets/mood_comfort.png',
+  '생각보다 괜찮았다':'ec_assets/mood_surprising.png'
+};
 var ecThanksMap = {
   '연인':'오늘 함께한 당신에게, 그리고 내 사람에게', '친구':'옆에 있어줘서 고마운 친구에게',
   '가족':'언제나 내 편인 가족에게', '혼자':'올 한 해 나 자신에게'
@@ -1261,6 +1266,7 @@ function ecGenerate(){
   document.getElementById('ecR_genre').textContent = ecGenreMap[cast] || 'Holiday Road Movie';
   document.getElementById('ecR_scene').textContent = ecSceneMap[mood] || '오늘의 웃음과 대화';
   document.getElementById('ecR_mood').textContent  = ecMoodMap[mood] || mood;
+  document.getElementById('ecMoodImg').src = ecMoodImgMap[mood] || '';
   document.getElementById('ecR_thanks').textContent = ecThanksMap[cast] || '오늘 함께한 당신에게';
   document.getElementById('ecR_bgm').textContent = ecBgmMap[bgm] || bgm;
   document.getElementById('ecR_wish').textContent = wish ? '🌟 '+wish : '— (작성하지 않음)';
@@ -1332,95 +1338,108 @@ function ecSpin(){
   },80);
 }
 
-// ── 엔딩크레딧 카드 → 이미지 캡처 (canvas로 직접 렌더링, 시네마틱 스타일) ──
+// ── 엔딩크레딧 카드 → 이미지 캡처 (배경+일러스트+텍스트 합성, 비동기) ──
+function loadImg(src){
+  return new Promise(function(resolve,reject){
+    var img=new Image();
+    img.crossOrigin='anonymous';
+    img.onload=function(){ resolve(img); };
+    img.onerror=reject;
+    img.src=src;
+  });
+}
+
 function ecRenderCanvas(){
   var cv=document.getElementById('canvas');
-  var W=900, H=1500;
+  var W=862, H=1824; // 배경 이미지 원본 비율
   cv.width=W; cv.height=H;
   var ctx=cv.getContext('2d');
   var cx=W/2;
 
-  // 배경: 비네트
-  var bg=ctx.createRadialGradient(cx,H*0.4,40,cx,H*0.4,H*0.85);
-  bg.addColorStop(0,'#1a0f08'); bg.addColorStop(1,'#0a0604');
-  ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
+  var mood=ecAnswers[2];
+  var moodSrc=ecMoodImgMap[mood] || '';
 
-  ctx.textAlign='center';
-  var y=110;
+  return loadImg('ec_assets/ec_bg.png').then(function(bgImg){
+    return (moodSrc?loadImg(moodSrc):Promise.resolve(null)).then(function(moodImg){
+      ctx.drawImage(bgImg,0,0,W,H);
 
-  ctx.fillStyle='#9a7a3a'; ctx.font='14px "Press Start 2P", monospace';
-  ctx.fillText('A TEXAS ROADHOUSE PRODUCTION', cx, y); y+=36;
+      // 콘텐츠 영역: 이미지 상의 빈 카드 영역 (대략 비율 기준)
+      var areaTop = H*0.205;
+      var areaBottom = H*0.875;
+      var areaLeft = W*0.085;
+      var areaRight = W*0.915;
+      var areaW = areaRight-areaLeft;
+      var y = areaTop + 30;
 
-  ctx.strokeStyle='rgba(154,122,58,.5)'; ctx.lineWidth=1.5;
-  ctx.beginPath(); ctx.moveTo(cx-50,y); ctx.lineTo(cx+50,y); ctx.stroke(); y+=56;
+      ctx.textAlign='center';
 
-  ctx.fillStyle='#e8a020'; ctx.font='44px Georgia, "Noto Serif KR", serif';
-  ctx.fillText('TO BE CONTINUED...', cx, y); y+=44;
+      // 무드 일러스트
+      if(moodImg){
+        var imgSize = areaW*0.62;
+        var ix = cx - imgSize/2;
+        ctx.save();
+        roundRect(ctx, ix, y, imgSize, imgSize, 10);
+        ctx.clip();
+        ctx.drawImage(moodImg, ix, y, imgSize, imgSize);
+        ctx.restore();
+        ctx.strokeStyle='rgba(154,122,58,.5)'; ctx.lineWidth=2;
+        roundRect(ctx, ix, y, imgSize, imgSize, 10); ctx.stroke();
+        y += imgSize + 28;
+      }
 
-  ctx.fillStyle='#9a7a3a'; ctx.font='15px "Press Start 2P", monospace';
-  ctx.fillText('CHRISTMAS · A HOLIDAY STORY', cx, y); y+=80;
+      var wish=document.getElementById('ecR_wish').textContent;
+      var rows=[
+        {label:'STARRING',          value:document.getElementById('ecR_starring').textContent, italic:false, size:22},
+        {divider:true},
+        {label:'GENRE',              value:document.getElementById('ecR_genre').textContent, italic:true, size:20},
+        {label:'BEST SCENE',         value:document.getElementById('ecR_scene').textContent, italic:false, size:20},
+        {label:'MOOD OF THE YEAR',   value:document.getElementById('ecR_mood').textContent, italic:false, size:20},
+        {divider:true},
+        {label:'SPECIAL THANKS TO',  value:document.getElementById('ecR_thanks').textContent, italic:false, size:20},
+        {label:'SOUNDTRACK',         value:document.getElementById('ecR_bgm').textContent, italic:true, size:20},
+        {divider:true}
+      ];
 
-  var wish=document.getElementById('ecR_wish').textContent;
-  var rows=[
-    {label:'STARRING',          value:document.getElementById('ecR_starring').textContent, italic:false, size:34},
-    {divider:true},
-    {label:'GENRE',              value:document.getElementById('ecR_genre').textContent, italic:true, size:30},
-    {label:'BEST SCENE',         value:document.getElementById('ecR_scene').textContent, italic:false, size:30},
-    {label:'MOOD OF THE YEAR',   value:document.getElementById('ecR_mood').textContent, italic:false, size:30},
-    {divider:true},
-    {label:'SPECIAL THANKS TO',  value:document.getElementById('ecR_thanks').textContent, italic:false, size:30},
-    {label:'SOUNDTRACK',         value:document.getElementById('ecR_bgm').textContent, italic:true, size:30},
-    {divider:true}
-  ];
+      rows.forEach(function(r){
+        if(r.divider){
+          ctx.strokeStyle='rgba(138,106,48,.35)'; ctx.lineWidth=1;
+          ctx.beginPath(); ctx.moveTo(cx-24,y); ctx.lineTo(cx+24,y); ctx.stroke();
+          y+=26;
+          return;
+        }
+        ctx.fillStyle='#8a6a30'; ctx.font='10px "Press Start 2P", monospace';
+        ctx.fillText(r.label, cx, y); y+=22;
 
-  rows.forEach(function(r){
-    if(r.divider){
-      ctx.strokeStyle='rgba(154,122,58,.3)'; ctx.lineWidth=1;
-      ctx.beginPath(); ctx.moveTo(cx-30,y); ctx.lineTo(cx+30,y); ctx.stroke();
-      y+=44;
-      return;
-    }
-    ctx.fillStyle='#9a7a3a'; ctx.font='14px "Press Start 2P", monospace';
-    ctx.fillText(r.label, cx, y); y+=34;
+        ctx.fillStyle='#3a2a14';
+        ctx.font='bold '+(r.italic?'italic ':'')+r.size+'px "Noto Sans KR", sans-serif';
+        var lines=ecWrapText(ctx, r.value, areaW-20);
+        lines.forEach(function(line){ ctx.fillText(line, cx, y); y+=r.size+8; });
+        y+=14;
+      });
 
-    ctx.fillStyle='#f5ead0';
-    ctx.font=(r.italic?'italic ':'')+r.size+'px "Noto Sans KR", sans-serif';
-    var lines=ecWrapText(ctx, r.value, W-160);
-    lines.forEach(function(line){ ctx.fillText(line, cx, y); y+=r.size+10; });
-    y+=24;
+      // 소원 카드
+      var wishLines=ecWrapText(ctx, wish, areaW-60);
+      var wishBoxH = 50 + wishLines.length*26;
+      var wishBoxW = Math.min(areaW*0.9, areaW);
+      ctx.fillStyle='rgba(255,248,238,.35)';
+      ctx.strokeStyle='rgba(138,106,48,.35)'; ctx.lineWidth=1.5;
+      roundRect(ctx, cx-wishBoxW/2, y-22, wishBoxW, wishBoxH, 10);
+      ctx.fill(); ctx.stroke();
+
+      ctx.fillStyle='#8a6a30'; ctx.font='9px "Press Start 2P", monospace';
+      ctx.fillText("NEXT YEAR'S WISH", cx, y); y+=26;
+      ctx.fillStyle='#b06010'; ctx.font='bold 20px "Noto Sans KR", sans-serif';
+      wishLines.forEach(function(line){ ctx.fillText(line, cx, y); y+=26; });
+      y+=30;
+
+      // 마지막 줄
+      var finalLine=document.getElementById('ecR_final').textContent;
+      ctx.fillStyle='rgba(58,42,20,.7)'; ctx.font='italic 17px "Noto Sans KR", sans-serif';
+      ecWrapText(ctx, finalLine, areaW-20).forEach(function(line){ ctx.fillText(line, cx, y); y+=24; });
+
+      return cv.toDataURL('image/jpeg',0.92);
+    });
   });
-
-  // 소원 카드
-  var wishLines=ecWrapText(ctx, wish, W-220);
-  var wishBoxH = 70 + wishLines.length*36;
-  var wishBoxW = Math.min(560, W-120);
-  ctx.fillStyle='rgba(232,160,32,.06)';
-  ctx.strokeStyle='rgba(232,160,32,.25)'; ctx.lineWidth=1.5;
-  roundRect(ctx, cx-wishBoxW/2, y-30, wishBoxW, wishBoxH, 14);
-  ctx.fill(); ctx.stroke();
-
-  ctx.fillStyle='#9a7a3a'; ctx.font='13px "Press Start 2P", monospace';
-  ctx.fillText("NEXT YEAR'S WISH", cx, y); y+=36;
-  ctx.fillStyle='#e8a020'; ctx.font='30px "Noto Sans KR", sans-serif';
-  wishLines.forEach(function(line){ ctx.fillText(line, cx, y); y+=36; });
-  y+=46;
-
-  // 마지막 줄
-  var finalLine=document.getElementById('ecR_final').textContent;
-  ctx.fillStyle='rgba(245,234,208,.6)'; ctx.font='italic 26px "Noto Sans KR", sans-serif';
-  ecWrapText(ctx, finalLine, W-160).forEach(function(line){ ctx.fillText(line, cx, y); y+=36; });
-
-  y+=50;
-  ctx.strokeStyle='rgba(154,122,58,.25)'; ctx.lineWidth=1;
-  ctx.beginPath(); ctx.moveTo(80,y); ctx.lineTo(W-80,y); ctx.stroke(); y+=50;
-
-  ctx.fillStyle='#e8a020'; ctx.font='italic 32px Georgia, "Noto Serif KR", serif';
-  ctx.fillText('✦ And Happily Ever After ✦', cx, y); y+=40;
-
-  ctx.fillStyle='#9a7a3a'; ctx.font='14px "Press Start 2P", monospace';
-  ctx.fillText('TEXAS ROADHOUSE · CHRISTMAS', cx, y);
-
-  return cv.toDataURL('image/jpeg',0.92);
 }
 
 function roundRect(ctx,x,y,w,h,r){
@@ -1446,11 +1465,12 @@ function ecWrapText(ctx, text, maxWidth){
 }
 
 function ecSave(){
-  var url=ecRenderCanvas();
-  var a=document.createElement('a');
-  a.download='TxRH-EndCredit-'+Date.now()+'.jpg';
-  a.href=url;
-  a.click();
+  ecRenderCanvas().then(function(url){
+    var a=document.createElement('a');
+    a.download='TxRH-EndCredit-'+Date.now()+'.jpg';
+    a.href=url;
+    a.click();
+  }).catch(function(e){ alert('이미지 생성 중 오류가 발생했어요. 다시 시도해주세요.'); });
 }
 
 function ecToInsta(){
