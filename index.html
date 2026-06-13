@@ -201,28 +201,44 @@ html,body{ width:100%; height:100%; background:var(--dark); overflow:hidden; }
 .ec-next.visible{ display:block; }
 .ec-next.go{ background:var(--gold); color:var(--dark); border-bottom-color:#b06010; }
 
-/* 결과 카드 */
+/* 결과 카드 - 시네마틱 엔딩크레딧 */
 #ecResult{ display:none; }
 .ec-resultcard{
-  background:linear-gradient(135deg,#1f0e06,#120a04);
-  border:2px solid var(--gold); border-radius:18px;
-  padding:24px 18px; text-align:center; position:relative; overflow:hidden;
-  box-shadow:0 6px 20px rgba(0,0,0,.5);
+  background:radial-gradient(ellipse at center, #1a0f08 0%, #0a0604 75%);
+  border:1.5px solid rgba(154,122,58,.4); border-radius:18px;
+  padding:34px 22px 28px; text-align:center; position:relative; overflow:hidden;
+  box-shadow:0 8px 28px rgba(0,0,0,.55);
+  font-family:Georgia,'Noto Serif KR',serif;
 }
-.ec-resultcard::before{ content:''; position:absolute; top:0; left:0; right:0; height:4px;
-  background:linear-gradient(90deg,var(--red),var(--gold),var(--red)); }
-.ec-rtag{ color:var(--red); font-size:9px; letter-spacing:3px; margin-bottom:6px; }
-.ec-rtitle{ color:var(--gold); font-size:24px; font-family:'Press Start 2P',monospace; text-shadow:0 0 16px rgba(232,160,32,.5); margin-bottom:6px; }
-.ec-rsub{ color:rgba(255,248,238,.7); font-size:12px; margin-bottom:18px; font-family:'Noto Sans KR',sans-serif; }
-.ec-table{ text-align:left; margin-bottom:16px; }
-.ec-row{ display:flex; gap:10px; padding:9px 0; border-bottom:1px solid rgba(232,160,32,.15); align-items:flex-start; }
-.ec-row:last-child{ border-bottom:none; }
-.ec-rlabel{ font-size:8px; letter-spacing:1.5px; color:var(--red); min-width:78px; padding-top:3px; font-family:'Press Start 2P',monospace; }
-.ec-rvalue{ font-size:13.5px; color:var(--cream); font-weight:700; flex:1; font-family:'Noto Sans KR',sans-serif; line-height:1.6; }
-.ec-rend{ font-size:24px; color:var(--gold); margin:6px 0; font-family:'Press Start 2P',monospace; }
-.ec-rfoot{ font-size:9px; color:rgba(232,160,32,.5); letter-spacing:1px; font-family:'Press Start 2P',monospace; }
+.ec-rprod{ color:#9a7a3a; font-size:9px; letter-spacing:5px; margin-bottom:4px; font-family:'Press Start 2P',monospace; }
+.ec-rdiv{ width:54px; height:1px; background:#9a7a3a; opacity:.5; margin:10px auto 18px; }
+.ec-rtitle{ color:var(--gold); font-size:21px; letter-spacing:3px; font-weight:400; margin-bottom:6px; text-shadow:0 0 16px rgba(232,160,32,.35); }
+.ec-rsub{ color:#9a7a3a; font-size:9px; letter-spacing:4px; margin-bottom:28px; font-family:'Press Start 2P',monospace; }
+
+.ec-table{ display:flex; flex-direction:column; gap:16px; align-items:center; }
+.ec-row{ display:flex; flex-direction:column; align-items:center; gap:5px; }
+.ec-rlabel{ font-size:8px; letter-spacing:3px; color:#9a7a3a; font-family:'Press Start 2P',monospace; }
+.ec-rvalue{ font-size:14px; color:#f5ead0; font-weight:400; line-height:1.6; font-family:'Noto Sans KR',sans-serif; }
+.ec-rvalue.it{ font-style:italic; }
+.ec-divider{ width:34px; height:1px; background:rgba(154,122,58,.3); }
+.ec-wishcard{
+  background:rgba(232,160,32,.06); border:1px solid rgba(232,160,32,.25); border-radius:10px;
+  padding:14px 18px; max-width:280px;
+}
+.ec-wishcard .ec-rlabel{ margin-bottom:7px; }
+.ec-wishcard .ec-rvalue{ color:var(--gold); font-size:13px; }
+.ec-finalline{ color:rgba(245,234,208,.6); font-size:11.5px; font-style:italic; line-height:1.7; font-family:'Noto Sans KR',sans-serif; }
+
+.ec-rend{ font-size:15px; color:var(--gold); margin:6px 0; font-style:italic; font-family:Georgia,'Noto Serif KR',serif; letter-spacing:1px; }
+.ec-rfoot{ font-size:8px; color:#9a7a3a; letter-spacing:2px; font-family:'Press Start 2P',monospace; }
+.ec-rfooter{ margin-top:30px; padding-top:18px; border-top:1px solid rgba(154,122,58,.25); }
 
 .ec-sharebar{ display:flex; gap:8px; margin-top:14px; }
+.ec-musictip{
+  margin-top:10px; padding:12px 14px; border-radius:10px; font-size:12.5px; line-height:1.7;
+  background:rgba(232,160,32,.08); border:1.5px dashed rgba(232,160,32,.35); color:rgba(255,248,238,.8);
+}
+.ec-musictip b{ color:var(--gold); }
 
 /* 히든엔딩 */
 .ec-hidden{
@@ -261,7 +277,7 @@ html,body{ width:100%; height:100%; background:var(--dark); overflow:hidden; }
 <!-- ══ 메인 선택 ══ -->
 <div id="sMain" class="screen px">
   <div class="main-top">★ TEXAS ROADHOUSE ★</div>
-  <div class="main-logo">CHRISTMAS<br>2024</div>
+  <div class="main-logo">CHRISTMAS</div>
   <div class="main-sub">CHOOSE YOUR EXPERIENCE</div>
 
   <div class="main-cards">
@@ -274,7 +290,7 @@ html,body{ width:100%; height:100%; background:var(--dark); overflow:hidden; }
       <div class="mc-desc kr">3가지 질문에 답하면 15초 만에 나만의 크리스마스 엔딩 크레딧이 완성돼요. 내년 소원도 함께 적고, 히든엔딩으로 오늘 계산할 사람도 뽑아보세요!</div>
       <div class="mc-preview">
         <div class="pv-box" style="background:linear-gradient(135deg,#241206,#170a02);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px">
-          <div style="font-size:9px;color:var(--red);letter-spacing:2px;margin-bottom:4px">2024 XMAS</div>
+          <div style="font-size:9px;color:var(--red);letter-spacing:2px;margin-bottom:4px">XMAS</div>
           <div style="font-size:12px;color:var(--gold);text-shadow:2px 2px 0 var(--red)">END<br>CREDIT</div>
         </div>
         <div class="pv-box" style="background:linear-gradient(135deg,#241206,#170a02);display:flex;align-items:center;justify-content:center;font-size:28px">🎁</div>
@@ -305,7 +321,7 @@ html,body{ width:100%; height:100%; background:var(--dark); overflow:hidden; }
   <button class="gohome-btn px" onclick="goMain()">◀ 처음으로</button>
   <div class="l-top">★ PHOTO BOOTH ★</div>
   <div class="l-logo px">TEXAS<br>ROADHOUSE</div>
-  <div class="l-sub px">CHRISTMAS 2024</div>
+  <div class="l-sub px">CHRISTMAS</div>
 
   <!-- 1컷/4컷 모드 선택 -->
   <div class="mode-row">
@@ -451,7 +467,7 @@ html,body{ width:100%; height:100%; background:var(--dark); overflow:hidden; }
     <div class="ec-card" id="ecStep2">
       <div class="ec-steplabel px">STEP 2 OF 4</div>
       <div class="ec-steptitle px">올해의 내 기분은?</div>
-      <div class="ec-stepdesc">2024년의 나는 어땠나요?</div>
+      <div class="ec-stepdesc">올해의 나는 어땠나요?</div>
       <div class="ec-options five">
         <div class="ec-opt" onclick="ecSelect(2,'살아남았다',this)"><span class="eo-emoji">🔥</span><span class="eo-label">살아남았다</span></div>
         <div class="ec-opt" onclick="ecSelect(2,'꽤 행복했다',this)"><span class="eo-emoji">🎄</span><span class="eo-label">꽤 행복했다</span></div>
@@ -485,34 +501,46 @@ html,body{ width:100%; height:100%; background:var(--dark); overflow:hidden; }
         <textarea id="ecWishInput" maxlength="60" placeholder="예) 내년엔 사랑하는 사람들과 더 많은 시간을 보내고 싶어요" oninput="ecWishCount()"></textarea>
         <div class="wc" id="ecWishCount">0 / 60</div>
       </div>
-      <button class="ec-next go px" id="ecNext4" onclick="ecGenerate()">🎬 엔딩 크레딧 생성!</button>
+      <button class="ec-next go visible px" id="ecNext4" onclick="ecGenerate()">🎬 엔딩 크레딧 생성!</button>
     </div>
 
     <!-- RESULT -->
     <div id="ecResult">
       <div class="ec-resultcard" id="ecCard">
-        <div class="ec-rtag px">★ 2024 CHRISTMAS ★</div>
-        <div class="ec-rtitle px">END CREDIT</div>
-        <div class="ec-rsub">당신의 오늘이 엔딩이 됩니다</div>
+        <div class="ec-rprod">A TEXAS ROADHOUSE PRODUCTION</div>
+        <div class="ec-rdiv"></div>
+        <div class="ec-rtitle">TO BE CONTINUED...</div>
+        <div class="ec-rsub">CHRISTMAS · A HOLIDAY STORY</div>
+
         <div class="ec-table">
           <div class="ec-row"><div class="ec-rlabel">STARRING</div><div class="ec-rvalue" id="ecR_starring">YOU & YOUR FAVORITE PERSON</div></div>
-          <div class="ec-row"><div class="ec-rlabel">GENRE</div><div class="ec-rvalue" id="ecR_genre">Holiday Road Movie</div></div>
+          <div class="ec-divider"></div>
+          <div class="ec-row"><div class="ec-rlabel">GENRE</div><div class="ec-rvalue it" id="ecR_genre">Holiday Road Movie</div></div>
           <div class="ec-row"><div class="ec-rlabel">BEST SCENE</div><div class="ec-rvalue" id="ecR_scene">오늘의 웃음과 대화</div></div>
-          <div class="ec-row"><div class="ec-rlabel">MOOD</div><div class="ec-rvalue" id="ecR_mood">—</div></div>
-          <div class="ec-row"><div class="ec-rlabel">ACHIEVEMENT</div><div class="ec-rvalue">✦ 2024 완주 성공!</div></div>
-          <div class="ec-row"><div class="ec-rlabel">SPECIAL THANKS</div><div class="ec-rvalue" id="ecR_thanks">오늘 함께한 당신에게</div></div>
-          <div class="ec-row"><div class="ec-rlabel">BGM</div><div class="ec-rvalue" id="ecR_bgm">—</div></div>
-          <div class="ec-row"><div class="ec-rlabel">MY WISH 2025</div><div class="ec-rvalue" id="ecR_wish">—</div></div>
-          <div class="ec-row"><div class="ec-rlabel">FINAL LINE</div><div class="ec-rvalue" id="ecR_final">내년에도 좋은 장면을 많이 남기길.</div></div>
+          <div class="ec-row"><div class="ec-rlabel">MOOD OF THE YEAR</div><div class="ec-rvalue" id="ecR_mood">—</div></div>
+          <div class="ec-divider"></div>
+          <div class="ec-row"><div class="ec-rlabel">SPECIAL THANKS TO</div><div class="ec-rvalue" id="ecR_thanks">오늘 함께한 당신에게</div></div>
+          <div class="ec-row"><div class="ec-rlabel">SOUNDTRACK</div><div class="ec-rvalue it" id="ecR_bgm">—</div></div>
+          <div class="ec-divider"></div>
+          <div class="ec-wishcard">
+            <div class="ec-rlabel">NEXT YEAR'S WISH</div>
+            <div class="ec-rvalue" id="ecR_wish">—</div>
+          </div>
+          <div class="ec-finalline" id="ecR_final">내년에도 좋은 장면을 많이 남기길.</div>
         </div>
-        <div class="ec-rend px">★ ★ THE END ★ ★</div>
-        <div class="ec-rfoot px">TEXAS ROADHOUSE · CHRISTMAS 2024</div>
+
+        <div class="ec-rfooter">
+          <div class="ec-rend">✦ And Happily Ever After ✦</div>
+          <div class="ec-rfoot">TEXAS ROADHOUSE · CHRISTMAS</div>
+        </div>
       </div>
 
       <div class="ec-sharebar">
         <button class="rbtn rb-save px" style="flex:1;padding:14px 4px;font-size:9px;border-radius:8px" onclick="ecSave()">💾 저장하기</button>
         <button class="rbtn rb-insta px" style="flex:1;padding:14px 4px;font-size:9px;border-radius:8px" onclick="ecToInsta()">📸 스토리 공유</button>
       </div>
+
+      <div class="ec-musictip kr" id="ecMusicTip"></div>
 
       <!-- 히든엔딩 -->
       <div class="ec-hidden">
@@ -1180,7 +1208,7 @@ var ecSceneMap = {
   '생각보다 괜찮았다':'예상보다 괜찮았던 순간들'
 };
 var ecMoodMap = {
-  '살아남았다':'🔥 Fighter Mode — 2024 완주 성공', '꽤 행복했다':'🎄 Warm & Happy — 행복한 연말',
+  '살아남았다':'🔥 Fighter Mode — 올해도 완주 성공', '꽤 행복했다':'🎄 Warm & Happy — 행복한 연말',
   '새로운 걸 많이 했다':'🤠 Adventurous — 도전의 한 해', '먹고 버텼다':'🥩 Comfort Mode — 먹으면서 버텼다',
   '생각보다 괜찮았다':'✨ Surprisingly Good — 나쁘지 않았어'
 };
@@ -1191,6 +1219,13 @@ var ecThanksMap = {
 var ecBgmMap = {
   '재즈 크리스마스':'🎷 Have Yourself a Merry Little Christmas', '컨트리 홀리데이':'🎸 Country Christmas Special Mix',
   '따뜻한 캐럴':'🎄 All I Want for Christmas Is You', '파티 모드':"💃 Rockin' Around the Christmas Tree"
+};
+// 인스타 스토리 음악 스티커 검색용 추천 키워드 (실제 음원 자동 삽입은 인스타 정책상 불가)
+var ecBgmSearchMap = {
+  '재즈 크리스마스':'Have Yourself a Merry Little Christmas',
+  '컨트리 홀리데이':'Country Christmas',
+  '따뜻한 캐럴':'All I Want for Christmas Is You',
+  '파티 모드':"Rockin' Around the Christmas Tree"
 };
 
 function ecSelect(step, value, el){
@@ -1230,6 +1265,12 @@ function ecGenerate(){
   document.getElementById('ecR_bgm').textContent = ecBgmMap[bgm] || bgm;
   document.getElementById('ecR_wish').textContent = wish ? '🌟 '+wish : '— (작성하지 않음)';
   document.getElementById('ecR_final').textContent = wish ? '그 소원, 내년 크리스마스에 다시 확인해봐요.' : '내년에도 좋은 장면을 많이 남기길.';
+
+  var bgmSearch = ecBgmSearchMap[bgm] || bgm;
+  document.getElementById('ecMusicTip').innerHTML =
+    '🎵 <b>스토리에 음악 추가하기</b><br>' +
+    '인스타그램 스토리 업로드 화면에서 <b>음악 스티커</b>를 누르고 <b>"'+bgmSearch+'"</b>를 검색해 추가해보세요. ' +
+    '(외부 사이트에서 음원을 자동으로 삽입하는 기능은 인스타그램에서 지원하지 않아, 직접 검색해 추가하는 방식이 가장 정확해요.)';
 
   for(var i=1;i<=4;i++){
     document.getElementById('ecStep'+i).classList.remove('active');
@@ -1291,77 +1332,105 @@ function ecSpin(){
   },80);
 }
 
-// ── 엔딩크레딧 카드 → 이미지 캡처 (canvas로 직접 렌더링) ──
+// ── 엔딩크레딧 카드 → 이미지 캡처 (canvas로 직접 렌더링, 시네마틱 스타일) ──
 function ecRenderCanvas(){
   var cv=document.getElementById('canvas');
   var W=900, H=1500;
   cv.width=W; cv.height=H;
   var ctx=cv.getContext('2d');
+  var cx=W/2;
 
-  // 배경
-  var bg=ctx.createLinearGradient(0,0,W,H);
-  bg.addColorStop(0,'#1f0e06'); bg.addColorStop(1,'#120a04');
+  // 배경: 비네트
+  var bg=ctx.createRadialGradient(cx,H*0.4,40,cx,H*0.4,H*0.85);
+  bg.addColorStop(0,'#1a0f08'); bg.addColorStop(1,'#0a0604');
   ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
 
-  // 외곽 테두리
-  ctx.strokeStyle='#e8a020'; ctx.lineWidth=6;
-  ctx.strokeRect(20,20,W-40,H-40);
-  // 상단 그라데이션 바
-  var topbar=ctx.createLinearGradient(0,0,W,0);
-  topbar.addColorStop(0,'#c0392b'); topbar.addColorStop(.5,'#e8a020'); topbar.addColorStop(1,'#c0392b');
-  ctx.fillStyle=topbar; ctx.fillRect(20,20,W-40,10);
-
-  var cx=W/2, y=90;
   ctx.textAlign='center';
+  var y=110;
 
-  ctx.fillStyle='#c0392b'; ctx.font='28px "Press Start 2P", monospace';
-  ctx.fillText('★ 2024 CHRISTMAS ★', cx, y); y+=70;
+  ctx.fillStyle='#9a7a3a'; ctx.font='14px "Press Start 2P", monospace';
+  ctx.fillText('A TEXAS ROADHOUSE PRODUCTION', cx, y); y+=36;
 
-  ctx.fillStyle='#e8a020'; ctx.font='52px "Press Start 2P", monospace';
-  ctx.fillText('END CREDIT', cx, y); y+=50;
+  ctx.strokeStyle='rgba(154,122,58,.5)'; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.moveTo(cx-50,y); ctx.lineTo(cx+50,y); ctx.stroke(); y+=56;
 
-  ctx.fillStyle='rgba(255,248,238,.8)'; ctx.font='26px "Noto Sans KR", sans-serif';
-  ctx.fillText('당신의 오늘이 엔딩이 됩니다', cx, y); y+=60;
+  ctx.fillStyle='#e8a020'; ctx.font='44px Georgia, "Noto Serif KR", serif';
+  ctx.fillText('TO BE CONTINUED...', cx, y); y+=44;
 
-  // 표 (좌측 정렬)
+  ctx.fillStyle='#9a7a3a'; ctx.font='15px "Press Start 2P", monospace';
+  ctx.fillText('CHRISTMAS · A HOLIDAY STORY', cx, y); y+=80;
+
+  var wish=document.getElementById('ecR_wish').textContent;
   var rows=[
-    ['STARRING', document.getElementById('ecR_starring').textContent],
-    ['GENRE', document.getElementById('ecR_genre').textContent],
-    ['BEST SCENE', document.getElementById('ecR_scene').textContent],
-    ['MOOD', document.getElementById('ecR_mood').textContent],
-    ['ACHIEVEMENT', '✦ 2024 완주 성공!'],
-    ['SPECIAL THANKS', document.getElementById('ecR_thanks').textContent],
-    ['BGM', document.getElementById('ecR_bgm').textContent],
-    ['MY WISH 2025', document.getElementById('ecR_wish').textContent],
-    ['FINAL LINE', document.getElementById('ecR_final').textContent]
+    {label:'STARRING',          value:document.getElementById('ecR_starring').textContent, italic:false, size:34},
+    {divider:true},
+    {label:'GENRE',              value:document.getElementById('ecR_genre').textContent, italic:true, size:30},
+    {label:'BEST SCENE',         value:document.getElementById('ecR_scene').textContent, italic:false, size:30},
+    {label:'MOOD OF THE YEAR',   value:document.getElementById('ecR_mood').textContent, italic:false, size:30},
+    {divider:true},
+    {label:'SPECIAL THANKS TO',  value:document.getElementById('ecR_thanks').textContent, italic:false, size:30},
+    {label:'SOUNDTRACK',         value:document.getElementById('ecR_bgm').textContent, italic:true, size:30},
+    {divider:true}
   ];
-  var tableX=70, tableW=W-140;
-  ctx.textAlign='left';
+
   rows.forEach(function(r){
-    // 라벨
-    ctx.fillStyle='#c0392b'; ctx.font='16px "Press Start 2P", monospace';
-    ctx.fillText(r[0], tableX, y);
-    // 값 (줄바꿈 처리)
-    ctx.fillStyle='#fff8ee'; ctx.font='bold 24px "Noto Sans KR", sans-serif';
-    var lines=ecWrapText(ctx, r[1], tableW-260);
-    var valX=tableX+260;
-    lines.forEach(function(line,i){ ctx.fillText(line, valX, y+i*30); });
-    var rowH=Math.max(30*lines.length, 36);
-    y+=rowH;
-    // 구분선
-    ctx.strokeStyle='rgba(232,160,32,.15)'; ctx.lineWidth=1;
-    ctx.beginPath(); ctx.moveTo(tableX,y+8); ctx.lineTo(tableX+tableW,y+8); ctx.stroke();
-    y+=34;
+    if(r.divider){
+      ctx.strokeStyle='rgba(154,122,58,.3)'; ctx.lineWidth=1;
+      ctx.beginPath(); ctx.moveTo(cx-30,y); ctx.lineTo(cx+30,y); ctx.stroke();
+      y+=44;
+      return;
+    }
+    ctx.fillStyle='#9a7a3a'; ctx.font='14px "Press Start 2P", monospace';
+    ctx.fillText(r.label, cx, y); y+=34;
+
+    ctx.fillStyle='#f5ead0';
+    ctx.font=(r.italic?'italic ':'')+r.size+'px "Noto Sans KR", sans-serif';
+    var lines=ecWrapText(ctx, r.value, W-160);
+    lines.forEach(function(line){ ctx.fillText(line, cx, y); y+=r.size+10; });
+    y+=24;
   });
 
-  ctx.textAlign='center';
-  y+=20;
-  ctx.fillStyle='#e8a020'; ctx.font='40px "Press Start 2P", monospace';
-  ctx.fillText('★ ★ THE END ★ ★', cx, y); y+=44;
-  ctx.fillStyle='rgba(232,160,32,.5)'; ctx.font='16px "Press Start 2P", monospace';
-  ctx.fillText('TEXAS ROADHOUSE · CHRISTMAS 2024', cx, y);
+  // 소원 카드
+  var wishLines=ecWrapText(ctx, wish, W-220);
+  var wishBoxH = 70 + wishLines.length*36;
+  var wishBoxW = Math.min(560, W-120);
+  ctx.fillStyle='rgba(232,160,32,.06)';
+  ctx.strokeStyle='rgba(232,160,32,.25)'; ctx.lineWidth=1.5;
+  roundRect(ctx, cx-wishBoxW/2, y-30, wishBoxW, wishBoxH, 14);
+  ctx.fill(); ctx.stroke();
+
+  ctx.fillStyle='#9a7a3a'; ctx.font='13px "Press Start 2P", monospace';
+  ctx.fillText("NEXT YEAR'S WISH", cx, y); y+=36;
+  ctx.fillStyle='#e8a020'; ctx.font='30px "Noto Sans KR", sans-serif';
+  wishLines.forEach(function(line){ ctx.fillText(line, cx, y); y+=36; });
+  y+=46;
+
+  // 마지막 줄
+  var finalLine=document.getElementById('ecR_final').textContent;
+  ctx.fillStyle='rgba(245,234,208,.6)'; ctx.font='italic 26px "Noto Sans KR", sans-serif';
+  ecWrapText(ctx, finalLine, W-160).forEach(function(line){ ctx.fillText(line, cx, y); y+=36; });
+
+  y+=50;
+  ctx.strokeStyle='rgba(154,122,58,.25)'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(80,y); ctx.lineTo(W-80,y); ctx.stroke(); y+=50;
+
+  ctx.fillStyle='#e8a020'; ctx.font='italic 32px Georgia, "Noto Serif KR", serif';
+  ctx.fillText('✦ And Happily Ever After ✦', cx, y); y+=40;
+
+  ctx.fillStyle='#9a7a3a'; ctx.font='14px "Press Start 2P", monospace';
+  ctx.fillText('TEXAS ROADHOUSE · CHRISTMAS', cx, y);
 
   return cv.toDataURL('image/jpeg',0.92);
+}
+
+function roundRect(ctx,x,y,w,h,r){
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);
+  ctx.arcTo(x+w,y,x+w,y+h,r);
+  ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r);
+  ctx.arcTo(x,y,x+w,y,r);
+  ctx.closePath();
 }
 
 function ecWrapText(ctx, text, maxWidth){
