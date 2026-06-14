@@ -1320,6 +1320,7 @@ function ecRestart(){
     var card=document.getElementById('ecStep'+i);
     card.querySelectorAll('.ec-opt').forEach(function(o){o.classList.remove('on');});
     document.getElementById('ecNext'+i).classList.remove('visible');
+    if(i===4) document.getElementById('ecNext4').classList.add('visible');
     card.classList.remove('active');
   }
   document.getElementById('ecStep1').classList.add('active');
