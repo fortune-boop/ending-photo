@@ -48,8 +48,31 @@ html,body{ width:100%; height:100%; background:var(--dark); overflow:hidden; }
   margin-top:12px; text-align:center; font-size:12px; letter-spacing:1px; padding:9px;
   border-radius:8px; font-weight:700;
 }
-.mc-cta.ec{ background:rgba(212,160,23,.18); color:var(--gold2); border:1.5px solid rgba(212,160,23,.4); }
-.mc-cta.pb{ background:rgba(192,57,43,.22); color:#ff8a7a; border:1.5px solid rgba(192,57,43,.45); }
+.main-card.sp{ border-color:rgba(232,160,32,.5); }
+.mc-cta.sp{ background:rgba(232,160,32,.18); color:var(--gold); border:1.5px solid rgba(232,160,32,.4); }
+/* 카드 미리보기 - 단일 이미지 방식 */
+.mc-imgbox{
+  width:100%; border-radius:10px; overflow:hidden; margin-bottom:12px;
+  border:1.5px solid rgba(232,160,32,.2); background:#0e0500; position:relative;
+}
+.mc-imgbox img{ width:100%; display:block; object-fit:cover; }
+.mc-imgbox .mc-overlay{
+  position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+  background:rgba(0,0,0,.35);
+}
+.mc-imgbox .mc-overlay-icon{ font-size:48px; filter:drop-shadow(0 2px 6px rgba(0,0,0,.5)); }
+/* 스핀 카드 미리보기 */
+.mc-spin-preview{
+  background:rgba(232,160,32,.07); border:1.5px dashed rgba(232,160,32,.3);
+  border-radius:10px; padding:14px; margin-bottom:12px; text-align:center;
+}
+.mc-spin-preview .sp-names{ display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin-top:10px; }
+.mc-spin-preview .sp-chip{
+  background:rgba(192,57,43,.2); border:1px solid rgba(192,57,43,.4);
+  border-radius:6px; padding:5px 10px; font-size:12px; color:rgba(255,248,238,.7);
+  font-family:'Noto Sans KR',sans-serif;
+}
+.mc-spin-preview .sp-chip.winner{ background:rgba(232,160,32,.25); border-color:var(--gold); color:var(--gold); }
 
 /* 뒤로가기(공용) */
 .gohome-btn{ color:rgba(232,160,32,.6); font-size:9px; cursor:pointer; margin-bottom:14px; display:flex; align-items:center; gap:6px; background:none; border:none; padding:6px 0; }
@@ -216,7 +239,7 @@ html,body{ width:100%; height:100%; background:var(--dark); overflow:hidden; }
   background-size:cover; background-position:top center;
 }
 .ec-rbottom{
-  width:100%; aspect-ratio:1080/672;
+  width:100%; aspect-ratio:1080/575;
   background-image:url('ec_assets/ec_bottom.png');
   background-color:#0d0a08;
   background-size:cover; background-position:top center;
@@ -231,7 +254,7 @@ html,body{ width:100%; height:100%; background:var(--dark); overflow:hidden; }
 /* 오프닝: 무드 일러스트 + STARRING을 나란히 */
 .ec-opening{
   display:flex; gap:14px; align-items:center; margin-bottom:12px; text-align:left;
-  background:rgba(15,8,3,.78); border:1px solid rgba(180,90,20,.45);
+  background:radial-gradient(ellipse at center, rgba(40,20,8,.82) 0%, rgba(10,5,2,.88) 70%); border:1px solid rgba(180,90,20,.45);
   border-radius:12px; padding:14px; box-shadow:0 2px 14px rgba(0,0,0,.4);
 }
 .ec-moodimg{
@@ -245,7 +268,7 @@ html,body{ width:100%; height:100%; background:var(--dark); overflow:hidden; }
 
 .ec-table{ display:flex; flex-direction:column; gap:10px; align-items:center; }
 .ec-sectioncard{
-  width:100%; background:rgba(15,8,3,.78);
+  width:100%; background:radial-gradient(ellipse at center, rgba(40,20,8,.82) 0%, rgba(10,5,2,.88) 70%);
   border:1px solid rgba(180,90,20,.45); border-radius:12px;
   padding:14px 16px; box-shadow:0 2px 14px rgba(0,0,0,.5);
   display:flex; flex-direction:column; gap:10px; align-items:center;
@@ -256,7 +279,7 @@ html,body{ width:100%; height:100%; background:var(--dark); overflow:hidden; }
 .ec-rvalue.it{ font-style:italic; }
 .ec-divider{ width:34px; height:1px; background:rgba(180,90,20,.4); }
 .ec-wishcard{
-  background:rgba(15,8,3,.78); border:1.5px solid rgba(200,110,30,.5); border-radius:12px;
+  background:radial-gradient(ellipse at center, rgba(40,20,8,.82) 0%, rgba(10,5,2,.88) 70%); border:1.5px solid rgba(200,110,30,.5); border-radius:12px;
   padding:14px 16px; max-width:100%; width:100%; box-shadow:0 2px 14px rgba(0,0,0,.5);
 }
 .ec-wishcard .ec-rlabel{ margin-bottom:4px; }
@@ -315,38 +338,53 @@ html,body{ width:100%; height:100%; background:var(--dark); overflow:hidden; }
   <div class="main-sub">CHOOSE YOUR EXPERIENCE</div>
 
   <div class="main-cards">
-    <!-- 엔딩크레딧 카드 -->
-    <div class="main-card ec" onclick="goEnding()">
-      <div class="mc-top">
-        <div class="mc-emoji">🎬</div>
-        <div class="mc-title px">CHRISTMAS<br>END CREDIT</div>
-      </div>
-      <div class="mc-desc kr">3가지 질문에 답하면 15초 만에 나만의 크리스마스 엔딩 크레딧이 완성돼요. 내년 소원도 함께 적고, 히든엔딩으로 오늘 계산할 사람도 뽑아보세요!</div>
-      <div class="mc-preview">
-        <div class="pv-box" style="background:linear-gradient(135deg,#241206,#170a02);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px">
-          <div style="font-size:9px;color:var(--red);letter-spacing:2px;margin-bottom:4px">XMAS</div>
-          <div style="font-size:12px;color:var(--gold);text-shadow:2px 2px 0 var(--red)">END<br>CREDIT</div>
-        </div>
-        <div class="pv-box" style="background:linear-gradient(135deg,#241206,#170a02);display:flex;align-items:center;justify-content:center;font-size:28px">🎁</div>
-        <div class="pv-box" style="background:linear-gradient(135deg,#241206,#170a02);display:flex;align-items:center;justify-content:center;font-size:28px">⭐</div>
-      </div>
-      <div class="mc-cta ec px">🎬 엔딩크레딧 만들기 ▶</div>
-    </div>
 
-    <!-- 포토부스 카드 -->
+    <!-- 1. 포토부스 -->
     <div class="main-card pb" onclick="goLanding()">
       <div class="mc-top">
         <div class="mc-emoji">📸</div>
         <div class="mc-title px">PHOTO<br>BOOTH</div>
       </div>
-      <div class="mc-desc kr">크리스마스 테마 프레임으로 사진을 찍어보세요. 1컷 또는 4컷, 스티커와 말풍선까지 더해 나만의 인증샷을 완성할 수 있어요.</div>
-      <div class="mc-preview">
-        <div class="pv-box"><img src="frames/thumbs/appetizer_roll.jpg" loading="lazy"><div class="pv-tag px">🍞 APPETIZER</div></div>
-        <div class="pv-box"><img src="frames/thumbs/xmas_merry.jpg" loading="lazy"><div class="pv-tag px">🤠 TX XMAS</div></div>
-        <div class="pv-box"><img src="frames/thumbs/andy_santa.jpg" loading="lazy"><div class="pv-tag px">🦔 ANDY</div></div>
+      <div class="mc-desc kr">메뉴 기다리는 동안 크리스마스 프레임으로 인증샷 찍어보세요!</div>
+      <div class="mc-imgbox" style="aspect-ratio:1/1">
+        <img src="ec_assets/pb_preview.png" loading="lazy">
+        <div class="mc-overlay"><div class="mc-overlay-icon">📷</div></div>
       </div>
       <div class="mc-cta pb px">📸 포토부스 이용하기 ▶</div>
     </div>
+
+    <!-- 2. 엔딩크레딧 -->
+    <div class="main-card ec" onclick="goEnding()">
+      <div class="mc-top">
+        <div class="mc-emoji">🎬</div>
+        <div class="mc-title px">CHRISTMAS<br>END CREDIT</div>
+      </div>
+      <div class="mc-desc kr">텍로하에서 보내는 연말, 나만의 엔딩 크레딧으로 연말정산해보세요!</div>
+      <div class="mc-imgbox" style="aspect-ratio:9/7; overflow:hidden;">
+        <img src="ec_assets/ec_preview.png" loading="lazy" style="object-position:top center;">
+      </div>
+      <div class="mc-cta ec px">🎬 엔딩크레딧 만들기 ▶</div>
+    </div>
+
+    <!-- 3. 계산 랜덤뽑기 -->
+    <div class="main-card sp" onclick="goSpin()">
+      <div class="mc-top">
+        <div class="mc-emoji">🎰</div>
+        <div class="mc-title px">WHO PAYS?<br>RANDOM PICK</div>
+      </div>
+      <div class="mc-desc kr">누가 결제할지 고민이라면? 랜덤으로 공평하게 뽑아보세요!</div>
+      <div class="mc-spin-preview">
+        <div style="font-size:10.5px;color:var(--gold);letter-spacing:2px">🎲 오늘의 계산 담당은?</div>
+        <div class="sp-names">
+          <div class="sp-chip">민수</div>
+          <div class="sp-chip winner">👑 지현</div>
+          <div class="sp-chip">우진</div>
+          <div class="sp-chip">소연</div>
+        </div>
+      </div>
+      <div class="mc-cta sp px">🎰 랜덤으로 뽑기 ▶</div>
+    </div>
+
   </div>
 </div>
 
@@ -464,6 +502,36 @@ html,body{ width:100%; height:100%; background:var(--dark); overflow:hidden; }
     <button class="rbtn rb-retry px" onclick="retry()">↩ 다시</button>
   </div>
   <div class="rtag px">#TxRH크리스마스 #텍사스로드하우스</div>
+</div>
+
+<!-- ══ 계산 랜덤뽑기 ══ -->
+<div id="sSpin" class="screen px" style="display:none; overflow-y:auto; background:var(--dark); padding:24px 16px 40px; justify-content:flex-start;">
+  <button class="gohome-btn px" onclick="goMain()">◀ 처음으로</button>
+  <div style="width:100%;max-width:420px;">
+    <div style="text-align:center;margin-bottom:24px;">
+      <div style="color:var(--red);font-size:10.5px;letter-spacing:3px;margin-bottom:8px;">★ POST CREDIT SCENE ★</div>
+      <div style="color:var(--gold);font-size:clamp(18px,5vw,26px);text-shadow:3px 3px 0 var(--red);line-height:1.5;">WHO PAYS?</div>
+      <div style="color:rgba(255,248,238,.7);font-size:15px;font-family:'Noto Sans KR',sans-serif;margin-top:8px;">누가 결제할지 고민이라면 랜덤으로 뽑아보세요!</div>
+    </div>
+
+    <div class="ec-hidden">
+      <div class="ec-htitle">🎁 오늘 계산할 사람은?</div>
+      <div class="ec-hsub">이름을 입력하고 랜덤으로 뽑아보세요!</div>
+      <div class="ec-namegrid" id="spinNameGrid"></div>
+      <div class="ec-namerow">
+        <input id="spinCustomName" placeholder="이름 입력 후 추가..." maxlength="6">
+        <button class="ec-addbtn" onclick="spinAddName()">추가</button>
+      </div>
+      <button class="ec-spinbtn px" onclick="spinGo()">🎰 랜덤으로 뽑기!</button>
+      <div class="ec-spinresult" id="spinResult">
+        <div class="ec-spinlabel px">👑 오늘의 계산 담당</div>
+        <div class="ec-spinname" id="spinResultName">?</div>
+        <div class="ec-spinthanks" id="spinResultThanks"></div>
+        <div class="ec-spinnote">※ 실제 결제와 무관한 재미용 콘텐츠입니다</div>
+      </div>
+      <button class="ec-restart px" onclick="spinReset()" style="margin-top:12px;">↺ 다시 뽑기</button>
+    </div>
+  </div>
 </div>
 
 <!-- ══ 엔딩크레딧 ══ -->
@@ -1109,8 +1177,56 @@ function goMain(){
   document.getElementById('sResult').style.display='none';
   document.getElementById('sLanding').style.display='none';
   document.getElementById('sEnding').style.display='none';
+  document.getElementById('sSpin').style.display='none';
   document.getElementById('sMain').style.display='flex';
   pushHistory('main');
+}
+
+function goSpin(){
+  document.getElementById('sMain').style.display='none';
+  document.getElementById('sSpin').style.display='flex';
+  pushHistory('spin');
+}
+
+function spinAddName(){
+  var input=document.getElementById('spinCustomName');
+  var name=input.value.trim();
+  if(!name) return;
+  var chip=document.createElement('div');
+  chip.className='ec-chip selected';
+  chip.textContent=name;
+  chip.onclick=function(){ chip.classList.toggle('selected'); };
+  document.getElementById('spinNameGrid').appendChild(chip);
+  input.value='';
+}
+
+function spinGo(){
+  var selected=[].slice.call(document.querySelectorAll('#spinNameGrid .ec-chip.selected')).map(function(c){return c.textContent;});
+  if(selected.length===0){ alert('이름을 먼저 추가하고 선택해 주세요!'); return; }
+  var resultEl=document.getElementById('spinResult');
+  var nameEl=document.getElementById('spinResultName');
+  var thanksEl=document.getElementById('spinResultThanks');
+  resultEl.style.display='block';
+  thanksEl.textContent='';
+  var final=selected[Math.floor(Math.random()*selected.length)];
+  var count=0;
+  var interval=setInterval(function(){
+    nameEl.textContent=selected[Math.floor(Math.random()*selected.length)];
+    count++;
+    if(count>20){
+      clearInterval(interval);
+      nameEl.textContent=final;
+      thanksEl.innerHTML='🙏 고마워요, 잘 먹었습니다!<br>🎄 메리 크리스마스!';
+    }
+  },80);
+}
+
+function spinReset(){
+  document.getElementById('spinResult').style.display='none';
+  document.getElementById('spinResultName').textContent='?';
+  document.getElementById('spinResultThanks').textContent='';
+  document.getElementById('spinNameGrid').innerHTML='';
+  document.getElementById('spinCustomName').value='';
 }
 
 function goEnding(){
@@ -1140,8 +1256,10 @@ window.addEventListener('popstate', function(e){
   document.getElementById('sBooth').style.display='none';
   document.getElementById('sResult').style.display='none';
   document.getElementById('sEnding').style.display='none';
+  document.getElementById('sSpin').style.display='none';
   if(screen==='landing'){ document.getElementById('sLanding').style.display='flex'; }
   else if(screen==='ending'){ document.getElementById('sEnding').style.display='flex'; }
+  else if(screen==='spin'){ document.getElementById('sSpin').style.display='flex'; }
   else { document.getElementById('sMain').style.display='flex'; }
 });
 // 초기 history 상태 등록
