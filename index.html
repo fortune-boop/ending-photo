@@ -48,10 +48,10 @@ html,body{ width:100%; height:100%; background:var(--dark); overflow:hidden; }
   margin-top:12px; text-align:center; font-size:12px; letter-spacing:1px; padding:9px;
   border-radius:8px; font-weight:700;
 }
-.main-card.sp{ border-color:rgba(232,160,32,.5); }
+.main-card.sp{ border-color:rgba(60,160,80,.55); }
 .mc-cta.ec{ background:rgba(212,160,23,.22); color:var(--gold); border:1.5px solid rgba(212,160,23,.45); }
 .mc-cta.pb{ background:rgba(192,57,43,.28); color:#ffb0a0; border:1.5px solid rgba(192,57,43,.5); }
-.mc-cta.sp{ background:rgba(232,160,32,.22); color:var(--gold); border:1.5px solid rgba(232,160,32,.45); }
+.mc-cta.sp{ background:rgba(60,160,80,.22); color:#7de89a; border:1.5px solid rgba(60,160,80,.5); }
 /* 카드 미리보기 - 단일 이미지 방식 */
 .mc-imgbox{
   width:100%; border-radius:10px; overflow:hidden; margin-bottom:12px;
@@ -340,7 +340,7 @@ html,body{ width:100%; height:100%; background:var(--dark); overflow:hidden; }
 <body>
 
 <!-- ══ 메인 선택 ══ -->
-<div id="sMain" class="screen px">
+<div id="sMain" class="screen px" onclick="_startThemeIfNeeded()">
   <div class="main-top">★ TEXAS ROADHOUSE ★</div>
   <div class="main-logo">CHRISTMAS</div>
   <div class="main-sub">CHOOSE YOUR EXPERIENCE</div>
@@ -348,7 +348,7 @@ html,body{ width:100%; height:100%; background:var(--dark); overflow:hidden; }
   <div class="main-cards">
 
     <!-- 1. 포토부스 -->
-    <div class="main-card pb" onclick="goLanding()">
+    <div class="main-card pb" onclick="_startThemeIfNeeded();goLanding()">
       <div class="mc-top">
         <div class="mc-emoji">📸</div>
         <div class="mc-title px">PHOTO<br>BOOTH</div>
@@ -362,7 +362,7 @@ html,body{ width:100%; height:100%; background:var(--dark); overflow:hidden; }
     </div>
 
     <!-- 2. 엔딩크레딧 -->
-    <div class="main-card ec" onclick="goEnding()">
+    <div class="main-card ec" onclick="_startThemeIfNeeded();goEnding()">
       <div class="mc-top">
         <div class="mc-emoji">🎬</div>
         <div class="mc-title px">CHRISTMAS<br>END CREDIT</div>
@@ -375,7 +375,7 @@ html,body{ width:100%; height:100%; background:var(--dark); overflow:hidden; }
     </div>
 
     <!-- 3. 계산 랜덤뽑기 -->
-    <div class="main-card sp" onclick="goSpin()">
+    <div class="main-card sp" onclick="_startThemeIfNeeded();goSpin()">
       <div class="mc-top">
         <div class="mc-emoji">🎰</div>
         <div class="mc-title px">WHO PAYS?<br>RANDOM PICK</div>
@@ -657,26 +657,6 @@ html,body{ width:100%; height:100%; background:var(--dark); overflow:hidden; }
         <button class="rbtn rb-insta px" style="flex:1;padding:14px 4px;font-size:9px;border-radius:8px" onclick="ecToInsta()">📸 스토리 공유</button>
       </div>
       <button class="ec-dlmusic px" id="ecDlMusic" onclick="ecDownloadMusic()">🎵 오늘의 음악 다운로드</button>
-
-      <div class="ec-musictip kr" id="ecMusicTip"></div>
-
-      <!-- 히든엔딩 -->
-      <div class="ec-hidden">
-        <div class="ec-htitle">🎁 POST CREDIT SCENE</div>
-        <div class="ec-hsub">오늘 계산할 사람은 누구?<br>이름을 입력하고 랜덤으로 뽑아보세요!</div>
-        <div class="ec-namegrid" id="ecNameGrid"></div>
-        <div class="ec-namerow">
-          <input id="ecCustomName" placeholder="이름 입력 후 추가..." maxlength="6">
-          <button class="ec-addbtn" onclick="ecAddName()">추가</button>
-        </div>
-        <button class="ec-spinbtn px" onclick="ecSpin()">🎰 랜덤으로 뽑기!</button>
-        <div class="ec-spinresult" id="ecSpinResult">
-          <div class="ec-spinlabel px">👑 오늘의 계산 담당</div>
-          <div class="ec-spinname" id="ecSpinName">?</div>
-          <div class="ec-spinthanks" id="ecSpinThanks"></div>
-          <div class="ec-spinnote">※ 실제 결제와 무관한 재미용 콘텐츠입니다</div>
-        </div>
-      </div>
 
       <button class="ec-restart px" onclick="ecRestart()">↺ 다시 만들기</button>
     </div>
@@ -1183,6 +1163,7 @@ function goMain(){
   if(stream){ stream.getTracks().forEach(function(t){t.stop();}); stream=null; }
   shooting=false;
   ecStopBgm();
+  _startThemeIfNeeded();
   document.getElementById('sBooth').style.display='none';
   document.getElementById('sResult').style.display='none';
   document.getElementById('sLanding').style.display='none';
@@ -1402,8 +1383,6 @@ function ecSelect(step, value, el){
   document.querySelectorAll('#ecStep'+step+' .ec-opt').forEach(function(o){ o.classList.remove('on'); });
   el.classList.add('on');
   document.getElementById('ecNext'+step).classList.add('visible');
-  // STEP3: BGM 미리 재생
-  if(step===3){ _startThemeIfNeeded(); ecPlayBgm(value); }
 }
 
 function ecWishCount(){
@@ -1438,17 +1417,13 @@ function ecGenerate(){
   document.getElementById('ecR_wish').textContent = wish ? '🌟 '+wish : '— (작성하지 않음)';
   document.getElementById('ecR_final').textContent = wish ? '그 소원, 내년 크리스마스에 다시 확인해봐요.' : '내년에도 좋은 장면을 많이 남기길.';
 
-  var bgmSearch = ecBgmSearchMap[bgm] || bgm;
-  document.getElementById('ecMusicTip').innerHTML =
-    '🎵 <b>스토리에 음악 추가하기</b><br>' +
-    '인스타그램 스토리 업로드 화면에서 <b>음악 스티커</b>를 누르고 <b>"'+bgmSearch+'"</b>를 검색해 추가해보세요. ' +
-    '(외부 사이트에서 음원을 자동으로 삽입하는 기능은 인스타그램에서 지원하지 않아, 직접 검색해 추가하는 방식이 가장 정확해요.)';
-
   for(var i=1;i<=4;i++){
     document.getElementById('ecStep'+i).classList.remove('active');
     document.getElementById('ecDot'+i).className='ec-dot done';
   }
   document.getElementById('ecResult').style.display='block';
+  // 결과 화면 진입 시 선택한 BGM 재생
+  if(ecAnswers[3]){ ecPlayBgm(ecAnswers[3]); }
   // 음악 다운로드 버튼 표시
   var dlBtn = document.getElementById('ecDlMusic');
   if(_ecBgmId && ecBgmAudioMap[_ecBgmId]){
@@ -1465,10 +1440,6 @@ function ecRestart(){
   ecStopBgm();
   document.getElementById('ecDlMusic').style.display='none';
   document.getElementById('ecResult').style.display='none';
-  document.getElementById('ecSpinResult').style.display='none';
-  document.getElementById('ecSpinName').textContent='?';
-  document.getElementById('ecSpinThanks').textContent='';
-  document.getElementById('ecNameGrid').innerHTML='';
   for(var i=1;i<=4;i++){
     var card=document.getElementById('ecStep'+i);
     card.querySelectorAll('.ec-opt').forEach(function(o){o.classList.remove('on');});
