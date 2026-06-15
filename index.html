@@ -49,7 +49,9 @@ html,body{ width:100%; height:100%; background:var(--dark); overflow:hidden; }
   border-radius:8px; font-weight:700;
 }
 .main-card.sp{ border-color:rgba(232,160,32,.5); }
-.mc-cta.sp{ background:rgba(232,160,32,.18); color:var(--gold); border:1.5px solid rgba(232,160,32,.4); }
+.mc-cta.ec{ background:rgba(212,160,23,.22); color:var(--gold); border:1.5px solid rgba(212,160,23,.45); }
+.mc-cta.pb{ background:rgba(192,57,43,.28); color:#ffb0a0; border:1.5px solid rgba(192,57,43,.5); }
+.mc-cta.sp{ background:rgba(232,160,32,.22); color:var(--gold); border:1.5px solid rgba(232,160,32,.45); }
 /* 카드 미리보기 - 단일 이미지 방식 */
 .mc-imgbox{
   width:100%; border-radius:10px; overflow:hidden; margin-bottom:12px;
@@ -291,6 +293,12 @@ html,body{ width:100%; height:100%; background:var(--dark); overflow:hidden; }
 .ec-rfooter{ margin-top:30px; padding-top:18px; border-top:1px solid rgba(154,122,58,.25); }
 
 .ec-sharebar{ display:flex; gap:8px; margin-top:14px; }
+.ec-dlmusic{
+  width:100%; margin-top:8px; padding:12px;
+  background:rgba(232,160,32,.12); border:1.5px solid rgba(232,160,32,.4);
+  border-radius:10px; color:var(--gold); font-size:9px; letter-spacing:1px; cursor:pointer;
+  font-family:'Press Start 2P',monospace; text-align:center; display:none;
+}
 .ec-musictip{
   margin-top:10px; padding:12px 14px; border-radius:10px; font-size:12.5px; line-height:1.7;
   background:rgba(232,160,32,.08); border:1.5px dashed rgba(232,160,32,.35); color:rgba(255,248,238,.8);
@@ -376,10 +384,10 @@ html,body{ width:100%; height:100%; background:var(--dark); overflow:hidden; }
       <div class="mc-spin-preview">
         <div style="font-size:10.5px;color:var(--gold);letter-spacing:2px">🎲 오늘의 계산 담당은?</div>
         <div class="sp-names">
-          <div class="sp-chip">민수</div>
-          <div class="sp-chip winner">👑 지현</div>
-          <div class="sp-chip">우진</div>
-          <div class="sp-chip">소연</div>
+          <div class="sp-chip">?</div>
+          <div class="sp-chip">?</div>
+          <div class="sp-chip winner">👑 ?</div>
+          <div class="sp-chip">?</div>
         </div>
       </div>
       <div class="mc-cta sp px">🎰 랜덤으로 뽑기 ▶</div>
@@ -648,6 +656,7 @@ html,body{ width:100%; height:100%; background:var(--dark); overflow:hidden; }
         <button class="rbtn rb-save px" style="flex:1;padding:14px 4px;font-size:9px;border-radius:8px" onclick="ecSave()">💾 저장하기</button>
         <button class="rbtn rb-insta px" style="flex:1;padding:14px 4px;font-size:9px;border-radius:8px" onclick="ecToInsta()">📸 스토리 공유</button>
       </div>
+      <button class="ec-dlmusic px" id="ecDlMusic" onclick="ecDownloadMusic()">🎵 오늘의 음악 다운로드</button>
 
       <div class="ec-musictip kr" id="ecMusicTip"></div>
 
@@ -1173,6 +1182,7 @@ function goLanding(){
 function goMain(){
   if(stream){ stream.getTracks().forEach(function(t){t.stop();}); stream=null; }
   shooting=false;
+  ecStopBgm();
   document.getElementById('sBooth').style.display='none';
   document.getElementById('sResult').style.display='none';
   document.getElementById('sLanding').style.display='none';
@@ -1392,6 +1402,8 @@ function ecSelect(step, value, el){
   document.querySelectorAll('#ecStep'+step+' .ec-opt').forEach(function(o){ o.classList.remove('on'); });
   el.classList.add('on');
   document.getElementById('ecNext'+step).classList.add('visible');
+  // STEP3: BGM 미리 재생
+  if(step===3){ _startThemeIfNeeded(); ecPlayBgm(value); }
 }
 
 function ecWishCount(){
@@ -1437,6 +1449,12 @@ function ecGenerate(){
     document.getElementById('ecDot'+i).className='ec-dot done';
   }
   document.getElementById('ecResult').style.display='block';
+  // 음악 다운로드 버튼 표시
+  var dlBtn = document.getElementById('ecDlMusic');
+  if(_ecBgmId && ecBgmAudioMap[_ecBgmId]){
+    dlBtn.textContent = '🎵 ' + (ecBgmAudioMap[_ecBgmId].name.replace('.mp3','').replace(/_/g,' ')) + ' 다운로드';
+    dlBtn.style.display = 'block';
+  }
   document.getElementById('sEnding').scrollTo({top:0, behavior:'smooth'});
 }
 
@@ -1444,6 +1462,8 @@ function ecRestart(){
   ecAnswers={1:null,2:null,3:null,4:null};
   document.getElementById('ecWishInput').value='';
   ecWishCount();
+  ecStopBgm();
+  document.getElementById('ecDlMusic').style.display='none';
   document.getElementById('ecResult').style.display='none';
   document.getElementById('ecSpinResult').style.display='none';
   document.getElementById('ecSpinName').textContent='?';
@@ -1681,6 +1701,105 @@ function ecToInsta(){
   document.getElementById('mInsta').style.display='flex';
 }
 
+// ══════════════════════════════
+// 음악 시스템
+// ══════════════════════════════
+var _musicStarted = false;   // 첫 터치 후 테마 재생 시작 여부
+var _ecBgmId = null;         // 현재 선택된 엔딩크레딧 BGM 오디오 id
+var _ecBgmActive = false;    // 엔딩크레딧 BGM 활성 여부
+
+// BGM 선택값 → 오디오 id + 다운로드 파일명
+var ecBgmAudioMap = {
+  '재즈 크리스마스':  { id:'audioJazz',    file:'music/jazz.mp3',    name:'Jazz_Christmas.mp3' },
+  '컨트리 홀리데이':  { id:'audioCountry', file:'music/country.mp3', name:'Country_Holiday.mp3' },
+  '따뜻한 캐럴':     { id:'audioCarol',   file:'music/carol.mp3',   name:'Warm_Carol.mp3' },
+  '파티 모드':       { id:'audioParty',   file:'music/party.mp3',   name:'Party_Mode.mp3' }
+};
+
+// 첫 사용자 인터랙션 시 테마 음악 시작 (자동재생 정책 우회)
+function _startThemeIfNeeded(){
+  if(_musicStarted) return;
+  _musicStarted = true;
+  var th = document.getElementById('audioTheme');
+  th.volume = 0.45;
+  th.play().catch(function(){});
+}
+
+// 엔딩크레딧 BGM 전환: 테마 페이드아웃 → BGM 페이드인
+function ecPlayBgm(bgmKey){
+  _ecBgmId = bgmKey;
+  var info = ecBgmAudioMap[bgmKey];
+  if(!info) return;
+  _ecBgmActive = true;
+
+  // 테마 페이드아웃
+  var th = document.getElementById('audioTheme');
+  _fadeOut(th, 1200, function(){ th.pause(); });
+
+  // BGM 재생
+  var bgm = document.getElementById(info.id);
+  bgm.currentTime = 0;
+  bgm.volume = 0;
+  bgm.play().catch(function(){});
+  _fadeIn(bgm, 1200, 0.75);
+}
+
+// 엔딩크레딧 BGM 종료 → 테마 복귀
+function ecStopBgm(){
+  if(!_ecBgmActive) return;
+  _ecBgmActive = false;
+  if(_ecBgmId && ecBgmAudioMap[_ecBgmId]){
+    var bgm = document.getElementById(ecBgmAudioMap[_ecBgmId].id);
+    _fadeOut(bgm, 1000, function(){ bgm.pause(); bgm.currentTime=0; });
+  }
+  _ecBgmId = null;
+  if(_musicStarted){
+    var th = document.getElementById('audioTheme');
+    th.play().catch(function(){});
+    _fadeIn(th, 1200, 0.45);
+  }
+}
+
+function _fadeOut(audio, ms, cb){
+  var steps = 20, interval = ms/steps, vol = audio.volume;
+  var t = setInterval(function(){
+    vol = Math.max(0, vol - audio.volume/steps);
+    audio.volume = vol;
+    if(vol<=0){ clearInterval(t); if(cb) cb(); }
+  }, interval);
+}
+
+function _fadeIn(audio, ms, target){
+  audio.volume = 0;
+  var steps = 20, interval = ms/steps, step = target/steps;
+  var t = setInterval(function(){
+    audio.volume = Math.min(target, audio.volume + step);
+    if(audio.volume >= target) clearInterval(t);
+  }, interval);
+}
+
+// 음악 다운로드
+function ecDownloadMusic(){
+  if(!_ecBgmId || !ecBgmAudioMap[_ecBgmId]) return;
+  var info = ecBgmAudioMap[_ecBgmId];
+  var a = document.createElement('a');
+  a.href = info.file;
+  a.download = info.name;
+  a.click();
+}
+
+// 첫 터치 이벤트 등록
+document.addEventListener('touchstart', _startThemeIfNeeded, {once:true});
+document.addEventListener('click',      _startThemeIfNeeded, {once:true});
+
 </script>
+
+<!-- 음악 -->
+<audio id="audioTheme" src="music/theme.mp3" loop preload="none"></audio>
+<audio id="audioJazz"  src="music/jazz.mp3"  loop preload="none"></audio>
+<audio id="audioCountry" src="music/country.mp3" loop preload="none"></audio>
+<audio id="audioCarol"  src="music/carol.mp3"  loop preload="none"></audio>
+<audio id="audioParty"  src="music/party.mp3"  loop preload="none"></audio>
+
 </body>
 </html>
