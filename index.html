@@ -238,14 +238,14 @@ html,body{ width:100%; height:100%; background:var(--dark); overflow:hidden; }
 }
 .ec-rtop{
   flex-shrink:0;
-  width:100%; aspect-ratio:1080/479;
+  width:100%; aspect-ratio:1080/383;
   background-image:url('ec_assets/ec_top.png');
   background-color:#0d0a08;
   background-size:cover; background-position:top center;
 }
 .ec-rbottom{
   flex-shrink:0;
-  width:100%; aspect-ratio:1080/575;
+  width:100%; aspect-ratio:1080/422;
   background-image:url('ec_assets/ec_bottom.png');
   background-color:#0d0a08;
   background-size:cover; background-position:top center;
@@ -255,44 +255,44 @@ html,body{ width:100%; height:100%; background:var(--dark); overflow:hidden; }
   background-image:url('ec_assets/ec_mid.png');
   background-color:#0d0a08;
   background-repeat:repeat-y; background-size:100% auto;
-  padding:5px 6% 5px;
-  display:flex; flex-direction:column; gap:4px; justify-content:center;
+  padding:10px 6% 10px;
+  display:flex; flex-direction:column; gap:8px; justify-content:center;
 }
 /* 무드 이미지: 좌측 작게 + 우측 텍스트 */
 .ec-moodblock{
-  display:flex; align-items:center; gap:8px; flex-shrink:0;
+  display:flex; align-items:center; gap:12px; flex-shrink:0;
   background:radial-gradient(ellipse at center, rgba(40,20,8,.82) 0%, rgba(10,5,2,.88) 70%);
-  border:1px solid rgba(180,90,20,.45); border-radius:8px;
-  padding:6px 8px; box-shadow:0 2px 8px rgba(0,0,0,.4);
+  border:1px solid rgba(180,90,20,.45); border-radius:10px;
+  padding:10px 12px; box-shadow:0 2px 10px rgba(0,0,0,.4);
 }
 .ec-moodimg-sm{
-  flex-shrink:0; width:25%; aspect-ratio:1; border-radius:6px; overflow:hidden;
-  border:1.5px solid rgba(180,90,20,.5);
+  flex-shrink:0; width:27%; aspect-ratio:1; border-radius:8px; overflow:hidden;
+  border:2px solid rgba(180,90,20,.5);
 }
 .ec-moodimg-sm img{ width:100%; height:100%; object-fit:cover; display:block; }
 .ec-moodtext{ flex:1; text-align:left; }
-.ec-moodtext .ec-rlabel{ margin-bottom:3px; }
+.ec-moodtext .ec-rlabel{ margin-bottom:5px; }
 /* 2열 그리드 */
-.ec-grid2{ display:grid; grid-template-columns:1fr 1fr; gap:4px; flex-shrink:0; }
+.ec-grid2{ display:grid; grid-template-columns:1fr 1fr; gap:8px; flex-shrink:0; }
 .ec-sectioncard{
   background:radial-gradient(ellipse at center, rgba(40,20,8,.82) 0%, rgba(10,5,2,.88) 70%);
-  border:1px solid rgba(180,90,20,.45); border-radius:7px;
-  padding:5px 6px; box-shadow:0 2px 8px rgba(0,0,0,.4);
-  display:flex; flex-direction:column; gap:2px; align-items:center; text-align:center;
+  border:1px solid rgba(180,90,20,.45); border-radius:10px;
+  padding:10px 10px; box-shadow:0 2px 10px rgba(0,0,0,.4);
+  display:flex; flex-direction:column; gap:4px; align-items:center; text-align:center;
 }
-.ec-row{ display:flex; flex-direction:column; align-items:center; gap:2px; }
-.ec-rlabel{ font-size:5px; letter-spacing:1.5px; color:#c87030; font-family:'Press Start 2P',monospace; }
-.ec-rvalue{ font-size:8.5px; color:#f0d8a0; font-weight:700; line-height:1.3; font-family:'Noto Sans KR',sans-serif; }
+.ec-row{ display:flex; flex-direction:column; align-items:center; gap:4px; }
+.ec-rlabel{ font-size:7.5px; letter-spacing:2px; color:#c87030; font-family:'Press Start 2P',monospace; }
+.ec-rvalue{ font-size:13px; color:#f0d8a0; font-weight:700; line-height:1.4; font-family:'Noto Sans KR',sans-serif; }
 .ec-rvalue.it{ font-style:italic; }
-.ec-divider{ width:26px; height:1px; background:rgba(180,90,20,.4); }
+.ec-divider{ width:32px; height:1px; background:rgba(180,90,20,.4); }
 .ec-wishcard{
   background:radial-gradient(ellipse at center, rgba(40,20,8,.82) 0%, rgba(10,5,2,.88) 70%);
-  border:1.5px solid rgba(200,110,30,.5); border-radius:7px;
-  padding:5px 8px; text-align:center; flex-shrink:0;
+  border:2px solid rgba(200,110,30,.5); border-radius:10px;
+  padding:10px 14px; text-align:center; flex-shrink:0;
 }
-.ec-wishcard .ec-rlabel{ margin-bottom:1px; }
-.ec-wishcard .ec-rvalue{ color:#e8a030; font-size:8.5px; }
-.ec-finalline{ color:rgba(220,170,80,.7); font-size:7.5px; font-style:italic; text-align:center; font-family:'Noto Sans KR',sans-serif; flex-shrink:0; }
+.ec-wishcard .ec-rlabel{ margin-bottom:3px; }
+.ec-wishcard .ec-rvalue{ color:#e8a030; font-size:13px; }
+.ec-finalline{ color:rgba(220,170,80,.75); font-size:11px; font-style:italic; text-align:center; font-family:'Noto Sans KR',sans-serif; flex-shrink:0; }
 
 .ec-rend{ font-size:15px; color:var(--gold); margin:6px 0; font-style:italic; font-family:Georgia,'Noto Serif KR',serif; letter-spacing:1px; }
 .ec-rfoot{ font-size:8px; color:#9a7a3a; letter-spacing:2px; font-family:'Press Start 2P',monospace; }
@@ -1645,10 +1645,10 @@ function ecRenderCanvas(){
     ctx.drawImage(bottomImg, 0, H-bottomH, W, bottomH);
 
     // 콘텐츠 영역 - 무드 이미지 전체폭 + 2열 레이아웃
-    var pad = W * 0.07;
+    var pad = W * 0.06;
     var areaW = W - pad*2;
-    var cp = 14;
-    var y = topH + 18;
+    var cp = 22;
+    var y = topH + 36;
 
     function drawCard(yTop, xLeft, cardW, cardH){
       ctx.fillStyle='rgba(20,8,3,.85)';
@@ -1657,90 +1657,90 @@ function ecRenderCanvas(){
       ctx.fill(); ctx.stroke();
     }
     function lbl(text, cx2, y2){
-      ctx.fillStyle='#c87030'; ctx.font='9px "Press Start 2P", monospace';
-      ctx.textAlign='center'; ctx.fillText(text, cx2, y2); return y2+18;
+      ctx.fillStyle='#c87030'; ctx.font='14px "Press Start 2P", monospace';
+      ctx.textAlign='center'; ctx.fillText(text, cx2, y2); return y2+28;
     }
     function val(text, cx2, y2, italic, maxW){
       ctx.fillStyle='#f0d8a0';
-      ctx.font='bold '+(italic?'italic ':'')+'17px "Noto Sans KR", sans-serif';
+      ctx.font='bold '+(italic?'italic ':'')+'26px "Noto Sans KR", sans-serif';
       ctx.textAlign='center';
-      ecWrapText(ctx,text,maxW||areaW-cp*2).forEach(function(l){ ctx.fillText(l,cx2,y2); y2+=22; });
+      ecWrapText(ctx,text,maxW||areaW-cp*2).forEach(function(l){ ctx.fillText(l,cx2,y2); y2+=33; });
       return y2;
     }
 
     // ── 무드 블록: 좌측 이미지 + 우측 텍스트 ──
-    var moodImgSz = areaW * 0.25;
-    var moodBlockH = Math.max(moodImgSz, 80) + cp*2;
+    var moodImgSz = areaW * 0.27;
+    var moodBlockH = Math.max(moodImgSz, 120) + cp*2;
     drawCard(y, pad, areaW, moodBlockH);
     if(moodImg){
       var mix = pad+cp, miy = y+cp+(moodBlockH-cp*2-moodImgSz)/2;
       ctx.save();
-      roundRect(ctx, mix, miy, moodImgSz, moodImgSz, 8); ctx.clip();
+      roundRect(ctx, mix, miy, moodImgSz, moodImgSz, 10); ctx.clip();
       ctx.drawImage(moodImg, mix, miy, moodImgSz, moodImgSz);
       ctx.restore();
-      ctx.strokeStyle='rgba(180,90,20,.5)'; ctx.lineWidth=2;
-      roundRect(ctx, mix, miy, moodImgSz, moodImgSz, 8); ctx.stroke();
+      ctx.strokeStyle='rgba(180,90,20,.5)'; ctx.lineWidth=3;
+      roundRect(ctx, mix, miy, moodImgSz, moodImgSz, 10); ctx.stroke();
     }
-    var mtx = pad+cp+moodImgSz+16;
-    var mtxW = areaW - cp*2 - moodImgSz - 16;
-    var mty = y + cp + 16;
+    var mtx = pad+cp+moodImgSz+24;
+    var mtxW = areaW - cp*2 - moodImgSz - 24;
+    var mty = y + cp + 26;
     ctx.textAlign='left';
-    ctx.fillStyle='#c87030'; ctx.font='8px "Press Start 2P", monospace';
-    ctx.fillText('MOOD OF THE YEAR', mtx, mty); mty+=20;
-    ctx.fillStyle='#f0d8a0'; ctx.font='bold 16px "Noto Sans KR", sans-serif';
-    ecWrapText(ctx, document.getElementById('ecR_mood').textContent, mtxW).forEach(function(l){ ctx.fillText(l,mtx,mty); mty+=22; });
-    y += moodBlockH + 8;
+    ctx.fillStyle='#c87030'; ctx.font='13px "Press Start 2P", monospace';
+    ctx.fillText('MOOD OF THE YEAR', mtx, mty); mty+=32;
+    ctx.fillStyle='#f0d8a0'; ctx.font='bold 24px "Noto Sans KR", sans-serif';
+    ecWrapText(ctx, document.getElementById('ecR_mood').textContent, mtxW).forEach(function(l){ ctx.fillText(l,mtx,mty); mty+=32; });
+    y += moodBlockH + 14;
     ctx.textAlign='center';
 
     // ── 2열 카드 ──
-    var colW = (areaW-8)/2;
-    var rowH = 108;
+    var colW = (areaW-14)/2;
+    var rowH = 168;
     var rowY = y;
 
     // 왼쪽: STARRING + GENRE
     drawCard(rowY, pad, colW, rowH);
-    var lx = pad + colW/2, ly = rowY+cp;
+    var lx = pad + colW/2, ly = rowY+cp+6;
     ly = lbl('STARRING', lx, ly);
-    ly = val(document.getElementById('ecR_starring').textContent, lx, ly, false, colW-16);
-    ly += 8;
+    ly = val(document.getElementById('ecR_starring').textContent, lx, ly, false, colW-24);
+    ly += 12;
     ly = lbl('GENRE', lx, ly);
-    val(document.getElementById('ecR_genre').textContent, lx, ly, true, colW-16);
+    val(document.getElementById('ecR_genre').textContent, lx, ly, true, colW-24);
 
     // 오른쪽: BEST SCENE + SOUNDTRACK
-    drawCard(rowY, pad+colW+8, colW, rowH);
-    var rx = pad+colW+8+colW/2, ry = rowY+cp;
+    drawCard(rowY, pad+colW+14, colW, rowH);
+    var rx = pad+colW+14+colW/2, ry = rowY+cp+6;
     ry = lbl('BEST SCENE', rx, ry);
-    ry = val(document.getElementById('ecR_scene').textContent, rx, ry, false, colW-16);
-    ry += 8;
+    ry = val(document.getElementById('ecR_scene').textContent, rx, ry, false, colW-24);
+    ry += 12;
     ry = lbl('SOUNDTRACK', rx, ry);
-    val(document.getElementById('ecR_bgm').textContent, rx, ry, true, colW-16);
-    y = rowY + rowH + 8;
+    val(document.getElementById('ecR_bgm').textContent, rx, ry, true, colW-24);
+    y = rowY + rowH + 14;
 
     // ── SPECIAL THANKS TO ──
-    var c3H = cp*2 + 18 + 22;
+    var c3H = cp*2 + 28 + 33;
     drawCard(y, pad, areaW, c3H);
-    var c3y = y+cp;
+    var c3y = y+cp+6;
     c3y = lbl('SPECIAL THANKS TO', cx, c3y);
     val(document.getElementById('ecR_thanks').textContent, cx, c3y, false, areaW-cp*2);
-    y += c3H + 8;
+    y += c3H + 14;
 
     // ── A MESSAGE TO MYSELF ──
     var wish = document.getElementById('ecR_wish').textContent;
     var wishLines = ecWrapText(ctx, wish, areaW-cp*2);
-    var c4H = cp*2 + 18 + 18 + wishLines.length*22;
+    var c4H = cp*2 + 28 + 28 + wishLines.length*33;
     drawCard(y, pad, areaW, c4H);
-    var c4y = y+cp;
+    var c4y = y+cp+6;
     c4y = lbl('A MESSAGE TO MYSELF', cx, c4y);
-    ctx.fillStyle='rgba(200,150,60,.7)'; ctx.font='italic 13px "Noto Sans KR", sans-serif';
-    ctx.fillText('연말까지 고생한 나에게', cx, c4y); c4y+=20;
-    ctx.fillStyle='#e8a030'; ctx.font='bold 17px "Noto Sans KR", sans-serif';
-    wishLines.forEach(function(l){ ctx.fillText(l,cx,c4y); c4y+=22; });
-    y += c4H + 10;
+    ctx.fillStyle='rgba(200,150,60,.7)'; ctx.font='italic 19px "Noto Sans KR", sans-serif';
+    ctx.fillText('연말까지 고생한 나에게', cx, c4y); c4y+=30;
+    ctx.fillStyle='#e8a030'; ctx.font='bold 26px "Noto Sans KR", sans-serif';
+    wishLines.forEach(function(l){ ctx.fillText(l,cx,c4y); c4y+=33; });
+    y += c4H + 16;
 
     // 마지막 문구
     var finalLine = document.getElementById('ecR_final').textContent;
-    ctx.fillStyle='rgba(220,170,80,.8)'; ctx.font='italic 14px "Noto Sans KR", sans-serif';
-    ecWrapText(ctx, finalLine, areaW).forEach(function(l){ ctx.fillText(l,cx,y); y+=18; });
+    ctx.fillStyle='rgba(220,170,80,.8)'; ctx.font='italic 21px "Noto Sans KR", sans-serif';
+    ecWrapText(ctx, finalLine, areaW).forEach(function(l){ ctx.fillText(l,cx,y); y+=28; });
 
     return cv.toDataURL('image/jpeg', 0.93);
   });
@@ -1879,8 +1879,13 @@ function ecDownloadMusic(){
   a.click();
 }
 
-// 첫 터치 이벤트 등록
-document.addEventListener('touchstart', _startThemeIfNeeded, {once:true});
+// 첫 터치/클릭 시 테마 음악 시작 (실패 시 다음 인터랙션에서 재시도)
+function _bindMusicStarters(){
+  document.addEventListener('touchstart', _startThemeIfNeeded, {capture:true});
+  document.addEventListener('click', _startThemeIfNeeded, {capture:true});
+  document.addEventListener('touchend', _startThemeIfNeeded, {capture:true});
+}
+_bindMusicStarters();
 // 탭 비활성(다른 앱 전환, 홈버튼 등) 시 음악 일시정지/재개
 document.addEventListener('visibilitychange', function(){
   if(document.hidden){
@@ -1900,8 +1905,6 @@ document.addEventListener('visibilitychange', function(){
     }
   }
 });
-
-document.addEventListener('click',      _startThemeIfNeeded, {once:true});
 
 </script>
 
