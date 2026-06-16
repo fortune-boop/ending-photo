@@ -226,67 +226,66 @@ html,body{ width:100%; height:100%; background:var(--dark); overflow:hidden; }
 .ec-next.visible{ display:block; }
 .ec-next.go{ background:var(--gold); color:var(--dark); border-bottom-color:#b06010; }
 
-/* 결과 카드 - 시네마틱 엔딩크레딧 (상/하단 띠 + 콘텐츠 영역 분리) */
+/* 결과 카드 - 시네마틱 엔딩크레딧 9:16 고정 */
 #ecResult{ display:none; }
 .ec-resultcard{
   border-radius:18px; overflow:hidden;
   box-shadow:0 8px 28px rgba(0,0,0,.55);
   font-family:Georgia,'Noto Serif KR',serif;
   border:1.5px solid rgba(154,122,58,.35);
+  aspect-ratio:9/16;
+  display:flex; flex-direction:column;
 }
 .ec-rtop{
+  flex-shrink:0;
   width:100%; aspect-ratio:1080/479;
   background-image:url('ec_assets/ec_top.png');
   background-color:#0d0a08;
   background-size:cover; background-position:top center;
 }
 .ec-rbottom{
+  flex-shrink:0;
   width:100%; aspect-ratio:1080/575;
   background-image:url('ec_assets/ec_bottom.png');
   background-color:#0d0a08;
   background-size:cover; background-position:top center;
 }
 .ec-rcontent{
+  flex:1; min-height:0; overflow:hidden;
   background-image:url('ec_assets/ec_mid.png');
   background-color:#0d0a08;
-  background-repeat:repeat-y; background-size:100% auto; background-position:top center;
-  padding:22px 13% 26px; text-align:center;
+  background-repeat:repeat-y; background-size:100% auto;
+  padding:8px 7% 8px;
+  display:flex; flex-direction:column; gap:6px;
 }
-
-/* 오프닝: 무드 일러스트 + STARRING을 나란히 */
-.ec-opening{
-  display:flex; gap:14px; align-items:center; margin-bottom:12px; text-align:left;
-  background:radial-gradient(ellipse at center, rgba(40,20,8,.82) 0%, rgba(10,5,2,.88) 70%); border:1px solid rgba(180,90,20,.45);
-  border-radius:12px; padding:14px; box-shadow:0 2px 14px rgba(0,0,0,.4);
+/* 무드 이미지 전체폭 블록 */
+.ec-moodblock{ text-align:center; flex-shrink:0; }
+.ec-moodimg-full{
+  width:100%; aspect-ratio:1/1; border-radius:8px; overflow:hidden;
+  border:1.5px solid rgba(180,90,20,.45); box-shadow:0 3px 10px rgba(0,0,0,.4);
 }
-.ec-moodimg{
-  flex-shrink:0; width:38%; aspect-ratio:1;
-  border:2px solid rgba(138,106,48,.5); border-radius:10px; overflow:hidden;
-  box-shadow:0 4px 12px rgba(0,0,0,.25);
-}
-.ec-moodimg img{ width:100%; height:100%; object-fit:cover; display:block; }
-.ec-opening-text{ flex:1; }
-.ec-opening-text .ec-rlabel{ margin-bottom:6px; }
-
-.ec-table{ display:flex; flex-direction:column; gap:10px; align-items:center; }
+.ec-moodimg-full img{ width:100%; height:100%; object-fit:cover; display:block; }
+/* 2열 그리드 */
+.ec-grid2{ display:grid; grid-template-columns:1fr 1fr; gap:5px; flex-shrink:0; }
 .ec-sectioncard{
-  width:100%; background:radial-gradient(ellipse at center, rgba(40,20,8,.82) 0%, rgba(10,5,2,.88) 70%);
-  border:1px solid rgba(180,90,20,.45); border-radius:12px;
-  padding:14px 16px; box-shadow:0 2px 14px rgba(0,0,0,.5);
-  display:flex; flex-direction:column; gap:10px; align-items:center;
+  background:radial-gradient(ellipse at center, rgba(40,20,8,.82) 0%, rgba(10,5,2,.88) 70%);
+  border:1px solid rgba(180,90,20,.45); border-radius:8px;
+  padding:7px 8px; box-shadow:0 2px 8px rgba(0,0,0,.4);
+  display:flex; flex-direction:column; gap:3px; align-items:center; text-align:center;
 }
-.ec-row{ display:flex; flex-direction:column; align-items:center; gap:4px; }
-.ec-rlabel{ font-size:7.5px; letter-spacing:3px; color:#c87030; font-family:'Press Start 2P',monospace; }
-.ec-rvalue{ font-size:13px; color:#f0d8a0; font-weight:700; line-height:1.6; font-family:'Noto Sans KR',sans-serif; }
+.ec-row{ display:flex; flex-direction:column; align-items:center; gap:3px; }
+.ec-rlabel{ font-size:5.5px; letter-spacing:2px; color:#c87030; font-family:'Press Start 2P',monospace; }
+.ec-rvalue{ font-size:10px; color:#f0d8a0; font-weight:700; line-height:1.4; font-family:'Noto Sans KR',sans-serif; }
 .ec-rvalue.it{ font-style:italic; }
-.ec-divider{ width:34px; height:1px; background:rgba(180,90,20,.4); }
+.ec-divider{ width:30px; height:1px; background:rgba(180,90,20,.4); }
 .ec-wishcard{
-  background:radial-gradient(ellipse at center, rgba(40,20,8,.82) 0%, rgba(10,5,2,.88) 70%); border:1.5px solid rgba(200,110,30,.5); border-radius:12px;
-  padding:14px 16px; max-width:100%; width:100%; box-shadow:0 2px 14px rgba(0,0,0,.5);
+  background:radial-gradient(ellipse at center, rgba(40,20,8,.82) 0%, rgba(10,5,2,.88) 70%);
+  border:1.5px solid rgba(200,110,30,.5); border-radius:8px;
+  padding:7px 10px; text-align:center; flex-shrink:0;
 }
-.ec-wishcard .ec-rlabel{ margin-bottom:4px; }
-.ec-wishcard .ec-rvalue{ color:#e8a030; font-size:13px; }
-.ec-finalline{ color:rgba(220,170,80,.7); font-size:11px; font-style:italic; line-height:1.6; font-family:'Noto Sans KR',sans-serif; }
+.ec-wishcard .ec-rlabel{ margin-bottom:2px; }
+.ec-wishcard .ec-rvalue{ color:#e8a030; font-size:10px; }
+.ec-finalline{ color:rgba(220,170,80,.7); font-size:9px; font-style:italic; text-align:center; font-family:'Noto Sans KR',sans-serif; flex-shrink:0; }
 
 .ec-rend{ font-size:15px; color:var(--gold); margin:6px 0; font-style:italic; font-family:Georgia,'Noto Serif KR',serif; letter-spacing:1px; }
 .ec-rfoot{ font-size:8px; color:#9a7a3a; letter-spacing:2px; font-family:'Press Start 2P',monospace; }
@@ -329,7 +328,9 @@ html,body{ width:100%; height:100%; background:var(--dark); overflow:hidden; }
 .ec-spinresult{ display:none; text-align:center; padding:18px; background:rgba(232,160,32,.08); border:1.5px solid rgba(232,160,32,.3); border-radius:12px; }
 .ec-spinlabel{ font-size:9px; letter-spacing:2px; color:var(--gold); margin-bottom:8px; font-family:'Press Start 2P',monospace; }
 .ec-spinname{ font-size:30px; font-weight:900; color:var(--gold); text-shadow:0 0 16px rgba(232,160,32,.5); font-family:'Noto Sans KR',sans-serif; }
+.ec-spinthanks{ font-size:13px; color:rgba(255,220,150,.9); margin-top:6px; line-height:1.8; font-family:'Noto Sans KR',sans-serif; font-weight:700; }
 .ec-spinnote{ font-size:10.5px; color:rgba(255,248,238,.4); margin-top:8px; line-height:1.6; font-family:'Noto Sans KR',sans-serif; }
+.spin-sharebar{ display:flex; gap:8px; margin-top:12px; }
 
 .ec-restart{
   width:100%; padding:13px; background:transparent; border:2px solid rgba(232,160,32,.4); border-radius:10px;
@@ -536,6 +537,10 @@ html,body{ width:100%; height:100%; background:var(--dark); overflow:hidden; }
         <div class="ec-spinname" id="spinResultName">?</div>
         <div class="ec-spinthanks" id="spinResultThanks"></div>
         <div class="ec-spinnote">※ 실제 결제와 무관한 재미용 콘텐츠입니다</div>
+        <div class="spin-sharebar">
+          <button class="rbtn rb-save px" style="flex:1;padding:12px 4px;font-size:8px;border-radius:8px" onclick="spinSave()">💾 저장하기</button>
+          <button class="rbtn rb-insta px" style="flex:1;padding:12px 4px;font-size:8px;border-radius:8px" onclick="spinToInsta()">📸 공유하기</button>
+        </div>
       </div>
       <button class="ec-restart px" onclick="spinReset()" style="margin-top:12px;">↺ 다시 뽑기</button>
     </div>
@@ -605,10 +610,10 @@ html,body{ width:100%; height:100%; background:var(--dark); overflow:hidden; }
     <!-- STEP 4: 소원 작성 -->
     <div class="ec-card" id="ecStep4">
       <div class="ec-steplabel px">STEP 4 OF 4</div>
-      <div class="ec-steptitle px">🌟 내년의 소원은?</div>
-      <div class="ec-stepdesc">엔딩 크레딧의 마지막 장면에 담길 당신의 소원을 적어주세요</div>
+      <div class="ec-steptitle px">✍️ 나에게 한마디</div>
+      <div class="ec-stepdesc">연말까지 고생한 나 자신에게 한마디 남겨보세요</div>
       <div class="ec-wishbox">
-        <textarea id="ecWishInput" maxlength="60" placeholder="예) 내년엔 사랑하는 사람들과 더 많은 시간을 보내고 싶어요" oninput="ecWishCount()"></textarea>
+        <textarea id="ecWishInput" maxlength="60" placeholder="예) 올 한 해 정말 수고했어. 내년엔 조금 더 나를 위해 살자!" oninput="ecWishCount()"></textarea>
         <div class="wc" id="ecWishCount">0 / 60</div>
       </div>
       <button class="ec-next go visible px" id="ecNext4" onclick="ecGenerate()">🎬 엔딩 크레딧 생성!</button>
@@ -619,35 +624,49 @@ html,body{ width:100%; height:100%; background:var(--dark); overflow:hidden; }
       <div class="ec-resultcard" id="ecCard">
         <div class="ec-rtop"></div>
         <div class="ec-rcontent">
-          <div class="ec-opening">
-            <div class="ec-moodimg" id="ecMoodImgWrap"><img id="ecMoodImg" src="" alt=""></div>
-            <div class="ec-opening-text">
+
+          <!-- 무드 이미지: 전체폭 + MOOD OF THE YEAR 라벨 -->
+          <div class="ec-moodblock">
+            <div class="ec-rlabel" style="margin-bottom:8px;">MOOD OF THE YEAR</div>
+            <div class="ec-moodimg-full" id="ecMoodImgWrap">
+              <img id="ecMoodImg" src="" alt="">
+            </div>
+            <div class="ec-rvalue" id="ecR_mood" style="margin-top:8px;font-size:11.5px;">—</div>
+          </div>
+
+          <!-- 2열 텍스트 그리드 -->
+          <div class="ec-grid2">
+            <div class="ec-sectioncard">
               <div class="ec-rlabel">STARRING</div>
               <div class="ec-rvalue" id="ecR_starring">YOU & YOUR FAVORITE PERSON</div>
-              <div class="ec-divider" style="margin:10px 0"></div>
+            </div>
+            <div class="ec-sectioncard">
               <div class="ec-rlabel">GENRE</div>
               <div class="ec-rvalue it" id="ecR_genre">Holiday Road Movie</div>
             </div>
+            <div class="ec-sectioncard">
+              <div class="ec-rlabel">BEST SCENE</div>
+              <div class="ec-rvalue" id="ecR_scene">오늘의 웃음과 대화</div>
+            </div>
+            <div class="ec-sectioncard">
+              <div class="ec-rlabel">SOUNDTRACK</div>
+              <div class="ec-rvalue it" id="ecR_bgm">—</div>
+            </div>
           </div>
 
-          <div class="ec-table">
-            <div class="ec-sectioncard">
-              <div class="ec-row"><div class="ec-rlabel">BEST SCENE</div><div class="ec-rvalue" id="ecR_scene">오늘의 웃음과 대화</div></div>
-              <div class="ec-divider" style="margin:8px auto"></div>
-              <div class="ec-row"><div class="ec-rlabel">MOOD OF THE YEAR</div><div class="ec-rvalue" id="ecR_mood">—</div></div>
-            </div>
-            <div class="ec-sectioncard">
-              <div class="ec-row"><div class="ec-rlabel">SPECIAL THANKS TO</div><div class="ec-rvalue" id="ecR_thanks">오늘 함께한 당신에게</div></div>
-              <div class="ec-divider" style="margin:8px auto"></div>
-              <div class="ec-row"><div class="ec-rlabel">SOUNDTRACK</div><div class="ec-rvalue it" id="ecR_bgm">—</div></div>
-            </div>
-            <div class="ec-wishcard">
-              <div class="ec-rlabel">A MESSAGE TO MYSELF</div>
-              <div class="ec-rlabel" style="font-size:7px;opacity:.7;letter-spacing:1px;margin-bottom:8px;margin-top:3px">연말까지 고생한 나에게</div>
-              <div class="ec-rvalue" id="ecR_wish">—</div>
-            </div>
-            <div class="ec-finalline" id="ecR_final">내년에도 좋은 장면을 많이 남기길.</div>
+          <!-- SPECIAL THANKS - 1열 (길어서) -->
+          <div class="ec-sectioncard" style="width:100%;margin-top:8px;">
+            <div class="ec-rlabel">SPECIAL THANKS TO</div>
+            <div class="ec-rvalue" id="ecR_thanks">오늘 함께한 당신에게</div>
           </div>
+
+          <!-- 나에게 한마디 -->
+          <div class="ec-wishcard" style="margin-top:8px;">
+            <div class="ec-rlabel">A MESSAGE TO MYSELF</div>
+            <div class="ec-rlabel" style="font-size:7px;opacity:.7;letter-spacing:1px;margin-bottom:8px;margin-top:3px;">연말까지 고생한 나에게</div>
+            <div class="ec-rvalue" id="ecR_wish">—</div>
+          </div>
+          <div class="ec-finalline" id="ecR_final" style="margin-top:10px;">올 한 해 정말 수고했어요.</div>
         </div>
         <div class="ec-rbottom"></div>
       </div>
@@ -1220,6 +1239,87 @@ function spinReset(){
   document.getElementById('spinCustomName').value='';
 }
 
+function spinRenderCanvas(){
+  var cv = document.getElementById('canvas');
+  var W=1080, H=1080; // 정사각형 (인스타 피드 비율)
+  cv.width=W; cv.height=H;
+  var ctx=cv.getContext('2d');
+  var cx=W/2, cy=H/2;
+
+  // 배경
+  var bg=ctx.createRadialGradient(cx,cy,40,cx,cy,W*0.75);
+  bg.addColorStop(0,'#2a1400'); bg.addColorStop(1,'#0d0600');
+  ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
+
+  // 외곽 테두리
+  ctx.strokeStyle='rgba(232,160,32,.4)'; ctx.lineWidth=6;
+  roundRect(ctx,20,20,W-40,H-40,20); ctx.stroke();
+  // 내부 얇은 테두리
+  ctx.strokeStyle='rgba(232,160,32,.2)'; ctx.lineWidth=2;
+  roundRect(ctx,36,36,W-72,H-72,14); ctx.stroke();
+
+  ctx.textAlign='center';
+
+  // 헤더
+  var y=120;
+  ctx.fillStyle='var(--red)'; ctx.fillStyle='#c0392b';
+  ctx.font='18px "Press Start 2P", monospace';
+  ctx.fillText('★ POST CREDIT SCENE ★', cx, y); y+=70;
+
+  ctx.fillStyle='#e8a020'; ctx.font='28px "Press Start 2P", monospace';
+  ctx.fillText('WHO PAYS?', cx, y); y+=60;
+
+  // 구분선
+  ctx.strokeStyle='rgba(232,160,32,.3)'; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.moveTo(cx-120,y); ctx.lineTo(cx+120,y); ctx.stroke(); y+=60;
+
+  // 계산 담당 라벨
+  ctx.fillStyle='#e8a020'; ctx.font='16px "Press Start 2P", monospace';
+  ctx.fillText('👑 오늘의 계산 담당', cx, y); y+=70;
+
+  // 이름
+  var name = document.getElementById('spinResultName').textContent;
+  ctx.fillStyle='#f0c060';
+  ctx.font='bold 90px "Noto Sans KR", sans-serif';
+  ctx.shadowColor='rgba(232,160,32,.5)'; ctx.shadowBlur=24;
+  ctx.fillText(name, cx, y); y+=90;
+  ctx.shadowBlur=0;
+
+  // 구분선
+  ctx.strokeStyle='rgba(232,160,32,.3)'; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.moveTo(cx-100,y); ctx.lineTo(cx+100,y); ctx.stroke(); y+=60;
+
+  // 감사 문구
+  ctx.fillStyle='rgba(255,220,150,.9)';
+  ctx.font='bold 34px "Noto Sans KR", sans-serif';
+  ctx.fillText('🙏 고마워요, 잘 먹었습니다!', cx, y); y+=50;
+  ctx.fillText('🎄 메리 크리스마스!', cx, y); y+=70;
+
+  // 면책
+  ctx.fillStyle='rgba(255,248,238,.3)'; ctx.font='18px "Noto Sans KR", sans-serif';
+  ctx.fillText('※ 실제 결제와 무관한 재미용 콘텐츠입니다', cx, y); y+=60;
+
+  // 하단 브랜드
+  ctx.fillStyle='rgba(232,160,32,.4)'; ctx.font='14px "Press Start 2P", monospace';
+  ctx.fillText('TEXAS ROADHOUSE · CHRISTMAS', cx, H-50);
+
+  return cv.toDataURL('image/jpeg', 0.92);
+}
+
+function spinSave(){
+  var url = spinRenderCanvas();
+  var a=document.createElement('a');
+  a.download='TxRH-WhoPays-'+Date.now()+'.jpg';
+  a.href=url; a.click();
+}
+
+function spinToInsta(){
+  spinSave();
+  _igTag='#texasroadhouse #텍사스로드하우스 @texasroadhouse_kr #TxRH크리스마스 #오늘의계산담당';
+  document.getElementById('copyTagBox').textContent=_igTag;
+  document.getElementById('mInsta').style.display='flex';
+}
+
 function goEnding(){
   document.getElementById('sMain').style.display='none';
   document.getElementById('sLanding').style.display='none';
@@ -1415,7 +1515,7 @@ function ecGenerate(){
   document.getElementById('ecR_thanks').textContent = ecThanksMap[cast] || '오늘 함께한 당신에게';
   document.getElementById('ecR_bgm').textContent = ecBgmMap[bgm] || bgm;
   document.getElementById('ecR_wish').textContent = wish ? '🌟 '+wish : '— (작성하지 않음)';
-  document.getElementById('ecR_final').textContent = wish ? '그 소원, 내년 크리스마스에 다시 확인해봐요.' : '내년에도 좋은 장면을 많이 남기길.';
+  document.getElementById('ecR_final').textContent = wish ? '올 한 해 정말 수고했어요. 당신은 충분히 잘 해냈습니다.' : '올 한 해 정말 수고했어요.';
 
   for(var i=1;i<=4;i++){
     document.getElementById('ecStep'+i).classList.remove('active');
@@ -1535,99 +1635,99 @@ function ecRenderCanvas(){
     ctx.drawImage(topImg,    0, 0,        W, topH);
     ctx.drawImage(bottomImg, 0, H-bottomH, W, bottomH);
 
-    // 콘텐츠 텍스트 영역
-    var pad = W * 0.09;
+    // 콘텐츠 영역 - 무드 이미지 전체폭 + 2열 레이아웃
+    var pad = W * 0.07;
     var areaW = W - pad*2;
-    var cp = 22; // 카드 내부 패딩
-    var y = topH + 36;
+    var cp = 14;
+    var y = topH + 18;
 
-    // 카드 배경 헬퍼 (텍스트 먼저 측정 후 배경 그리고 텍스트 재렌더 방식 대신,
-    // 넉넉한 고정 높이로 카드를 먼저 그림)
-    function card(yTop, cardH){
-      ctx.fillStyle='rgba(15,8,3,.82)';
+    function drawCard(yTop, xLeft, cardW, cardH){
+      ctx.fillStyle='rgba(20,8,3,.85)';
       ctx.strokeStyle='rgba(180,90,20,.45)'; ctx.lineWidth=2;
-      roundRect(ctx, pad, yTop, areaW, cardH, 16);
+      roundRect(ctx, xLeft, yTop, cardW, cardH, 10);
       ctx.fill(); ctx.stroke();
     }
-    function label(text, cx2, y2){
-      ctx.fillStyle='#c87030'; ctx.font='10px "Press Start 2P", monospace';
-      ctx.fillText(text, cx2, y2);
+    function lbl(text, cx2, y2){
+      ctx.fillStyle='#c87030'; ctx.font='9px "Press Start 2P", monospace';
+      ctx.textAlign='center'; ctx.fillText(text, cx2, y2); return y2+18;
     }
-    function value(text, cx2, y2, italic, maxW){
-      ctx.fillStyle='#2a1800';
-      ctx.font='bold '+(italic?'italic ':'')+' 21px "Noto Sans KR", sans-serif';
-      ecWrapText(ctx,text,maxW||areaW-cp*2).forEach(function(l){ ctx.fillText(l,cx2,y2); y2+=28; });
+    function val(text, cx2, y2, italic, maxW){
+      ctx.fillStyle='#f0d8a0';
+      ctx.font='bold '+(italic?'italic ':'')+'17px "Noto Sans KR", sans-serif';
+      ctx.textAlign='center';
+      ecWrapText(ctx,text,maxW||areaW-cp*2).forEach(function(l){ ctx.fillText(l,cx2,y2); y2+=22; });
       return y2;
     }
-    function divLine(cx2, y2){
-      ctx.strokeStyle='rgba(180,90,20,.35)'; ctx.lineWidth=1;
-      ctx.beginPath(); ctx.moveTo(cx2-32,y2); ctx.lineTo(cx2+32,y2); ctx.stroke();
-    }
 
-    // ── 카드1: 무드 일러스트 + STARRING/GENRE ──
-    var imgSize = Math.min(areaW*0.37, 280);
-    var textBlockW = areaW - imgSize - cp*3;
-    var c1H = imgSize + cp*2;
-    card(y, c1H);
+    // ── MOOD OF THE YEAR 라벨 ──
+    y = lbl('MOOD OF THE YEAR', cx, y); y+=4;
+
+    // ── 무드 이미지 전체폭 ──
     if(moodImg){
       ctx.save();
-      roundRect(ctx, pad+cp, y+cp, imgSize, imgSize, 10); ctx.clip();
-      ctx.drawImage(moodImg, pad+cp, y+cp, imgSize, imgSize);
+      roundRect(ctx, pad, y, areaW, areaW, 10); ctx.clip();
+      ctx.drawImage(moodImg, pad, y, areaW, areaW);
       ctx.restore();
-      ctx.strokeStyle='rgba(138,106,48,.5)'; ctx.lineWidth=2;
-      roundRect(ctx, pad+cp, y+cp, imgSize, imgSize, 10); ctx.stroke();
+      ctx.strokeStyle='rgba(180,90,20,.45)'; ctx.lineWidth=2;
+      roundRect(ctx, pad, y, areaW, areaW, 10); ctx.stroke();
+      y += areaW + 8;
     }
-    var tx = pad + cp + imgSize + cp;
-    ctx.textAlign='left';
-    var ty = y + cp + 20;
-    label('STARRING', tx, ty); ty+=24;
-    ty = value(document.getElementById('ecR_starring').textContent, tx, ty, false, textBlockW);
-    ty+=10; divLine(tx+textBlockW/2, ty); ty+=18;
-    label('GENRE', tx, ty); ty+=24;
-    value(document.getElementById('ecR_genre').textContent, tx, ty, true, textBlockW);
-    y += c1H + 12;
 
-    // ── 카드2: BEST SCENE + MOOD OF THE YEAR ──
+    // 무드 설명 텍스트
+    ctx.fillStyle='#f0d8a0'; ctx.font='bold 15px "Noto Sans KR", sans-serif';
     ctx.textAlign='center';
-    var c2H = cp + 24+26 + 28+14 + 16 + 24+26 + 28 + cp;
-    card(y, c2H);
-    var c2y = y + cp;
-    label('BEST SCENE', cx, c2y); c2y+=24;
-    c2y = value(document.getElementById('ecR_scene').textContent, cx, c2y); c2y+=14;
-    divLine(cx, c2y); c2y+=16;
-    label('MOOD OF THE YEAR', cx, c2y); c2y+=24;
-    value(document.getElementById('ecR_mood').textContent, cx, c2y);
-    y += c2H + 12;
+    ecWrapText(ctx, document.getElementById('ecR_mood').textContent, areaW).forEach(function(l){ ctx.fillText(l,cx,y); y+=20; });
+    y += 8;
 
-    // ── 카드3: SPECIAL THANKS TO + SOUNDTRACK ──
-    var c3H = cp + 24+26 + 28+14 + 16 + 24+26 + 28 + cp;
-    card(y, c3H);
-    var c3y = y + cp;
-    label('SPECIAL THANKS TO', cx, c3y); c3y+=24;
-    c3y = value(document.getElementById('ecR_thanks').textContent, cx, c3y); c3y+=14;
-    divLine(cx, c3y); c3y+=16;
-    label('SOUNDTRACK', cx, c3y); c3y+=24;
-    ctx.fillStyle='#f0d8a0'; ctx.font='italic bold 21px "Noto Sans KR", sans-serif';
-    ecWrapText(ctx,document.getElementById('ecR_bgm').textContent,areaW-cp*2).forEach(function(l){ ctx.fillText(l,cx,c3y); c3y+=28; });
-    y += c3H + 12;
+    // ── 2열 카드 ──
+    var colW = (areaW-8)/2;
+    var rowH = 108;
+    var rowY = y;
 
-    // ── 카드4: A MESSAGE TO MYSELF ──
+    // 왼쪽: STARRING + GENRE
+    drawCard(rowY, pad, colW, rowH);
+    var lx = pad + colW/2, ly = rowY+cp;
+    ly = lbl('STARRING', lx, ly);
+    ly = val(document.getElementById('ecR_starring').textContent, lx, ly, false, colW-16);
+    ly += 8;
+    ly = lbl('GENRE', lx, ly);
+    val(document.getElementById('ecR_genre').textContent, lx, ly, true, colW-16);
+
+    // 오른쪽: BEST SCENE + SOUNDTRACK
+    drawCard(rowY, pad+colW+8, colW, rowH);
+    var rx = pad+colW+8+colW/2, ry = rowY+cp;
+    ry = lbl('BEST SCENE', rx, ry);
+    ry = val(document.getElementById('ecR_scene').textContent, rx, ry, false, colW-16);
+    ry += 8;
+    ry = lbl('SOUNDTRACK', rx, ry);
+    val(document.getElementById('ecR_bgm').textContent, rx, ry, true, colW-16);
+    y = rowY + rowH + 8;
+
+    // ── SPECIAL THANKS TO ──
+    var c3H = cp*2 + 18 + 22;
+    drawCard(y, pad, areaW, c3H);
+    var c3y = y+cp;
+    c3y = lbl('SPECIAL THANKS TO', cx, c3y);
+    val(document.getElementById('ecR_thanks').textContent, cx, c3y, false, areaW-cp*2);
+    y += c3H + 8;
+
+    // ── A MESSAGE TO MYSELF ──
     var wish = document.getElementById('ecR_wish').textContent;
-    var wishLines = ecWrapText(ctx, wish, areaW-cp*2-10);
-    var c4H = cp + 24 + 20 + 22 + wishLines.length*30 + cp;
-    card(y, c4H);
-    var c4y = y + cp;
-    label('A MESSAGE TO MYSELF', cx, c4y); c4y+=20;
-    ctx.fillStyle='rgba(200,150,60,.7)'; ctx.font='italic 17px "Noto Sans KR", sans-serif';
-    ctx.fillText('연말까지 고생한 나에게', cx, c4y); c4y+=28;
-    ctx.fillStyle='#e8a030'; ctx.font='bold 23px "Noto Sans KR", sans-serif';
-    wishLines.forEach(function(l){ ctx.fillText(l,cx,c4y); c4y+=30; });
-    y += c4H + 16;
+    var wishLines = ecWrapText(ctx, wish, areaW-cp*2);
+    var c4H = cp*2 + 18 + 18 + wishLines.length*22;
+    drawCard(y, pad, areaW, c4H);
+    var c4y = y+cp;
+    c4y = lbl('A MESSAGE TO MYSELF', cx, c4y);
+    ctx.fillStyle='rgba(200,150,60,.7)'; ctx.font='italic 13px "Noto Sans KR", sans-serif';
+    ctx.fillText('연말까지 고생한 나에게', cx, c4y); c4y+=20;
+    ctx.fillStyle='#e8a030'; ctx.font='bold 17px "Noto Sans KR", sans-serif';
+    wishLines.forEach(function(l){ ctx.fillText(l,cx,c4y); c4y+=22; });
+    y += c4H + 10;
 
     // 마지막 문구
     var finalLine = document.getElementById('ecR_final').textContent;
-    ctx.fillStyle='rgba(220,170,80,.8)'; ctx.font='italic 19px "Noto Sans KR", sans-serif';
-    ecWrapText(ctx, finalLine, areaW-20).forEach(function(l){ ctx.fillText(l,cx,y); y+=26; });
+    ctx.fillStyle='rgba(220,170,80,.8)'; ctx.font='italic 14px "Noto Sans KR", sans-serif';
+    ecWrapText(ctx, finalLine, areaW).forEach(function(l){ ctx.fillText(l,cx,y); y+=18; });
 
     return cv.toDataURL('image/jpeg', 0.93);
   });
@@ -1761,6 +1861,26 @@ function ecDownloadMusic(){
 
 // 첫 터치 이벤트 등록
 document.addEventListener('touchstart', _startThemeIfNeeded, {once:true});
+// 탭 비활성(다른 앱 전환, 홈버튼 등) 시 음악 일시정지/재개
+document.addEventListener('visibilitychange', function(){
+  if(document.hidden){
+    // 탭이 숨겨지면 현재 재생 중인 음악 일시정지
+    ['audioTheme','audioJazz','audioCountry','audioCarol','audioParty'].forEach(function(id){
+      var el=document.getElementById(id);
+      if(el && !el.paused) el.pause();
+    });
+  } else {
+    // 탭으로 돌아오면 재생 중이던 음악 재개
+    if(_musicStarted){
+      if(_ecBgmActive && _ecBgmId && ecBgmAudioMap[_ecBgmId]){
+        document.getElementById(ecBgmAudioMap[_ecBgmId].id).play().catch(function(){});
+      } else {
+        document.getElementById('audioTheme').play().catch(function(){});
+      }
+    }
+  }
+});
+
 document.addEventListener('click',      _startThemeIfNeeded, {once:true});
 
 </script>
