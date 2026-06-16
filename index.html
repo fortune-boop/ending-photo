@@ -1,0 +1,1776 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Texas Roadhouse Photo Booth</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Noto+Sans+KR:wght@400;700;900&display=swap');
+:root{ --red:#c0392b; --gold:#e8a020; --dark:#1a0a00; --cream:#fff8ee; --gold2:#d4a017; }
+*{ box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+html,body{ width:100%; height:100%; background:var(--dark); overflow:hidden; }
+.px{ font-family:'Press Start 2P',monospace; }
+.kr{ font-family:'Noto Sans KR',sans-serif; }
+.screen{ position:fixed; inset:0; z-index:10; display:flex; flex-direction:column; align-items:center; }
+
+/* ══ 메인 선택 화면 ══ */
+#sMain{ background:var(--dark); overflow-y:auto; padding:24px 16px 40px; justify-content:flex-start; }
+.main-top{ color:var(--gold); font-size:10.5px; letter-spacing:3px; opacity:.6; margin-top:9px; }
+.main-logo{ color:var(--gold); font-size:clamp(21px,6vw,33px); text-align:center; line-height:1.5; text-shadow:4px 4px 0 var(--red); margin:6px 0; }
+.main-sub{ color:var(--red); font-size:10.5px; letter-spacing:3px; margin-bottom:24px; }
+.main-cards{ display:flex; flex-direction:column; gap:16px; width:100%; max-width:420px; }
+.main-card{
+  position:relative; border-radius:18px; overflow:hidden; cursor:pointer;
+  background:linear-gradient(135deg,#241206,#170a02);
+  border:2px solid rgba(232,160,32,.35);
+  box-shadow:0 6px 18px rgba(0,0,0,.4);
+  transition:transform .15s, border-color .15s;
+  padding:18px 16px;
+}
+.main-card:active{ transform:scale(.97); }
+.main-card.ec{ border-color:rgba(212,160,23,.5); }
+.main-card.pb{ border-color:rgba(192,57,43,.5); }
+.mc-top{ display:flex; align-items:center; gap:12px; margin-bottom:10px; }
+.mc-emoji{ font-size:34px; line-height:1; flex-shrink:0; filter:drop-shadow(2px 2px 0 rgba(0,0,0,.4)); }
+.mc-title{ color:var(--gold); font-size:13.5px; letter-spacing:1px; line-height:1.6; }
+.mc-desc{ color:rgba(255,248,238,.75); font-size:15px; line-height:1.7; margin-bottom:12px; }
+.mc-preview{
+  display:flex; gap:8px; border-radius:10px; overflow:hidden;
+  border:1.5px solid rgba(232,160,32,.25); background:#0e0500; padding:8px;
+}
+.mc-preview .pv-box{ flex:1; aspect-ratio:1; border-radius:6px; overflow:hidden; position:relative; background:#1a0a00; }
+.mc-preview .pv-box img{ width:100%; height:100%; object-fit:cover; }
+.mc-preview .pv-tag{
+  position:absolute; bottom:3px; left:3px; right:3px; text-align:center;
+  background:rgba(26,10,0,.75); color:var(--gold); font-size:7.5px; padding:2px; border-radius:3px;
+}
+.mc-cta{
+  margin-top:12px; text-align:center; font-size:12px; letter-spacing:1px; padding:9px;
+  border-radius:8px; font-weight:700;
+}
+.main-card.sp{ border-color:rgba(60,160,80,.55); }
+.mc-cta.ec{ background:rgba(212,160,23,.22); color:var(--gold); border:1.5px solid rgba(212,160,23,.45); }
+.mc-cta.pb{ background:rgba(192,57,43,.28); color:#ffb0a0; border:1.5px solid rgba(192,57,43,.5); }
+.mc-cta.sp{ background:rgba(60,160,80,.22); color:#7de89a; border:1.5px solid rgba(60,160,80,.5); }
+/* 카드 미리보기 - 단일 이미지 방식 */
+.mc-imgbox{
+  width:100%; border-radius:10px; overflow:hidden; margin-bottom:12px;
+  border:1.5px solid rgba(232,160,32,.2); background:#0e0500; position:relative;
+}
+.mc-imgbox img{ width:100%; display:block; object-fit:cover; }
+.mc-imgbox .mc-overlay{
+  position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+  background:rgba(0,0,0,.35);
+}
+.mc-imgbox .mc-overlay-icon{ font-size:48px; filter:drop-shadow(0 2px 6px rgba(0,0,0,.5)); }
+/* 스핀 카드 미리보기 */
+.mc-spin-preview{
+  background:rgba(232,160,32,.07); border:1.5px dashed rgba(232,160,32,.3);
+  border-radius:10px; padding:14px; margin-bottom:12px; text-align:center;
+}
+.mc-spin-preview .sp-names{ display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin-top:10px; }
+.mc-spin-preview .sp-chip{
+  background:rgba(192,57,43,.2); border:1px solid rgba(192,57,43,.4);
+  border-radius:6px; padding:5px 10px; font-size:12px; color:rgba(255,248,238,.7);
+  font-family:'Noto Sans KR',sans-serif;
+}
+.mc-spin-preview .sp-chip.winner{ background:rgba(232,160,32,.25); border-color:var(--gold); color:var(--gold); }
+
+/* 뒤로가기(공용) */
+.gohome-btn{ color:rgba(232,160,32,.6); font-size:9px; cursor:pointer; margin-bottom:14px; display:flex; align-items:center; gap:6px; background:none; border:none; padding:6px 0; }
+
+/* ── 랜딩 공통 ── */
+#sLanding{ background:var(--dark); overflow-y:auto; padding:12px 0 24px; justify-content:flex-start; }
+.l-top { color:var(--gold); font-size:10.5px; letter-spacing:2px; opacity:.6; margin-top:6px; }
+.l-logo{ color:var(--gold); font-size:clamp(21px,6vw,33px); text-align:center; line-height:1.5; text-shadow:3px 3px 0 var(--red); margin:4px 0; }
+.l-sub { color:var(--red); font-size:10.5px; letter-spacing:2px; margin-bottom:14px; }
+
+/* 모드 버튼 */
+.mode-row{ display:flex; gap:10px; margin-bottom:16px; }
+.mbtn{ color:rgba(255,248,238,.4); background:transparent; border:2px solid rgba(232,160,32,.28); padding:10px 20px; cursor:pointer; font-size:12px; }
+.mbtn.on{ color:var(--gold); border-color:var(--gold); background:rgba(232,160,32,.1); }
+
+/* ── STEP 1: 테마 선택 ── */
+#stepTheme{ width:100%; max-width:400px; padding:0 12px; }
+.step-title{ color:rgba(232,160,32,.6); font-size:10.5px; letter-spacing:1px; margin-bottom:10px; text-align:center; }
+.theme-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:16px; }
+.tc{
+  position:relative; border:2px solid rgba(232,160,32,.28); cursor:pointer;
+  overflow:hidden; background:#0e0500; border-radius:4px; padding-bottom:8px;
+}
+.tc.on{ border-color:var(--gold); }
+.tc .tg{ display:grid; grid-template-columns:1fr 1fr; gap:2px; padding:3px; }
+.tc .tg img{ width:100%; aspect-ratio:1; object-fit:cover; }
+.tc .lbl{ font-size:7.5px; color:var(--gold); text-align:center; padding:3px 2px; line-height:1.4; }
+.tc .chk{ position:absolute; top:3px; right:3px; width:14px; height:14px; background:var(--gold); display:none; align-items:center; justify-content:center; font-size:9px; color:#000; }
+.tc.on .chk{ display:flex; }
+
+/* ── STEP 2: 세부 프레임 선택 (1컷만) ── */
+#stepFrame{ display:none; width:100%; max-width:400px; padding:0 12px; }
+.back-btn{ color:rgba(232,160,32,.6); font-size:9px; cursor:pointer; margin-bottom:10px; display:flex; align-items:center; gap:6px; background:none; border:none; }
+.frame-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:16px; }
+.fc{ position:relative; border:2px solid rgba(232,160,32,.28); cursor:pointer; overflow:hidden; background:#0e0500; border-radius:3px; }
+.fc.on{ border-color:var(--gold); }
+.fc img{ width:100%; display:block; object-fit:cover; aspect-ratio:1; }
+.fc .lbl{ position:absolute; bottom:0; left:0; right:0; background:rgba(26,10,0,.85); font-size:7.5px; color:var(--gold); padding:3px; text-align:center; }
+.fc .chk{ position:absolute; top:3px; right:3px; width:14px; height:14px; background:var(--gold); display:none; align-items:center; justify-content:center; font-size:9px; color:#000; }
+.fc.on .chk{ display:flex; }
+
+.start-btn{ background:var(--red); color:#fff; border:none; border-bottom:4px solid #8b1a1a; padding:14px 28px; font-size:13.5px; cursor:pointer; margin-top:4px; }
+
+/* ── 부스 ── */
+#sBooth{ background:#080300; display:none; }
+.topbar{ width:100%; max-width:520px; background:#110600; padding:7px 14px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0; border-bottom:1px solid rgba(232,160,32,.15); }
+.ttl{ color:var(--gold); font-size:10.5px; }
+.dots{ display:flex; gap:6px; }
+.dot{ width:10px; height:10px; background:rgba(255,255,255,.1); border:1px solid rgba(232,160,32,.2); }
+.dot.done{ background:var(--gold); }
+.dot.cur{ background:var(--red); animation:blink .6s infinite; }
+@keyframes blink{ 0%,100%{opacity:1}50%{opacity:.3} }
+.vp{ position:relative; flex:1; width:100%; max-width:520px; overflow:hidden; display:flex; align-items:center; justify-content:center; min-height:0; }
+#fbox{ position:relative; flex-shrink:0; overflow:hidden; }
+#vid{ position:absolute; object-fit:cover; background:#000; transform-origin:center center; z-index:1; }
+#canvas{ display:none; }
+.sl{ position:absolute; inset:0; z-index:4; pointer-events:none; overflow:hidden; }
+.si{ position:absolute; pointer-events:auto; touch-action:none; user-select:none; transform-origin:center; }
+#fimg{ position:absolute; inset:0; width:100%; height:100%; object-fit:fill; z-index:3; pointer-events:none; }
+.zbar{ width:100%; max-width:520px; background:#110600; padding:5px 14px; display:flex; align-items:center; gap:10px; flex-shrink:0; }
+.zbar input{ flex:1; accent-color:var(--gold); cursor:pointer; }
+.zbar span{ color:var(--gold); font-size:10.5px; width:40px; text-align:right; }
+.tbar{ width:100%; max-width:520px; background:#0e0500; padding:5px 8px; display:flex; gap:5px; overflow-x:auto; flex-shrink:0; scrollbar-width:none; align-items:center; }
+.tbar::-webkit-scrollbar{ display:none; }
+.to{ font-size:26px; cursor:pointer; padding:3px 4px; line-height:1; border:1px solid transparent; }
+.to:hover{ background:rgba(232,160,32,.12); border-color:rgba(232,160,32,.28); }
+.tsep{ width:1px; height:18px; background:rgba(232,160,32,.15); flex-shrink:0; margin:0 2px; }
+.tlbl{ color:rgba(232,160,32,.4); font-size:7.5px; flex-shrink:0; white-space:nowrap; }
+.tbtn{ color:var(--gold); background:rgba(232,160,32,.08); border:1px solid rgba(232,160,32,.25); padding:5px 9px; cursor:pointer; font-size:7.5px; flex-shrink:0; white-space:nowrap; }
+.cbar{ width:100%; max-width:520px; background:#110600; padding:10px 14px; display:flex; align-items:center; justify-content:space-between; gap:8px; flex-shrink:0; }
+.cbtn{ color:var(--gold); background:transparent; border:2px solid rgba(232,160,32,.3); padding:10px 16px; cursor:pointer; font-size:10.5px; }
+.shutter{ width:56px; height:56px; border-radius:50%; background:var(--cream); border:4px solid rgba(255,255,255,.28); cursor:pointer; flex-shrink:0; box-shadow:0 0 0 2px var(--gold); }
+.shutter:active{ transform:scale(.9); }
+
+/* ── 결과 ── */
+#sResult{ background:var(--dark); display:none; }
+#rimg{ width:100%; max-width:520px; flex:1; object-fit:contain; display:block; min-height:0; }
+.rbar{ width:100%; max-width:520px; background:#110600; padding:12px 14px; display:flex; gap:8px; flex-shrink:0; border-top:2px solid rgba(232,160,32,.2); }
+.rbtn{ flex:1; padding:12px 4px; font-size:9px; cursor:pointer; border:none; text-align:center; }
+.rb-save { background:var(--red);  color:#fff;        border-bottom:3px solid #8b1a1a; }
+.rb-insta{ background:var(--gold); color:var(--dark);  border-bottom:3px solid #b06010; }
+.rb-retry{ background:transparent; color:var(--gold);  border:2px solid rgba(232,160,32,.4); }
+.rtag{ color:rgba(232,160,32,.3); font-size:9px; text-align:center; padding:6px; flex-shrink:0; }
+
+/* ── 모달 ── */
+.modal{ display:none; position:fixed; inset:0; background:rgba(0,0,0,.82); z-index:60; align-items:center; justify-content:center; padding:1.5rem; }
+.mbox{ background:#1a0a00; border:2px solid var(--gold); padding:1.25rem; width:100%; max-width:320px; max-height:85vh; overflow-y:auto; }
+.mtitle{ color:var(--gold); font-size:12px; margin-bottom:12px; }
+.mbox input, .mbox textarea{ width:100%; background:rgba(255,248,238,.06); border:1px solid rgba(232,160,32,.3); color:var(--cream); padding:8px 10px; font-family:'Noto Sans KR',sans-serif; font-size:14px; outline:none; margin-bottom:10px; }
+.mrow{ display:flex; gap:8px; margin-top:10px; }
+.ig-step{ font-family:'Noto Sans KR',sans-serif; font-size:14px; color:rgba(255,220,150,.8); line-height:2.2; }
+.ig-step b{ color:var(--gold); }
+.copy-tag{ background:rgba(232,160,32,.1); border:1px solid rgba(232,160,32,.3); color:var(--gold); font-family:'Noto Sans KR',sans-serif; font-size:13px; padding:6px 10px; margin-bottom:8px; border-radius:3px; word-break:break-all; }
+.copy-btn{ width:100%; background:rgba(232,160,32,.15); border:1px solid rgba(232,160,32,.4); color:var(--gold); font-size:9px; padding:9px; cursor:pointer; margin-bottom:12px; text-align:center; }
+
+/* ══ 엔딩크레딧 화면 ══ */
+#sEnding{ background:var(--dark); overflow-y:auto; padding:16px 14px 40px; justify-content:flex-start; }
+.ec-wrap{ width:100%; max-width:460px; }
+.ec-head{ text-align:center; margin-bottom:18px; }
+.ec-head .eh-top{ color:var(--red); font-size:10.5px; letter-spacing:3px; margin-bottom:8px; }
+.ec-head h1{ color:var(--gold); font-size:clamp(20px,5.5vw,28px); text-shadow:3px 3px 0 var(--red); line-height:1.5; }
+.ec-head .eh-sub{ color:rgba(255,248,238,.7); font-size:13.5px; margin-top:10px; font-family:'Noto Sans KR',sans-serif; }
+
+.ec-progress{ display:flex; gap:8px; justify-content:center; margin:18px 0 16px; }
+.ec-dot{ width:11px; height:11px; border-radius:50%; background:rgba(232,160,32,.18); transition:.3s; }
+.ec-dot.active{ background:var(--gold); }
+.ec-dot.done{ background:var(--red); }
+
+/* 세련된 카드 + 픽셀 콘텐츠 */
+.ec-card{
+  background:linear-gradient(135deg,#241206,#170a02);
+  border:2px solid rgba(232,160,32,.4); border-radius:18px;
+  padding:22px 18px; margin-bottom:14px; display:none;
+  box-shadow:0 6px 18px rgba(0,0,0,.4);
+  animation:ecFade .35s ease;
+}
+.ec-card.active{ display:block; }
+@keyframes ecFade{ from{opacity:0; transform:translateY(12px);} to{opacity:1; transform:translateY(0);} }
+
+.ec-steplabel{ color:var(--red); font-size:9px; letter-spacing:2px; margin-bottom:8px; }
+.ec-steptitle{ color:var(--gold); font-size:14px; letter-spacing:1px; line-height:1.6; margin-bottom:4px; }
+.ec-stepdesc{ color:rgba(255,248,238,.6); font-size:13.5px; margin-bottom:16px; font-family:'Noto Sans KR',sans-serif; }
+
+.ec-options{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.ec-options.five{ grid-template-columns:repeat(3,1fr); }
+.ec-opt{
+  background:rgba(255,248,238,.04); border:2px solid rgba(232,160,32,.28);
+  border-radius:12px; padding:14px 8px; text-align:center; cursor:pointer;
+  transition:.15s; color:var(--cream);
+}
+.ec-opt:active{ transform:scale(.96); }
+.ec-opt.on{ border-color:var(--gold); background:rgba(192,57,43,.22); }
+.ec-opt .eo-emoji{ font-size:26px; display:block; margin-bottom:6px; }
+.ec-opt .eo-label{ font-size:11px; line-height:1.5; font-family:'Noto Sans KR',sans-serif; font-weight:700; }
+
+.ec-wishbox textarea{
+  width:100%; min-height:88px; resize:vertical;
+  background:rgba(255,248,238,.05); border:2px solid rgba(232,160,32,.3); border-radius:10px;
+  color:var(--cream); font-family:'Noto Sans KR',sans-serif; font-size:14px; padding:10px 12px; outline:none;
+}
+.ec-wishbox textarea:focus{ border-color:var(--gold); }
+.ec-wishbox .wc{ text-align:right; color:rgba(232,160,32,.5); font-size:10.5px; margin-top:4px; }
+
+.ec-next{
+  display:none; width:100%; margin-top:16px; padding:14px;
+  background:var(--red); color:#fff; border:none; border-bottom:4px solid #8b1a1a;
+  font-size:12px; letter-spacing:1px; cursor:pointer; border-radius:10px; font-family:'Press Start 2P',monospace;
+}
+.ec-next.visible{ display:block; }
+.ec-next.go{ background:var(--gold); color:var(--dark); border-bottom-color:#b06010; }
+
+/* 결과 카드 - 시네마틱 엔딩크레딧 (상/하단 띠 + 콘텐츠 영역 분리) */
+#ecResult{ display:none; }
+.ec-resultcard{
+  border-radius:18px; overflow:hidden;
+  box-shadow:0 8px 28px rgba(0,0,0,.55);
+  font-family:Georgia,'Noto Serif KR',serif;
+  border:1.5px solid rgba(154,122,58,.35);
+}
+.ec-rtop{
+  width:100%; aspect-ratio:1080/479;
+  background-image:url('ec_assets/ec_top.png');
+  background-color:#0d0a08;
+  background-size:cover; background-position:top center;
+}
+.ec-rbottom{
+  width:100%; aspect-ratio:1080/575;
+  background-image:url('ec_assets/ec_bottom.png');
+  background-color:#0d0a08;
+  background-size:cover; background-position:top center;
+}
+.ec-rcontent{
+  background-image:url('ec_assets/ec_mid.png');
+  background-color:#0d0a08;
+  background-repeat:repeat-y; background-size:100% auto; background-position:top center;
+  padding:22px 13% 26px; text-align:center;
+}
+
+/* 오프닝: 무드 일러스트 + STARRING을 나란히 */
+.ec-opening{
+  display:flex; gap:14px; align-items:center; margin-bottom:12px; text-align:left;
+  background:radial-gradient(ellipse at center, rgba(40,20,8,.82) 0%, rgba(10,5,2,.88) 70%); border:1px solid rgba(180,90,20,.45);
+  border-radius:12px; padding:14px; box-shadow:0 2px 14px rgba(0,0,0,.4);
+}
+.ec-moodimg{
+  flex-shrink:0; width:38%; aspect-ratio:1;
+  border:2px solid rgba(138,106,48,.5); border-radius:10px; overflow:hidden;
+  box-shadow:0 4px 12px rgba(0,0,0,.25);
+}
+.ec-moodimg img{ width:100%; height:100%; object-fit:cover; display:block; }
+.ec-opening-text{ flex:1; }
+.ec-opening-text .ec-rlabel{ margin-bottom:6px; }
+
+.ec-table{ display:flex; flex-direction:column; gap:10px; align-items:center; }
+.ec-sectioncard{
+  width:100%; background:radial-gradient(ellipse at center, rgba(40,20,8,.82) 0%, rgba(10,5,2,.88) 70%);
+  border:1px solid rgba(180,90,20,.45); border-radius:12px;
+  padding:14px 16px; box-shadow:0 2px 14px rgba(0,0,0,.5);
+  display:flex; flex-direction:column; gap:10px; align-items:center;
+}
+.ec-row{ display:flex; flex-direction:column; align-items:center; gap:4px; }
+.ec-rlabel{ font-size:7.5px; letter-spacing:3px; color:#c87030; font-family:'Press Start 2P',monospace; }
+.ec-rvalue{ font-size:13px; color:#f0d8a0; font-weight:700; line-height:1.6; font-family:'Noto Sans KR',sans-serif; }
+.ec-rvalue.it{ font-style:italic; }
+.ec-divider{ width:34px; height:1px; background:rgba(180,90,20,.4); }
+.ec-wishcard{
+  background:radial-gradient(ellipse at center, rgba(40,20,8,.82) 0%, rgba(10,5,2,.88) 70%); border:1.5px solid rgba(200,110,30,.5); border-radius:12px;
+  padding:14px 16px; max-width:100%; width:100%; box-shadow:0 2px 14px rgba(0,0,0,.5);
+}
+.ec-wishcard .ec-rlabel{ margin-bottom:4px; }
+.ec-wishcard .ec-rvalue{ color:#e8a030; font-size:13px; }
+.ec-finalline{ color:rgba(220,170,80,.7); font-size:11px; font-style:italic; line-height:1.6; font-family:'Noto Sans KR',sans-serif; }
+
+.ec-rend{ font-size:15px; color:var(--gold); margin:6px 0; font-style:italic; font-family:Georgia,'Noto Serif KR',serif; letter-spacing:1px; }
+.ec-rfoot{ font-size:8px; color:#9a7a3a; letter-spacing:2px; font-family:'Press Start 2P',monospace; }
+.ec-rfooter{ margin-top:30px; padding-top:18px; border-top:1px solid rgba(154,122,58,.25); }
+
+.ec-sharebar{ display:flex; gap:8px; margin-top:14px; }
+.ec-dlmusic{
+  width:100%; margin-top:8px; padding:12px;
+  background:rgba(232,160,32,.12); border:1.5px solid rgba(232,160,32,.4);
+  border-radius:10px; color:var(--gold); font-size:9px; letter-spacing:1px; cursor:pointer;
+  font-family:'Press Start 2P',monospace; text-align:center; display:none;
+}
+.ec-musictip{
+  margin-top:10px; padding:12px 14px; border-radius:10px; font-size:12.5px; line-height:1.7;
+  background:rgba(232,160,32,.08); border:1.5px dashed rgba(232,160,32,.35); color:rgba(255,248,238,.8);
+}
+.ec-musictip b{ color:var(--gold); }
+
+/* 히든엔딩 */
+.ec-hidden{
+  background:rgba(192,57,43,.07); border:2px solid rgba(192,57,43,.35); border-radius:16px;
+  padding:20px 16px; margin-top:14px;
+}
+.ec-htitle{ text-align:center; color:var(--red); font-size:13px; margin-bottom:4px; font-family:'Press Start 2P',monospace; }
+.ec-hsub{ text-align:center; color:var(--gold); font-size:12px; margin-bottom:14px; font-family:'Noto Sans KR',sans-serif; }
+.ec-namegrid{ display:grid; grid-template-columns:repeat(4,1fr); gap:7px; margin-bottom:12px; }
+.ec-chip{
+  background:rgba(58,16,16,.6); border:1.5px solid rgba(192,57,43,.4); border-radius:8px;
+  padding:9px 4px; text-align:center; font-size:12.5px; font-weight:700; cursor:pointer; transition:.15s; color:var(--cream);
+  font-family:'Noto Sans KR',sans-serif;
+}
+.ec-chip.selected{ background:rgba(192,57,43,.4); border-color:var(--red); color:var(--gold); }
+.ec-namerow{ display:flex; gap:8px; margin-bottom:12px; }
+.ec-namerow input{ flex:1; background:rgba(42,16,4,.6); border:1px solid rgba(232,160,32,.3); border-radius:8px; padding:10px 12px; color:var(--cream); font-family:'Noto Sans KR',sans-serif; font-size:13px; outline:none; }
+.ec-addbtn{ background:rgba(232,160,32,.18); border:1px solid var(--gold); border-radius:8px; padding:10px 14px; color:var(--gold); font-family:'Noto Sans KR',sans-serif; font-size:13px; cursor:pointer; }
+.ec-spinbtn{
+  width:100%; padding:14px; background:linear-gradient(135deg,var(--red),#8b1a1a); color:#fff; border:none;
+  border-radius:10px; font-size:12px; letter-spacing:1px; cursor:pointer; font-family:'Press Start 2P',monospace; margin-bottom:12px;
+}
+.ec-spinresult{ display:none; text-align:center; padding:18px; background:rgba(232,160,32,.08); border:1.5px solid rgba(232,160,32,.3); border-radius:12px; }
+.ec-spinlabel{ font-size:9px; letter-spacing:2px; color:var(--gold); margin-bottom:8px; font-family:'Press Start 2P',monospace; }
+.ec-spinname{ font-size:30px; font-weight:900; color:var(--gold); text-shadow:0 0 16px rgba(232,160,32,.5); font-family:'Noto Sans KR',sans-serif; }
+.ec-spinnote{ font-size:10.5px; color:rgba(255,248,238,.4); margin-top:8px; line-height:1.6; font-family:'Noto Sans KR',sans-serif; }
+
+.ec-restart{
+  width:100%; padding:13px; background:transparent; border:2px solid rgba(232,160,32,.4); border-radius:10px;
+  color:var(--gold); font-size:11px; cursor:pointer; margin-top:14px; font-family:'Press Start 2P',monospace;
+}
+</style>
+</head>
+<body>
+
+<!-- ══ 메인 선택 ══ -->
+<div id="sMain" class="screen px" onclick="_startThemeIfNeeded()">
+  <div class="main-top">★ TEXAS ROADHOUSE ★</div>
+  <div class="main-logo">CHRISTMAS</div>
+  <div class="main-sub">CHOOSE YOUR EXPERIENCE</div>
+
+  <div class="main-cards">
+
+    <!-- 1. 포토부스 -->
+    <div class="main-card pb" onclick="_startThemeIfNeeded();goLanding()">
+      <div class="mc-top">
+        <div class="mc-emoji">📸</div>
+        <div class="mc-title px">PHOTO<br>BOOTH</div>
+      </div>
+      <div class="mc-desc kr">메뉴 기다리는 동안 크리스마스 프레임으로 인증샷 찍어보세요!</div>
+      <div class="mc-imgbox" style="aspect-ratio:1/1">
+        <img src="ec_assets/pb_preview.png" loading="lazy">
+        <div class="mc-overlay"><div class="mc-overlay-icon">📷</div></div>
+      </div>
+      <div class="mc-cta pb px">📸 포토부스 이용하기 ▶</div>
+    </div>
+
+    <!-- 2. 엔딩크레딧 -->
+    <div class="main-card ec" onclick="_startThemeIfNeeded();goEnding()">
+      <div class="mc-top">
+        <div class="mc-emoji">🎬</div>
+        <div class="mc-title px">CHRISTMAS<br>END CREDIT</div>
+      </div>
+      <div class="mc-desc kr">텍로하에서 보내는 연말, 나만의 엔딩 크레딧으로 연말정산해보세요!</div>
+      <div class="mc-imgbox" style="aspect-ratio:9/7; overflow:hidden;">
+        <img src="ec_assets/ec_preview.png" loading="lazy" style="object-position:top center;">
+      </div>
+      <div class="mc-cta ec px">🎬 엔딩크레딧 만들기 ▶</div>
+    </div>
+
+    <!-- 3. 계산 랜덤뽑기 -->
+    <div class="main-card sp" onclick="_startThemeIfNeeded();goSpin()">
+      <div class="mc-top">
+        <div class="mc-emoji">🎰</div>
+        <div class="mc-title px">WHO PAYS?<br>RANDOM PICK</div>
+      </div>
+      <div class="mc-desc kr">누가 결제할지 고민이라면? 랜덤으로 공평하게 뽑아보세요!</div>
+      <div class="mc-spin-preview">
+        <div style="font-size:10.5px;color:var(--gold);letter-spacing:2px">🎲 오늘의 계산 담당은?</div>
+        <div class="sp-names">
+          <div class="sp-chip">?</div>
+          <div class="sp-chip">?</div>
+          <div class="sp-chip winner">👑 ?</div>
+          <div class="sp-chip">?</div>
+        </div>
+      </div>
+      <div class="mc-cta sp px">🎰 랜덤으로 뽑기 ▶</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ 랜딩 ══ -->
+<div id="sLanding" class="screen px" style="display:none">
+  <button class="gohome-btn px" onclick="goMain()">◀ 처음으로</button>
+  <div class="l-top">★ PHOTO BOOTH ★</div>
+  <div class="l-logo px">TEXAS<br>ROADHOUSE</div>
+  <div class="l-sub px">CHRISTMAS</div>
+
+  <!-- 1컷/4컷 모드 선택 -->
+  <div class="mode-row">
+    <button class="mbtn px on" id="m1" onclick="setMode(1)">1컷</button>
+    <button class="mbtn px"    id="m4" onclick="setMode(4)">4컷</button>
+  </div>
+
+  <!-- STEP 1: 테마 선택 (1컷/4컷 공통) -->
+  <div id="stepTheme">
+    <div class="step-title px">테마를 선택하세요</div>
+    <div class="theme-grid">
+      <div class="tc on" id="tc0" onclick="pickTheme(0)">
+        <div class="tg">
+          <img src="frames/thumbs/appetizer_roll.jpg" loading="lazy">
+          <img src="frames/thumbs/appetizer_peanut.jpg" loading="lazy">
+          <img src="frames/thumbs/appetizer_steak.jpg" loading="lazy">
+          <img src="frames/thumbs/appetizer_potato.jpg" loading="lazy">
+        </div>
+        <div class="lbl px">🍞 APPETIZER</div>
+        <div class="chk">✓</div>
+      </div>
+      <div class="tc" id="tc1" onclick="pickTheme(1)">
+        <div class="tg">
+          <img src="frames/thumbs/xmas_rope.jpg" loading="lazy">
+          <img src="frames/thumbs/xmas_merry.jpg" loading="lazy">
+          <img src="frames/thumbs/xmas_longhorn.jpg" loading="lazy">
+          <img src="frames/thumbs/xmas_truck.jpg" loading="lazy">
+        </div>
+        <div class="lbl px">🤠 TX XMAS</div>
+        <div class="chk">✓</div>
+      </div>
+      <div class="tc" id="tc2" onclick="pickTheme(2)">
+        <div class="tg">
+          <img src="frames/thumbs/andy_santa.jpg" loading="lazy">
+          <img src="frames/thumbs/andy_texas.jpg" loading="lazy">
+          <img src="frames/thumbs/andy_star.jpg" loading="lazy">
+          <img src="frames/thumbs/andy_cozy.jpg" loading="lazy">
+        </div>
+        <div class="lbl px">🦔 ANDY</div>
+        <div class="chk">✓</div>
+      </div>
+    </div>
+    <!-- 1컷: 다음 버튼 → 세부 선택으로 -->
+    <button class="start-btn px" id="btnNext" onclick="goFramePick()" style="width:100%;max-width:400px">다음 ▶</button>
+    <!-- 4컷: 바로 시작 -->
+    <button class="start-btn px" id="btnStart4" onclick="startBooth4()" style="width:100%;max-width:400px;display:none">START ▶</button>
+  </div>
+
+  <!-- STEP 2: 세부 프레임 선택 (1컷만) -->
+  <div id="stepFrame">
+    <button class="back-btn px" onclick="goThemePick()">◀ 뒤로</button>
+    <div class="step-title px" id="frameStepTitle">프레임을 선택하세요</div>
+    <div class="frame-grid" id="frameGrid"></div>
+    <button class="start-btn px" onclick="startBooth1()" style="width:100%;max-width:400px">START ▶</button>
+  </div>
+</div>
+
+<!-- ══ 부스 ══ -->
+<div id="sBooth" class="screen px">
+  <div class="topbar">
+    <span class="ttl px" id="bTitle">PHOTO BOOTH</span>
+    <div class="dots" id="bDots"></div>
+  </div>
+  <div class="vp" id="vp">
+    <div id="fbox">
+      <video id="vid" autoplay playsinline muted></video>
+      <div class="sl" id="sl"></div>
+      <img id="fimg" src="" alt="">
+    </div>
+  </div>
+  <div class="zbar">
+    <span style="font-size:11px">🔍</span>
+    <input type="range" min="0.5" max="4" step="0.1" value="1" oninput="setZoom(parseFloat(this.value))">
+    <span id="zLabel" class="px">1.0x</span>
+  </div>
+  <div class="tbar">
+    <span class="tlbl px">스티커</span>
+    <span class="to" onclick="addSticker('🤠')">🤠</span>
+    <span class="to" onclick="addSticker('🎄')">🎄</span>
+    <span class="to" onclick="addSticker('⭐')">⭐</span>
+    <span class="to" onclick="addSticker('❄️')">❄️</span>
+    <span class="to" onclick="addSticker('🎅')">🎅</span>
+    <span class="to" onclick="addSticker('🥩')">🥩</span>
+    <span class="to" onclick="addSticker('🍞')">🍞</span>
+    <span class="to" onclick="addSticker('🥔')">🥔</span>
+    <span class="to" onclick="addSticker('🥜')">🥜</span>
+    <div class="tsep"></div>
+    <span class="tlbl px">문구</span>
+    <button class="tbtn px" onclick="openBubble()">💬 말풍선</button>
+    <div class="tsep"></div>
+    <button class="tbtn px" onclick="clearStickers()" style="color:rgba(255,80,80,.7)">🗑</button>
+  </div>
+  <div class="cbar">
+    <button class="cbtn px" onclick="flipCam()">🔄</button>
+    <button class="shutter" id="shutter" onclick="shoot()"></button>
+    <button class="cbtn px" onclick="goLanding()">✕</button>
+  </div>
+</div>
+
+<!-- ══ 결과 ══ -->
+<div id="sResult" class="screen px">
+  <img id="rimg" alt="">
+  <div class="rbar">
+    <button class="rbtn rb-save px"  onclick="dlPhoto()">💾 저장</button>
+    <button class="rbtn rb-insta px" onclick="toInsta()">📸 인스타</button>
+    <button class="rbtn rb-retry px" onclick="retry()">↩ 다시</button>
+  </div>
+  <div class="rtag px">#TxRH크리스마스 #텍사스로드하우스</div>
+</div>
+
+<!-- ══ 계산 랜덤뽑기 ══ -->
+<div id="sSpin" class="screen px" style="display:none; overflow-y:auto; background:var(--dark); padding:24px 16px 40px; justify-content:flex-start;">
+  <button class="gohome-btn px" onclick="goMain()">◀ 처음으로</button>
+  <div style="width:100%;max-width:420px;">
+    <div style="text-align:center;margin-bottom:24px;">
+      <div style="color:var(--red);font-size:10.5px;letter-spacing:3px;margin-bottom:8px;">★ POST CREDIT SCENE ★</div>
+      <div style="color:var(--gold);font-size:clamp(18px,5vw,26px);text-shadow:3px 3px 0 var(--red);line-height:1.5;">WHO PAYS?</div>
+      <div style="color:rgba(255,248,238,.7);font-size:15px;font-family:'Noto Sans KR',sans-serif;margin-top:8px;">누가 결제할지 고민이라면 랜덤으로 뽑아보세요!</div>
+    </div>
+
+    <div class="ec-hidden">
+      <div class="ec-htitle">🎁 오늘 계산할 사람은?</div>
+      <div class="ec-hsub">이름을 입력하고 랜덤으로 뽑아보세요!</div>
+      <div class="ec-namegrid" id="spinNameGrid"></div>
+      <div class="ec-namerow">
+        <input id="spinCustomName" placeholder="이름 입력 후 추가..." maxlength="6">
+        <button class="ec-addbtn" onclick="spinAddName()">추가</button>
+      </div>
+      <button class="ec-spinbtn px" onclick="spinGo()">🎰 랜덤으로 뽑기!</button>
+      <div class="ec-spinresult" id="spinResult">
+        <div class="ec-spinlabel px">👑 오늘의 계산 담당</div>
+        <div class="ec-spinname" id="spinResultName">?</div>
+        <div class="ec-spinthanks" id="spinResultThanks"></div>
+        <div class="ec-spinnote">※ 실제 결제와 무관한 재미용 콘텐츠입니다</div>
+      </div>
+      <button class="ec-restart px" onclick="spinReset()" style="margin-top:12px;">↺ 다시 뽑기</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 엔딩크레딧 ══ -->
+<div id="sEnding" class="screen px" style="display:none">
+  <div class="ec-wrap">
+    <button class="gohome-btn px" onclick="goMain()">◀ 처음으로</button>
+    <div class="ec-head">
+      <div class="eh-top px">★ TEXAS ROADHOUSE ★</div>
+      <h1 class="px">🎬 CHRISTMAS<br>END CREDIT</h1>
+      <div class="eh-sub">식사가 끝났다면, 오늘을 엔딩으로 마무리해 보세요</div>
+    </div>
+
+    <div class="ec-progress" id="ecProgress">
+      <div class="ec-dot active" id="ecDot1"></div>
+      <div class="ec-dot" id="ecDot2"></div>
+      <div class="ec-dot" id="ecDot3"></div>
+      <div class="ec-dot" id="ecDot4"></div>
+    </div>
+
+    <!-- STEP 1 -->
+    <div class="ec-card active" id="ecStep1">
+      <div class="ec-steplabel px">STEP 1 OF 4</div>
+      <div class="ec-steptitle px">오늘의 캐스트는?</div>
+      <div class="ec-stepdesc">누구와 함께 왔나요?</div>
+      <div class="ec-options">
+        <div class="ec-opt" onclick="ecSelect(1,'연인',this)"><span class="eo-emoji">❤️</span><span class="eo-label">연인</span></div>
+        <div class="ec-opt" onclick="ecSelect(1,'친구',this)"><span class="eo-emoji">🤍</span><span class="eo-label">친구</span></div>
+        <div class="ec-opt" onclick="ecSelect(1,'가족',this)"><span class="eo-emoji">🎄</span><span class="eo-label">가족</span></div>
+        <div class="ec-opt" onclick="ecSelect(1,'혼자',this)"><span class="eo-emoji">🤠</span><span class="eo-label">혼자만의 시간</span></div>
+      </div>
+      <button class="ec-next px" id="ecNext1" onclick="ecGoStep(2)">다음 ▶</button>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="ec-card" id="ecStep2">
+      <div class="ec-steplabel px">STEP 2 OF 4</div>
+      <div class="ec-steptitle px">올해의 내 기분은?</div>
+      <div class="ec-stepdesc">올해의 나는 어땠나요?</div>
+      <div class="ec-options five">
+        <div class="ec-opt" onclick="ecSelect(2,'살아남았다',this)"><span class="eo-emoji">🔥</span><span class="eo-label">살아남았다</span></div>
+        <div class="ec-opt" onclick="ecSelect(2,'꽤 행복했다',this)"><span class="eo-emoji">🎄</span><span class="eo-label">꽤 행복했다</span></div>
+        <div class="ec-opt" onclick="ecSelect(2,'새로운 걸 많이 했다',this)"><span class="eo-emoji">🤠</span><span class="eo-label">새로운 걸 많이 했다</span></div>
+        <div class="ec-opt" onclick="ecSelect(2,'먹고 버텼다',this)"><span class="eo-emoji">🥩</span><span class="eo-label">먹고 버텼다</span></div>
+        <div class="ec-opt" onclick="ecSelect(2,'생각보다 괜찮았다',this)"><span class="eo-emoji">✨</span><span class="eo-label">생각보다 괜찮았다</span></div>
+      </div>
+      <button class="ec-next px" id="ecNext2" onclick="ecGoStep(3)">다음 ▶</button>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="ec-card" id="ecStep3">
+      <div class="ec-steplabel px">STEP 3 OF 4</div>
+      <div class="ec-steptitle px">오늘의 엔딩 BGM은?</div>
+      <div class="ec-stepdesc">오늘 장면에 어울리는 음악은?</div>
+      <div class="ec-options">
+        <div class="ec-opt" onclick="ecSelect(3,'재즈 크리스마스',this)"><span class="eo-emoji">🎷</span><span class="eo-label">재즈 크리스마스</span></div>
+        <div class="ec-opt" onclick="ecSelect(3,'컨트리 홀리데이',this)"><span class="eo-emoji">🎸</span><span class="eo-label">컨트리 홀리데이</span></div>
+        <div class="ec-opt" onclick="ecSelect(3,'따뜻한 캐럴',this)"><span class="eo-emoji">🎄</span><span class="eo-label">따뜻한 캐럴</span></div>
+        <div class="ec-opt" onclick="ecSelect(3,'파티 모드',this)"><span class="eo-emoji">💃</span><span class="eo-label">파티 모드</span></div>
+      </div>
+      <button class="ec-next px" id="ecNext3" onclick="ecGoStep(4)">다음 ▶</button>
+    </div>
+
+    <!-- STEP 4: 소원 작성 -->
+    <div class="ec-card" id="ecStep4">
+      <div class="ec-steplabel px">STEP 4 OF 4</div>
+      <div class="ec-steptitle px">🌟 내년의 소원은?</div>
+      <div class="ec-stepdesc">엔딩 크레딧의 마지막 장면에 담길 당신의 소원을 적어주세요</div>
+      <div class="ec-wishbox">
+        <textarea id="ecWishInput" maxlength="60" placeholder="예) 내년엔 사랑하는 사람들과 더 많은 시간을 보내고 싶어요" oninput="ecWishCount()"></textarea>
+        <div class="wc" id="ecWishCount">0 / 60</div>
+      </div>
+      <button class="ec-next go visible px" id="ecNext4" onclick="ecGenerate()">🎬 엔딩 크레딧 생성!</button>
+    </div>
+
+    <!-- RESULT -->
+    <div id="ecResult">
+      <div class="ec-resultcard" id="ecCard">
+        <div class="ec-rtop"></div>
+        <div class="ec-rcontent">
+          <div class="ec-opening">
+            <div class="ec-moodimg" id="ecMoodImgWrap"><img id="ecMoodImg" src="" alt=""></div>
+            <div class="ec-opening-text">
+              <div class="ec-rlabel">STARRING</div>
+              <div class="ec-rvalue" id="ecR_starring">YOU & YOUR FAVORITE PERSON</div>
+              <div class="ec-divider" style="margin:10px 0"></div>
+              <div class="ec-rlabel">GENRE</div>
+              <div class="ec-rvalue it" id="ecR_genre">Holiday Road Movie</div>
+            </div>
+          </div>
+
+          <div class="ec-table">
+            <div class="ec-sectioncard">
+              <div class="ec-row"><div class="ec-rlabel">BEST SCENE</div><div class="ec-rvalue" id="ecR_scene">오늘의 웃음과 대화</div></div>
+              <div class="ec-divider" style="margin:8px auto"></div>
+              <div class="ec-row"><div class="ec-rlabel">MOOD OF THE YEAR</div><div class="ec-rvalue" id="ecR_mood">—</div></div>
+            </div>
+            <div class="ec-sectioncard">
+              <div class="ec-row"><div class="ec-rlabel">SPECIAL THANKS TO</div><div class="ec-rvalue" id="ecR_thanks">오늘 함께한 당신에게</div></div>
+              <div class="ec-divider" style="margin:8px auto"></div>
+              <div class="ec-row"><div class="ec-rlabel">SOUNDTRACK</div><div class="ec-rvalue it" id="ecR_bgm">—</div></div>
+            </div>
+            <div class="ec-wishcard">
+              <div class="ec-rlabel">A MESSAGE TO MYSELF</div>
+              <div class="ec-rlabel" style="font-size:7px;opacity:.7;letter-spacing:1px;margin-bottom:8px;margin-top:3px">연말까지 고생한 나에게</div>
+              <div class="ec-rvalue" id="ecR_wish">—</div>
+            </div>
+            <div class="ec-finalline" id="ecR_final">내년에도 좋은 장면을 많이 남기길.</div>
+          </div>
+        </div>
+        <div class="ec-rbottom"></div>
+      </div>
+
+      <div class="ec-sharebar">
+        <button class="rbtn rb-save px" style="flex:1;padding:14px 4px;font-size:9px;border-radius:8px" onclick="ecSave()">💾 저장하기</button>
+        <button class="rbtn rb-insta px" style="flex:1;padding:14px 4px;font-size:9px;border-radius:8px" onclick="ecToInsta()">📸 스토리 공유</button>
+      </div>
+      <button class="ec-dlmusic px" id="ecDlMusic" onclick="ecDownloadMusic()">🎵 오늘의 음악 다운로드</button>
+
+      <button class="ec-restart px" onclick="ecRestart()">↺ 다시 만들기</button>
+    </div>
+  </div>
+</div>
+
+<div id="mBubble" class="modal">
+  <div class="mbox">
+    <div class="mtitle px">💬 말풍선 추가</div>
+    <input id="bInput" type="text" maxlength="20" placeholder="텍스트 입력 (최대 20자)">
+    <div class="mrow">
+      <button class="rbtn rb-insta px" onclick="addBubble()" style="flex:1">추가</button>
+      <button class="rbtn rb-retry px" onclick="closeBubble()" style="flex:1">취소</button>
+    </div>
+  </div>
+</div>
+
+<!-- 인스타 공유 모달 -->
+<div id="mInsta" class="modal">
+  <div class="mbox">
+    <div class="mtitle px">📸 인스타 공유</div>
+    <div class="ig-step">
+      1. 사진이 자동 <b>저장</b>됩니다<br>
+      2. 아래 태그를 <b>복사</b>하세요<br>
+      3. 인스타그램에 <b>업로드</b>
+    </div>
+    <div class="copy-tag" id="copyTagBox">#texasroadhouse #텍사스로드하우스 @texasroadhouse_kr #TxRH크리스마스</div>
+    <button class="copy-btn px" onclick="copyTag()" id="copyBtn">📋 태그 복사하기</button>
+    <div class="mrow">
+      <button class="rbtn rb-insta px" onclick="openInstaApp()" style="flex:1">인스타 열기</button>
+      <button class="rbtn rb-retry px" onclick="closeInsta()" style="flex:1">닫기</button>
+    </div>
+  </div>
+</div>
+
+<canvas id="canvas" style="display:none"></canvas>
+
+<script>
+// ══════════════════════════════
+// 프레임 데이터
+// ══════════════════════════════
+var FRAMES = [
+  {id:0,  src:'frames/appetizer_roll.png',   label:'DINNER ROLL',  aspect:1.0,    hx:0.2105,hy:0.2137,hw:0.6172,hh:0.5853},
+  {id:1,  src:'frames/appetizer_peanut.png', label:'PEANUT',       aspect:1.0,    hx:0.2313,hy:0.1978,hw:0.5758,hh:0.5550},
+  {id:2,  src:'frames/appetizer_steak.png',  label:'RIBEYE',       aspect:1.0,    hx:0.1738,hy:0.1994,hw:0.5853,hh:0.4833},
+  {id:3,  src:'frames/appetizer_potato.png', label:'POTATO',       aspect:1.0,    hx:0.1722,hy:0.2632,hw:0.6077,hh:0.4833},
+  {id:4,  src:'frames/xmas_rope.png',        label:'TX ROPE',      aspect:1.0,    hx:0.2233,hy:0.2632,hw:0.6316,hh:0.5805},
+  {id:5,  src:'frames/xmas_merry.png',       label:'MERRY TX',     aspect:1.3887, hx:0.2366,hy:0.3445,hw:0.5229,hh:0.5212},
+  {id:6,  src:'frames/xmas_longhorn.png',    label:'LONGHORN',     aspect:0.8324, hx:0.2451,hy:0.2041,hw:0.5065,hh:0.6081},
+  {id:7,  src:'frames/xmas_truck.png',       label:'TX TRUCK',     aspect:1.4943, hx:0.1141,hy:0.1609,hw:0.7500,hh:0.6686},
+  {id:8,  src:'frames/andy_santa.png',       label:'ANDY SANTA',   aspect:1.0,    hx:0.3684,hy:0.1571,hw:0.5247,hh:0.6938},
+  {id:9,  src:'frames/andy_texas.png',       label:'ANDY TEXAS',   aspect:0.9661, hx:0.2360,hy:0.2219,hw:0.6396,hh:0.6487},
+  {id:10, src:'frames/andy_star.png',        label:'ANDY STAR',    aspect:0.9661, hx:0.1515,hy:0.1048,hw:0.7049,hh:0.6641},
+  {id:11, src:'frames/andy_cozy.png',        label:'ANDY COZY',    aspect:1.1901, hx:0.1611,hy:0.1769,hw:0.6944,hh:0.6099}
+];
+
+// 테마별 프레임 ID 묶음
+var THEMES = [
+  { name:'🍞 APPETIZER', ids:[0,1,2,3] },
+  { name:'🤠 TX XMAS',   ids:[4,5,6,7] },
+  { name:'🦔 ANDY',      ids:[8,9,10,11] }
+];
+
+// 썸네일 파일명 (thumbs 폴더)
+var THUMBS = [
+  'appetizer_roll','appetizer_peanut','appetizer_steak','appetizer_potato',
+  'xmas_rope','xmas_merry','xmas_longhorn','xmas_truck',
+  'andy_santa','andy_texas','andy_star','andy_cozy'
+];
+
+// ── 앱 상태 ──
+var mode      = 1;      // 1 or 4
+var selTheme  = 0;      // 선택된 테마 인덱스
+var sel1      = 0;      // 1컷: 선택된 프레임 ID
+var stream    = null;
+var facing    = 'user';
+var zoom      = 1;
+var shooting  = false;
+var fids      = [];     // 현재 세션 프레임 ID 목록
+var shotIdx   = 0;
+var shots     = [];
+var gTarget   = null;
+
+// ══════════════════════════════
+// 랜딩: 모드 전환
+// ══════════════════════════════
+function setMode(m) {
+  mode = m;
+  document.getElementById('m1').classList.toggle('on', m===1);
+  document.getElementById('m4').classList.toggle('on', m===4);
+  // 4컷은 START 직접, 1컷은 다음(세부선택)으로
+  document.getElementById('btnNext').style.display   = m===1 ? 'block' : 'none';
+  document.getElementById('btnStart4').style.display = m===4 ? 'block' : 'none';
+  // stepFrame(세부선택)에 있는 상태에서 모드를 바꾸면 테마 선택 화면으로 복귀
+  if(document.getElementById('stepFrame').style.display === 'block'){
+    goThemePick();
+  }
+}
+
+// ══════════════════════════════
+// STEP 1: 테마 선택
+// ══════════════════════════════
+function pickTheme(idx) {
+  selTheme = idx;
+  document.querySelectorAll('.tc').forEach(function(c){ c.classList.remove('on'); });
+  document.getElementById('tc'+idx).classList.add('on');
+}
+
+// 1컷: 다음 → 세부 프레임 선택 화면
+function goFramePick() {
+  // 선택된 테마의 프레임 카드 동적 생성
+  var theme = THEMES[selTheme];
+  document.getElementById('frameStepTitle').textContent = theme.name + ' 프레임 선택';
+  var grid = document.getElementById('frameGrid');
+  grid.innerHTML = '';
+  theme.ids.forEach(function(fid, i) {
+    var f    = FRAMES[fid];
+    var thumb= THUMBS[fid];
+    var div  = document.createElement('div');
+    div.className = 'fc' + (i===0?' on':'');
+    div.id        = 'ff'+fid;
+    div.onclick   = function(){ pickFrame(fid); };
+    div.innerHTML =
+      '<img src="frames/thumbs/'+thumb+'.jpg" loading="lazy">' +
+      '<div class="lbl px">'+f.label+'</div>' +
+      '<div class="chk">✓</div>';
+    grid.appendChild(div);
+  });
+  // 첫 번째 프레임 기본 선택
+  sel1 = theme.ids[0];
+
+  document.getElementById('stepTheme').style.display = 'none';
+  document.getElementById('stepFrame').style.display  = 'block';
+}
+
+// 뒤로: 테마 선택으로
+function goThemePick() {
+  document.getElementById('stepFrame').style.display  = 'none';
+  document.getElementById('stepTheme').style.display  = 'block';
+}
+
+// 세부 프레임 선택
+function pickFrame(fid) {
+  sel1 = fid;
+  document.querySelectorAll('#frameGrid .fc').forEach(function(c){ c.classList.remove('on'); });
+  var el = document.getElementById('ff'+fid);
+  if(el) el.classList.add('on');
+}
+
+// ══════════════════════════════
+// 부스 시작
+// ══════════════════════════════
+function startBooth1() {
+  // 1컷: 선택된 프레임 하나
+  fids = [sel1];
+  _startBooth();
+}
+
+function startBooth4() {
+  // 4컷: 선택된 테마의 4개 프레임
+  fids = THEMES[selTheme].ids.slice();
+  _startBooth();
+}
+
+function _startBooth() {
+  shotIdx  = 0; shots = []; shooting = false;
+  document.getElementById('sLanding').style.display = 'none';
+  document.getElementById('sBooth').style.display   = 'flex';
+  // stepFrame 초기화 (다음에 랜딩 돌아올 때를 위해)
+  document.getElementById('stepFrame').style.display = 'none';
+  document.getElementById('stepTheme').style.display = 'block';
+  document.getElementById('bTitle').textContent = FRAMES[fids[0]].label;
+  updateDots();
+  loadFimg(fids[0]);
+  startCam();
+}
+
+function updateDots() {
+  var el = document.getElementById('bDots');
+  if(fids.length === 1){ el.innerHTML=''; return; }
+  el.innerHTML = fids.map(function(_,i){
+    var c='dot'+(i<shotIdx?' done':i===shotIdx?' cur':'');
+    return '<div class="'+c+'"></div>';
+  }).join('');
+}
+
+// ══════════════════════════════
+// 카메라
+// ══════════════════════════════
+function startCam() {
+  if(stream) stream.getTracks().forEach(function(t){ t.stop(); });
+  navigator.mediaDevices.getUserMedia({ video:{ facingMode:facing }, audio:false })
+  .then(function(s){
+    stream = s;
+    document.getElementById('vid').srcObject = s;
+    applyLayout(fids[Math.min(shotIdx,fids.length-1)]);
+  })
+  .catch(function(e){ alert('카메라 오류: '+e.message); });
+}
+
+function flipCam() {
+  facing = facing==='user' ? 'environment' : 'user';
+  startCam();
+}
+
+// ══════════════════════════════
+// 레이아웃: fbox 크기 + video 위치
+// ══════════════════════════════
+function applyLayout(fid) {
+  var f   = FRAMES[fid];
+  var vp  = document.getElementById('vp');
+  var vpW = vp.offsetWidth, vpH = vp.offsetHeight;
+  var cW, cH;
+  if(vpW/vpH > f.aspect){ cH=vpH; cW=cH*f.aspect; }
+  else                   { cW=vpW; cH=cW/f.aspect; }
+  var fb = document.getElementById('fbox');
+  fb.style.width  = cW+'px';
+  fb.style.height = cH+'px';
+  var v = document.getElementById('vid');
+  v.style.left   = (f.hx*cW)+'px';
+  v.style.top    = (f.hy*cH)+'px';
+  v.style.width  = (f.hw*cW)+'px';
+  v.style.height = (f.hh*cH)+'px';
+  applyTransform();
+}
+
+window.addEventListener('resize', function(){
+  if(fids.length) applyLayout(fids[Math.min(shotIdx,fids.length-1)]);
+});
+
+function setZoom(z) {
+  zoom = Math.max(0.5, Math.min(4,z));
+  applyTransform();
+  document.getElementById('zLabel').textContent = zoom.toFixed(1)+'x';
+}
+
+function applyTransform() {
+  var v = document.getElementById('vid');
+  v.style.transform = (facing==='user'?'scaleX(-1)':'scaleX(1)') + ' scale('+zoom+')';
+}
+
+// 핀치 줌
+var _vp=document.getElementById('vp'), _pd=0, _pz=1;
+_vp.addEventListener('touchstart',function(e){
+  if(e.touches.length===2&&!gTarget){
+    var dx=e.touches[0].clientX-e.touches[1].clientX, dy=e.touches[0].clientY-e.touches[1].clientY;
+    _pd=Math.hypot(dx,dy); _pz=zoom;
+  }
+},{passive:true});
+_vp.addEventListener('touchmove',function(e){
+  if(e.touches.length===2&&!gTarget){
+    e.preventDefault();
+    var dx=e.touches[0].clientX-e.touches[1].clientX, dy=e.touches[0].clientY-e.touches[1].clientY;
+    setZoom(_pz*(Math.hypot(dx,dy)/_pd));
+  }
+},{passive:false});
+
+// ══════════════════════════════
+// 프레임 PNG 로드
+// ══════════════════════════════
+function loadFimg(fid) {
+  var img = document.getElementById('fimg');
+  img.onload = function(){ applyLayout(fid); };
+  img.src    = FRAMES[fid].src;
+}
+
+// ══════════════════════════════
+// 촬영
+// ══════════════════════════════
+function shoot() {
+  if(shooting) return;
+  shooting = true;
+  document.getElementById('shutter').style.opacity = '0.5';
+
+  var fid = fids[shotIdx];
+  var f   = FRAMES[fid];
+  var v   = document.getElementById('vid');
+  var fb  = document.getElementById('fbox');
+  var LONG = 2000;
+  var CW = f.aspect>=1 ? LONG : Math.round(LONG*f.aspect);
+  var CH = f.aspect>=1 ? Math.round(LONG/f.aspect) : LONG;
+  var cv = document.getElementById('canvas');
+  cv.width=CW; cv.height=CH;
+  var ctx = cv.getContext('2d');
+  ctx.fillStyle='#000'; ctx.fillRect(0,0,CW,CH);
+
+  // 카메라 → 구멍에 그리기
+  var hX=f.hx*CW, hY=f.hy*CH, hW=f.hw*CW, hH=f.hh*CH;
+  var vw=v.videoWidth||hW, vh=v.videoHeight||hH;
+  var sc=Math.max(hW/vw,hH/vh)*zoom;
+  var dw=vw*sc, dh=vh*sc;
+  ctx.save();
+  ctx.beginPath(); ctx.rect(hX,hY,hW,hH); ctx.clip();
+  if(facing==='user'){ ctx.translate(hX*2+hW,0); ctx.scale(-1,1); }
+  ctx.drawImage(v, hX+(hW-dw)/2, hY+(hH-dh)/2, dw, dh);
+  ctx.restore();
+
+  // 스티커
+  var fbW=fb.offsetWidth||1, fbH=fb.offsetHeight||1;
+  document.getElementById('sl').querySelectorAll('.si').forEach(function(s){
+    var ex=parseFloat(s.dataset.x||0)*(CW/fbW), ey=parseFloat(s.dataset.y||0)*(CH/fbH);
+    var sc2=parseFloat(s.dataset.s||1), rot=parseFloat(s.dataset.r||0)*Math.PI/180;
+    ctx.save(); ctx.translate(ex,ey); ctx.rotate(rot); ctx.scale(sc2*(CW/fbW),sc2*(CH/fbH));
+    var sp=s.querySelector('span');
+    if(sp){ ctx.font='34px serif'; ctx.fillText(sp.textContent,0,34); }
+    else {
+      var d=s.querySelector('div');
+      if(d){
+        var t=(d.firstChild&&d.firstChild.nodeValue)?d.firstChild.nodeValue.trim():d.textContent.trim();
+        ctx.font='bold 14px sans-serif';
+        var tw=ctx.measureText(t).width;
+        ctx.fillStyle='rgba(255,248,238,.94)'; ctx.fillRect(0,0,tw+24,30);
+        ctx.strokeStyle='#c0392b'; ctx.lineWidth=2.5; ctx.strokeRect(0,0,tw+24,30);
+        ctx.fillStyle='#1a0a00'; ctx.fillText(t,12,19);
+        ctx.fillStyle='#c0392b';
+        ctx.beginPath(); ctx.moveTo(16,30); ctx.lineTo(8,41); ctx.lineTo(32,30); ctx.fill();
+      }
+    }
+    ctx.restore();
+  });
+
+  function finish(){
+    shooting=false;
+    document.getElementById('shutter').style.opacity='1';
+    var url; try{ url=cv.toDataURL('image/jpeg',0.92); }catch(e){ url=''; }
+    shots.push(url); shotIdx++;
+    if(fids.length===4&&shotIdx<4){
+      clearStickers(); updateDots();
+      loadFimg(fids[shotIdx]); applyLayout(fids[shotIdx]);
+      document.getElementById('bTitle').textContent=FRAMES[fids[shotIdx]].label;
+      flash();
+    } else {
+      if(stream){ stream.getTracks().forEach(function(t){t.stop();}); stream=null; }
+      if(fids.length===4) build4(); else showResult(url);
+    }
+  }
+
+  var fi=document.getElementById('fimg');
+  if(fi.naturalWidth>0){ try{ctx.drawImage(fi,0,0,CW,CH);}catch(e){} finish(); }
+  else if(fi.src){ fi.onload=function(){try{ctx.drawImage(fi,0,0,CW,CH);}catch(e){}finish();}; fi.onerror=finish; }
+  else{ finish(); }
+}
+
+function flash(){
+  var fb=document.getElementById('fbox');
+  var fl=document.createElement('div');
+  fl.style.cssText='position:absolute;inset:0;background:#fff;z-index:20;pointer-events:none;transition:opacity .2s';
+  fb.appendChild(fl);
+  setTimeout(function(){fl.style.opacity='0';setTimeout(function(){fl.remove();},200);},30);
+}
+
+// ══════════════════════════════
+// 4컷 합성: 프레임 비율에 따라 레이아웃 최적화
+// - 모두 세로형(aspect<=1): 2x2 그리드
+// - 가로형 포함: 각 프레임 원본 비율 유지한 세로 스트립
+// ══════════════════════════════
+function build4() {
+  var GAP = 16;
+  var BASE = 1080; // 각 컷의 기준 폭
+
+  // 각 컷의 실제 크기 계산
+  var sizes = fids.map(function(fid){
+    var f = FRAMES[fid];
+    return { w: BASE, h: Math.round(BASE/f.aspect) };
+  });
+
+  // 모두 세로형(aspect<=1.1)이면 2x2, 아니면 세로 스트립
+  var allPortrait = fids.every(function(fid){ return FRAMES[fid].aspect <= 1.1; });
+
+  var cv  = document.getElementById('canvas');
+  var ctx;
+
+  if(allPortrait) {
+    // 2x2 그리드
+    var cw = sizes[0].w, ch = sizes[0].h;
+    cv.width  = cw*2 + GAP*3;
+    cv.height = ch*2 + GAP*3;
+    ctx = cv.getContext('2d');
+    ctx.fillStyle='#1a0a00'; ctx.fillRect(0,0,cv.width,cv.height);
+    var pos = [[GAP,GAP],[cw+GAP*2,GAP],[GAP,ch+GAP*2],[cw+GAP*2,ch+GAP*2]];
+    var done=0;
+    shots.forEach(function(src,i){
+      var img=new Image();
+      img.onload=function(){
+        ctx.drawImage(img,pos[i][0],pos[i][1],cw,ch);
+        done++;
+        if(done===4) finalizeGrid(cv,ctx);
+      };
+      img.src=src;
+    });
+  } else {
+    // 세로 스트립: 각 프레임 원본 비율 유지, 폭 통일, 세로로 나열
+    var stripW = BASE;
+    var totalH = GAP;
+    sizes.forEach(function(s){ totalH += s.h + GAP; });
+    cv.width  = stripW;
+    cv.height = totalH;
+    ctx = cv.getContext('2d');
+    ctx.fillStyle='#1a0a00'; ctx.fillRect(0,0,cv.width,cv.height);
+    var y = GAP, done=0;
+    shots.forEach(function(src,i){
+      var img=new Image();
+      var captureY=y, captureH=sizes[i].h;
+      img.onload=function(){
+        ctx.drawImage(img,GAP,captureY,stripW-GAP*2,captureH);
+        done++;
+        if(done===4) finalizeGrid(cv,ctx);
+      };
+      img.src=src;
+      y += sizes[i].h + GAP;
+    });
+  }
+}
+
+function finalizeGrid(cv,ctx){
+  ctx.fillStyle='rgba(232,160,32,.5)';
+  ctx.font='bold 28px monospace';
+  ctx.textAlign='center';
+  ctx.fillText('TEXAS ROADHOUSE', cv.width/2, cv.height-16);
+  showResult(cv.toDataURL('image/jpeg',0.92));
+}
+
+function showResult(url){
+  document.getElementById('rimg').src=url;
+  document.getElementById('sBooth').style.display='none';
+  document.getElementById('sResult').style.display='flex';
+}
+
+// ══════════════════════════════
+// 결과 화면
+// ══════════════════════════════
+function dlPhoto(){
+  var a=document.createElement('a');
+  a.download='TxRH-Christmas-'+Date.now()+'.jpg';
+  a.href=document.getElementById('rimg').src;
+  a.click();
+}
+
+// 인스타 공유: 저장 → 태그 복사 안내 → 앱 이동
+var _igTag = '#texasroadhouse #텍사스로드하우스 @texasroadhouse_kr #TxRH크리스마스';
+function toInsta(){
+  // 1) 사진 저장
+  dlPhoto();
+  // 2) 모달 표시
+  _igTag = '#texasroadhouse #텍사스로드하우스 @texasroadhouse_kr #TxRH크리스마스';
+  document.getElementById('copyTagBox').textContent = _igTag;
+  document.getElementById('mInsta').style.display='flex';
+}
+
+function copyTag(){
+  var tag=_igTag;
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(tag).then(function(){
+      document.getElementById('copyBtn').textContent='✅ 복사됐어요!';
+      setTimeout(function(){ document.getElementById('copyBtn').textContent='📋 태그 복사하기'; },2000);
+    });
+  } else {
+    // fallback
+    var ta=document.createElement('textarea');
+    ta.value=tag; ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.focus(); ta.select();
+    try{ document.execCommand('copy');
+      document.getElementById('copyBtn').textContent='✅ 복사됐어요!';
+      setTimeout(function(){ document.getElementById('copyBtn').textContent='📋 태그 복사하기'; },2000);
+    }catch(e){}
+    document.body.removeChild(ta);
+  }
+}
+
+function openInstaApp(){
+  var ua=navigator.userAgent.toLowerCase();
+  if(/iphone|ipad/.test(ua))      window.location.href='instagram://app';
+  else if(/android/.test(ua))     window.location.href='intent://instagram.com/#Intent;package=com.instagram.android;scheme=https;end';
+  else                             window.open('https://www.instagram.com/','_blank');
+  closeInsta();
+}
+
+function closeInsta(){ document.getElementById('mInsta').style.display='none'; }
+
+function retry(){
+  shotIdx=0; shots=[]; shooting=false;
+  document.getElementById('shutter').style.opacity='1';
+  clearStickers(); updateDots();
+  loadFimg(fids[0]); applyLayout(fids[0]);
+  document.getElementById('bTitle').textContent=FRAMES[fids[0]].label;
+  document.getElementById('sResult').style.display='none';
+  document.getElementById('sBooth').style.display='flex';
+  startCam();
+}
+
+function goLanding(){
+  if(stream){ stream.getTracks().forEach(function(t){t.stop();}); stream=null; }
+  shooting=false;
+  document.getElementById('shutter').style.opacity='1';
+  document.getElementById('sBooth').style.display='none';
+  document.getElementById('sResult').style.display='none';
+  document.getElementById('sEnding').style.display='none';
+  document.getElementById('sMain').style.display='none';
+  document.getElementById('sLanding').style.display='flex';
+  pushHistory('landing');
+}
+
+function goMain(){
+  if(stream){ stream.getTracks().forEach(function(t){t.stop();}); stream=null; }
+  shooting=false;
+  ecStopBgm();
+  _startThemeIfNeeded();
+  document.getElementById('sBooth').style.display='none';
+  document.getElementById('sResult').style.display='none';
+  document.getElementById('sLanding').style.display='none';
+  document.getElementById('sEnding').style.display='none';
+  document.getElementById('sSpin').style.display='none';
+  document.getElementById('sMain').style.display='flex';
+  pushHistory('main');
+}
+
+function goSpin(){
+  document.getElementById('sMain').style.display='none';
+  document.getElementById('sSpin').style.display='flex';
+  pushHistory('spin');
+}
+
+function spinAddName(){
+  var input=document.getElementById('spinCustomName');
+  var name=input.value.trim();
+  if(!name) return;
+  var chip=document.createElement('div');
+  chip.className='ec-chip selected';
+  chip.textContent=name;
+  chip.onclick=function(){ chip.classList.toggle('selected'); };
+  document.getElementById('spinNameGrid').appendChild(chip);
+  input.value='';
+}
+
+function spinGo(){
+  var selected=[].slice.call(document.querySelectorAll('#spinNameGrid .ec-chip.selected')).map(function(c){return c.textContent;});
+  if(selected.length===0){ alert('이름을 먼저 추가하고 선택해 주세요!'); return; }
+  var resultEl=document.getElementById('spinResult');
+  var nameEl=document.getElementById('spinResultName');
+  var thanksEl=document.getElementById('spinResultThanks');
+  resultEl.style.display='block';
+  thanksEl.textContent='';
+  var final=selected[Math.floor(Math.random()*selected.length)];
+  var count=0;
+  var interval=setInterval(function(){
+    nameEl.textContent=selected[Math.floor(Math.random()*selected.length)];
+    count++;
+    if(count>20){
+      clearInterval(interval);
+      nameEl.textContent=final;
+      thanksEl.innerHTML='🙏 고마워요, 잘 먹었습니다!<br>🎄 메리 크리스마스!';
+    }
+  },80);
+}
+
+function spinReset(){
+  document.getElementById('spinResult').style.display='none';
+  document.getElementById('spinResultName').textContent='?';
+  document.getElementById('spinResultThanks').textContent='';
+  document.getElementById('spinNameGrid').innerHTML='';
+  document.getElementById('spinCustomName').value='';
+}
+
+function goEnding(){
+  document.getElementById('sMain').style.display='none';
+  document.getElementById('sLanding').style.display='none';
+  document.getElementById('sEnding').style.display='flex';
+  pushHistory('ending');
+}
+
+// ══════════════════════════════
+// 뒤로가기(브라우저/모바일 back) 대응
+// ══════════════════════════════
+var _curScreen = 'main';
+function pushHistory(screen){
+  if(_curScreen === screen) return;
+  _curScreen = screen;
+  history.pushState({screen:screen}, '', '#'+screen);
+}
+window.addEventListener('popstate', function(e){
+  var screen = (e.state && e.state.screen) || 'main';
+  _curScreen = screen;
+  // 진행 중인 카메라/촬영 정리
+  if(stream){ stream.getTracks().forEach(function(t){t.stop();}); stream=null; }
+  shooting=false;
+  document.getElementById('sMain').style.display='none';
+  document.getElementById('sLanding').style.display='none';
+  document.getElementById('sBooth').style.display='none';
+  document.getElementById('sResult').style.display='none';
+  document.getElementById('sEnding').style.display='none';
+  document.getElementById('sSpin').style.display='none';
+  if(screen==='landing'){ document.getElementById('sLanding').style.display='flex'; }
+  else if(screen==='ending'){ document.getElementById('sEnding').style.display='flex'; }
+  else if(screen==='spin'){ document.getElementById('sSpin').style.display='flex'; }
+  else { document.getElementById('sMain').style.display='flex'; }
+});
+// 초기 history 상태 등록
+history.replaceState({screen:'main'}, '', '#main');
+
+// ══════════════════════════════
+// 스티커 시스템
+// ══════════════════════════════
+function addSticker(emoji){
+  var sl=document.getElementById('sl'), fb=document.getElementById('fbox');
+  var el=document.createElement('div');
+  el.className='si';
+  el.innerHTML='<span style="font-size:34px;line-height:1;display:block">'+emoji+'</span>';
+  el.dataset.x=fb.offsetWidth/2-17; el.dataset.y=fb.offsetHeight/2-17;
+  el.dataset.s=1; el.dataset.r=0;
+  applyT(el); bindGesture(el); sl.appendChild(el);
+}
+
+function openBubble(){ document.getElementById('mBubble').style.display='flex'; setTimeout(function(){document.getElementById('bInput').focus();},80); }
+function closeBubble(){ document.getElementById('mBubble').style.display='none'; document.getElementById('bInput').value=''; }
+
+function addBubble(){
+  var txt=document.getElementById('bInput').value.trim(); if(!txt) return;
+  var sl=document.getElementById('sl'), fb=document.getElementById('fbox');
+  var el=document.createElement('div');
+  el.className='si';
+  el.dataset.x=fb.offsetWidth/2-60; el.dataset.y=fb.offsetHeight/2-24;
+  el.dataset.s=1; el.dataset.r=0;
+  el.innerHTML='<div style="position:relative;background:rgba(255,248,238,.94);border:2.5px solid #c0392b;border-radius:8px;padding:6px 11px;max-width:160px;font-family:Noto Sans KR,sans-serif;font-size:13px;color:#1a0a00;font-weight:700;white-space:nowrap;box-shadow:2px 2px 0 #8b1a1a">'+txt+'<div style="position:absolute;bottom:-11px;left:16px;width:0;height:0;border-left:8px solid transparent;border-right:8px solid transparent;border-top:11px solid #c0392b"></div></div>';
+  applyT(el); bindGesture(el); sl.appendChild(el); closeBubble();
+}
+
+function applyT(el){
+  el.style.left=parseFloat(el.dataset.x)+'px';
+  el.style.top=parseFloat(el.dataset.y)+'px';
+  el.style.transform='rotate('+el.dataset.r+'deg) scale('+el.dataset.s+')';
+}
+
+function bindGesture(el){
+  var fb=document.getElementById('fbox');
+  var ss={x:0,y:0,ex:0,ey:0}, ps={d:0,a:0,s:1,r:0}, tap=0;
+  el.addEventListener('touchstart',function(e){
+    e.stopPropagation();
+    if(e.touches.length===1){
+      e.preventDefault(); gTarget=el;
+      ss={x:e.touches[0].clientX,y:e.touches[0].clientY,ex:parseFloat(el.dataset.x),ey:parseFloat(el.dataset.y)};
+    } else if(e.touches.length===2){
+      e.preventDefault(); gTarget=el;
+      var dx=e.touches[0].clientX-e.touches[1].clientX, dy=e.touches[0].clientY-e.touches[1].clientY;
+      ps={d:Math.hypot(dx,dy),a:Math.atan2(dy,dx)*180/Math.PI,s:parseFloat(el.dataset.s)||1,r:parseFloat(el.dataset.r)||0};
+    }
+  },{passive:false});
+  el.addEventListener('touchmove',function(e){
+    e.stopPropagation(); e.preventDefault();
+    var wr=fb.getBoundingClientRect();
+    if(e.touches.length===1&&gTarget===el){
+      el.dataset.x=Math.max(-30,Math.min(wr.width-10,ss.ex+(e.touches[0].clientX-ss.x)));
+      el.dataset.y=Math.max(-30,Math.min(wr.height-10,ss.ey+(e.touches[0].clientY-ss.y)));
+    } else if(e.touches.length===2&&gTarget===el){
+      var dx=e.touches[0].clientX-e.touches[1].clientX, dy=e.touches[0].clientY-e.touches[1].clientY;
+      el.dataset.s=Math.max(0.2,Math.min(5,ps.s*(Math.hypot(dx,dy)/ps.d)));
+      el.dataset.r=ps.r+(Math.atan2(dy,dx)*180/Math.PI-ps.a);
+    }
+    applyT(el);
+  },{passive:false});
+  el.addEventListener('touchend',function(e){
+    e.stopPropagation();
+    if(e.touches.length===0){ var now=Date.now(); if(now-tap<300) el.remove(); tap=now; gTarget=null; }
+  });
+  var md=false, ms={x:0,y:0,ex:0,ey:0};
+  el.addEventListener('mousedown',function(e){ e.stopPropagation(); md=true; gTarget=el; ms={x:e.clientX,y:e.clientY,ex:parseFloat(el.dataset.x),ey:parseFloat(el.dataset.y)}; });
+  document.addEventListener('mousemove',function(e){
+    if(!md||gTarget!==el) return;
+    var wr=fb.getBoundingClientRect();
+    el.dataset.x=Math.max(-30,Math.min(wr.width-10,ms.ex+(e.clientX-ms.x)));
+    el.dataset.y=Math.max(-30,Math.min(wr.height-10,ms.ey+(e.clientY-ms.y)));
+    applyT(el);
+  });
+  document.addEventListener('mouseup',function(){ md=false; gTarget=null; });
+  el.addEventListener('dblclick',function(){ el.remove(); });
+}
+
+function clearStickers(){ document.getElementById('sl').innerHTML=''; }
+
+// ══════════════════════════════
+// 엔딩크레딧
+// ══════════════════════════════
+var ecAnswers = {1:null, 2:null, 3:null, 4:null};
+
+var ecGenreMap = {
+  '연인':'Romance on the Road', '친구':'Comedy Christmas',
+  '가족':'Family Holiday Special', '혼자':'Solo Holiday Adventure'
+};
+var ecSceneMap = {
+  '살아남았다':'올해를 버텨낸 나에게 건배', '꽤 행복했다':'기억에 남을 오늘의 웃음',
+  '새로운 걸 많이 했다':'처음 해본 것들의 설렘', '먹고 버텼다':'맛있는 음식이 준 위로',
+  '생각보다 괜찮았다':'예상보다 괜찮았던 순간들'
+};
+var ecMoodMap = {
+  '살아남았다':'🔥 Fighter Mode — 올해도 완주 성공', '꽤 행복했다':'🎄 Warm & Happy — 행복한 연말',
+  '새로운 걸 많이 했다':'🤠 Adventurous — 도전의 한 해', '먹고 버텼다':'🥩 Comfort Mode — 먹으면서 버텼다',
+  '생각보다 괜찮았다':'✨ Surprisingly Good — 나쁘지 않았어'
+};
+// STEP2 기분별 매칭 일러스트
+var ecMoodImgMap = {
+  '살아남았다':'ec_assets/mood_fighter.png',
+  '꽤 행복했다':'ec_assets/mood_happy.png',
+  '새로운 걸 많이 했다':'ec_assets/mood_adventure.png',
+  '먹고 버텼다':'ec_assets/mood_comfort.png',
+  '생각보다 괜찮았다':'ec_assets/mood_surprising.png'
+};
+var ecThanksMap = {
+  '연인':'오늘 함께한 당신에게, 그리고 내 사람에게', '친구':'옆에 있어줘서 고마운 친구에게',
+  '가족':'언제나 내 편인 가족에게', '혼자':'올 한 해 나 자신에게'
+};
+var ecBgmMap = {
+  '재즈 크리스마스':'🎷 Have Yourself a Merry Little Christmas', '컨트리 홀리데이':'🎸 Country Christmas Special Mix',
+  '따뜻한 캐럴':'🎄 All I Want for Christmas Is You', '파티 모드':"💃 Rockin' Around the Christmas Tree"
+};
+// 인스타 스토리 음악 스티커 검색용 추천 키워드 (실제 음원 자동 삽입은 인스타 정책상 불가)
+var ecBgmSearchMap = {
+  '재즈 크리스마스':'Have Yourself a Merry Little Christmas',
+  '컨트리 홀리데이':'Country Christmas',
+  '따뜻한 캐럴':'All I Want for Christmas Is You',
+  '파티 모드':"Rockin' Around the Christmas Tree"
+};
+
+function ecSelect(step, value, el){
+  ecAnswers[step] = value;
+  document.querySelectorAll('#ecStep'+step+' .ec-opt').forEach(function(o){ o.classList.remove('on'); });
+  el.classList.add('on');
+  document.getElementById('ecNext'+step).classList.add('visible');
+}
+
+function ecWishCount(){
+  var v = document.getElementById('ecWishInput').value;
+  document.getElementById('ecWishCount').textContent = v.length+' / 60';
+}
+
+function ecGoStep(toStep){
+  for(var i=1;i<=4;i++){
+    document.getElementById('ecStep'+i).classList.remove('active');
+    var dot = document.getElementById('ecDot'+i);
+    if(i<toStep) dot.className='ec-dot done';
+    else if(i===toStep) dot.className='ec-dot active';
+    else dot.className='ec-dot';
+  }
+  document.getElementById('ecStep'+toStep).classList.add('active');
+  document.getElementById('sEnding').scrollTo({top:0, behavior:'smooth'});
+}
+
+function ecGenerate(){
+  var cast=ecAnswers[1], mood=ecAnswers[2], bgm=ecAnswers[3];
+  var wish=document.getElementById('ecWishInput').value.trim();
+
+  document.getElementById('ecR_starring').textContent =
+    cast==='혼자' ? 'YOU — Solo Holiday Edition' : 'YOU & YOUR FAVORITE '+cast.toUpperCase();
+  document.getElementById('ecR_genre').textContent = ecGenreMap[cast] || 'Holiday Road Movie';
+  document.getElementById('ecR_scene').textContent = ecSceneMap[mood] || '오늘의 웃음과 대화';
+  document.getElementById('ecR_mood').textContent  = ecMoodMap[mood] || mood;
+  document.getElementById('ecMoodImg').src = ecMoodImgMap[mood] || '';
+  document.getElementById('ecR_thanks').textContent = ecThanksMap[cast] || '오늘 함께한 당신에게';
+  document.getElementById('ecR_bgm').textContent = ecBgmMap[bgm] || bgm;
+  document.getElementById('ecR_wish').textContent = wish ? '🌟 '+wish : '— (작성하지 않음)';
+  document.getElementById('ecR_final').textContent = wish ? '그 소원, 내년 크리스마스에 다시 확인해봐요.' : '내년에도 좋은 장면을 많이 남기길.';
+
+  for(var i=1;i<=4;i++){
+    document.getElementById('ecStep'+i).classList.remove('active');
+    document.getElementById('ecDot'+i).className='ec-dot done';
+  }
+  document.getElementById('ecResult').style.display='block';
+  // 결과 화면 진입 시 선택한 BGM 재생
+  if(ecAnswers[3]){ ecPlayBgm(ecAnswers[3]); }
+  // 음악 다운로드 버튼 표시
+  var dlBtn = document.getElementById('ecDlMusic');
+  if(_ecBgmId && ecBgmAudioMap[_ecBgmId]){
+    dlBtn.textContent = '🎵 ' + (ecBgmAudioMap[_ecBgmId].name.replace('.mp3','').replace(/_/g,' ')) + ' 다운로드';
+    dlBtn.style.display = 'block';
+  }
+  document.getElementById('sEnding').scrollTo({top:0, behavior:'smooth'});
+}
+
+function ecRestart(){
+  ecAnswers={1:null,2:null,3:null,4:null};
+  document.getElementById('ecWishInput').value='';
+  ecWishCount();
+  ecStopBgm();
+  document.getElementById('ecDlMusic').style.display='none';
+  document.getElementById('ecResult').style.display='none';
+  for(var i=1;i<=4;i++){
+    var card=document.getElementById('ecStep'+i);
+    card.querySelectorAll('.ec-opt').forEach(function(o){o.classList.remove('on');});
+    document.getElementById('ecNext'+i).classList.remove('visible');
+    if(i===4) document.getElementById('ecNext4').classList.add('visible');
+    card.classList.remove('active');
+  }
+  document.getElementById('ecStep1').classList.add('active');
+  document.getElementById('ecDot1').className='ec-dot active';
+  document.getElementById('ecDot2').className='ec-dot';
+  document.getElementById('ecDot3').className='ec-dot';
+  document.getElementById('ecDot4').className='ec-dot';
+  document.getElementById('sEnding').scrollTo({top:0, behavior:'smooth'});
+}
+
+// 히든엔딩: 이름 선택 & 랜덤뽑기
+function ecToggleName(el){ el.classList.toggle('selected'); }
+
+function ecAddName(){
+  var input=document.getElementById('ecCustomName');
+  var name=input.value.trim();
+  if(!name) return;
+  var chip=document.createElement('div');
+  chip.className='ec-chip selected';
+  chip.textContent=name;
+  chip.onclick=function(){ ecToggleName(this); };
+  document.getElementById('ecNameGrid').appendChild(chip);
+  input.value='';
+}
+
+function ecSpin(){
+  var selected=[].slice.call(document.querySelectorAll('#ecNameGrid .ec-chip.selected')).map(function(c){return c.textContent;});
+  if(selected.length===0){ alert('이름을 먼저 추가하고 선택해 주세요!'); return; }
+  var resultEl=document.getElementById('ecSpinResult');
+  var nameEl=document.getElementById('ecSpinName');
+  var thanksEl=document.getElementById('ecSpinThanks');
+  resultEl.style.display='block';
+  thanksEl.textContent='';
+  var count=0;
+  var final=selected[Math.floor(Math.random()*selected.length)];
+  var interval=setInterval(function(){
+    nameEl.textContent=selected[Math.floor(Math.random()*selected.length)];
+    count++;
+    if(count>20){
+      clearInterval(interval);
+      nameEl.textContent=final;
+      thanksEl.innerHTML='🙏 고마워요, 잘 먹었습니다!<br>🎄 메리 크리스마스!';
+    }
+  },80);
+}
+
+// ── 엔딩크레딧 카드 → 이미지 캡처 (배경+일러스트+텍스트 합성, 비동기) ──
+function loadImg(src){
+  return new Promise(function(resolve,reject){
+    var img=new Image();
+    img.crossOrigin='anonymous';
+    img.onload=function(){ resolve(img); };
+    img.onerror=reject;
+    img.src=src;
+  });
+}
+
+function ecRenderCanvas(){
+  var cv=document.getElementById('canvas');
+  // 인스타그램 스토리 고정 비율 9:16
+  var W=1080, H=1920;
+  cv.width=W; cv.height=H;
+  var ctx=cv.getContext('2d');
+  var cx=W/2;
+
+  var mood=ecAnswers[2];
+  var moodSrc=ecMoodImgMap[mood] || '';
+
+  return Promise.all([
+    loadImg('ec_assets/ec_top.png'),
+    loadImg('ec_assets/ec_bottom.png'),
+    loadImg('ec_assets/ec_mid.png'),
+    moodSrc?loadImg(moodSrc):Promise.resolve(null)
+  ]).then(function(imgs){
+    var topImg=imgs[0], bottomImg=imgs[1], midImg=imgs[2], moodImg=imgs[3];
+
+    // 이미지 크기는 실제 파일 크기 기준 (1080px wide)
+    var topH    = topImg.height;    // 479
+    var bottomH = bottomImg.height; // 767
+    var midH    = midImg.height;    // 185
+    var contentH = H - topH - bottomH; // 700
+
+    // mid 타일링으로 콘텐츠 영역 채우기
+    for(var ty0=topH; ty0<topH+contentH+midH; ty0+=midH){
+      ctx.drawImage(midImg, 0, ty0, W, midH);
+    }
+    // 상단/하단 덮어씌우기
+    ctx.drawImage(topImg,    0, 0,        W, topH);
+    ctx.drawImage(bottomImg, 0, H-bottomH, W, bottomH);
+
+    // 콘텐츠 텍스트 영역
+    var pad = W * 0.09;
+    var areaW = W - pad*2;
+    var cp = 22; // 카드 내부 패딩
+    var y = topH + 36;
+
+    // 카드 배경 헬퍼 (텍스트 먼저 측정 후 배경 그리고 텍스트 재렌더 방식 대신,
+    // 넉넉한 고정 높이로 카드를 먼저 그림)
+    function card(yTop, cardH){
+      ctx.fillStyle='rgba(15,8,3,.82)';
+      ctx.strokeStyle='rgba(180,90,20,.45)'; ctx.lineWidth=2;
+      roundRect(ctx, pad, yTop, areaW, cardH, 16);
+      ctx.fill(); ctx.stroke();
+    }
+    function label(text, cx2, y2){
+      ctx.fillStyle='#c87030'; ctx.font='10px "Press Start 2P", monospace';
+      ctx.fillText(text, cx2, y2);
+    }
+    function value(text, cx2, y2, italic, maxW){
+      ctx.fillStyle='#2a1800';
+      ctx.font='bold '+(italic?'italic ':'')+' 21px "Noto Sans KR", sans-serif';
+      ecWrapText(ctx,text,maxW||areaW-cp*2).forEach(function(l){ ctx.fillText(l,cx2,y2); y2+=28; });
+      return y2;
+    }
+    function divLine(cx2, y2){
+      ctx.strokeStyle='rgba(180,90,20,.35)'; ctx.lineWidth=1;
+      ctx.beginPath(); ctx.moveTo(cx2-32,y2); ctx.lineTo(cx2+32,y2); ctx.stroke();
+    }
+
+    // ── 카드1: 무드 일러스트 + STARRING/GENRE ──
+    var imgSize = Math.min(areaW*0.37, 280);
+    var textBlockW = areaW - imgSize - cp*3;
+    var c1H = imgSize + cp*2;
+    card(y, c1H);
+    if(moodImg){
+      ctx.save();
+      roundRect(ctx, pad+cp, y+cp, imgSize, imgSize, 10); ctx.clip();
+      ctx.drawImage(moodImg, pad+cp, y+cp, imgSize, imgSize);
+      ctx.restore();
+      ctx.strokeStyle='rgba(138,106,48,.5)'; ctx.lineWidth=2;
+      roundRect(ctx, pad+cp, y+cp, imgSize, imgSize, 10); ctx.stroke();
+    }
+    var tx = pad + cp + imgSize + cp;
+    ctx.textAlign='left';
+    var ty = y + cp + 20;
+    label('STARRING', tx, ty); ty+=24;
+    ty = value(document.getElementById('ecR_starring').textContent, tx, ty, false, textBlockW);
+    ty+=10; divLine(tx+textBlockW/2, ty); ty+=18;
+    label('GENRE', tx, ty); ty+=24;
+    value(document.getElementById('ecR_genre').textContent, tx, ty, true, textBlockW);
+    y += c1H + 12;
+
+    // ── 카드2: BEST SCENE + MOOD OF THE YEAR ──
+    ctx.textAlign='center';
+    var c2H = cp + 24+26 + 28+14 + 16 + 24+26 + 28 + cp;
+    card(y, c2H);
+    var c2y = y + cp;
+    label('BEST SCENE', cx, c2y); c2y+=24;
+    c2y = value(document.getElementById('ecR_scene').textContent, cx, c2y); c2y+=14;
+    divLine(cx, c2y); c2y+=16;
+    label('MOOD OF THE YEAR', cx, c2y); c2y+=24;
+    value(document.getElementById('ecR_mood').textContent, cx, c2y);
+    y += c2H + 12;
+
+    // ── 카드3: SPECIAL THANKS TO + SOUNDTRACK ──
+    var c3H = cp + 24+26 + 28+14 + 16 + 24+26 + 28 + cp;
+    card(y, c3H);
+    var c3y = y + cp;
+    label('SPECIAL THANKS TO', cx, c3y); c3y+=24;
+    c3y = value(document.getElementById('ecR_thanks').textContent, cx, c3y); c3y+=14;
+    divLine(cx, c3y); c3y+=16;
+    label('SOUNDTRACK', cx, c3y); c3y+=24;
+    ctx.fillStyle='#f0d8a0'; ctx.font='italic bold 21px "Noto Sans KR", sans-serif';
+    ecWrapText(ctx,document.getElementById('ecR_bgm').textContent,areaW-cp*2).forEach(function(l){ ctx.fillText(l,cx,c3y); c3y+=28; });
+    y += c3H + 12;
+
+    // ── 카드4: A MESSAGE TO MYSELF ──
+    var wish = document.getElementById('ecR_wish').textContent;
+    var wishLines = ecWrapText(ctx, wish, areaW-cp*2-10);
+    var c4H = cp + 24 + 20 + 22 + wishLines.length*30 + cp;
+    card(y, c4H);
+    var c4y = y + cp;
+    label('A MESSAGE TO MYSELF', cx, c4y); c4y+=20;
+    ctx.fillStyle='rgba(200,150,60,.7)'; ctx.font='italic 17px "Noto Sans KR", sans-serif';
+    ctx.fillText('연말까지 고생한 나에게', cx, c4y); c4y+=28;
+    ctx.fillStyle='#e8a030'; ctx.font='bold 23px "Noto Sans KR", sans-serif';
+    wishLines.forEach(function(l){ ctx.fillText(l,cx,c4y); c4y+=30; });
+    y += c4H + 16;
+
+    // 마지막 문구
+    var finalLine = document.getElementById('ecR_final').textContent;
+    ctx.fillStyle='rgba(220,170,80,.8)'; ctx.font='italic 19px "Noto Sans KR", sans-serif';
+    ecWrapText(ctx, finalLine, areaW-20).forEach(function(l){ ctx.fillText(l,cx,y); y+=26; });
+
+    return cv.toDataURL('image/jpeg', 0.93);
+  });
+}
+
+function roundRect(ctx,x,y,w,h,r){
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);
+  ctx.arcTo(x+w,y,x+w,y+h,r);
+  ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r);
+  ctx.arcTo(x,y,x+w,y,r);
+  ctx.closePath();
+}
+
+function ecWrapText(ctx, text, maxWidth){
+  var words=text.split(''); // 한글 줄바꿈은 글자 단위로
+  var lines=[], cur='';
+  for(var i=0;i<words.length;i++){
+    var test=cur+words[i];
+    if(ctx.measureText(test).width>maxWidth && cur){ lines.push(cur); cur=words[i]; }
+    else cur=test;
+  }
+  if(cur) lines.push(cur);
+  return lines.length?lines:[''];
+}
+
+function ecSave(){
+  ecRenderCanvas().then(function(url){
+    var a=document.createElement('a');
+    a.download='TxRH-EndCredit-'+Date.now()+'.jpg';
+    a.href=url;
+    a.click();
+  }).catch(function(e){ alert('이미지 생성 중 오류가 발생했어요. 다시 시도해주세요.'); });
+}
+
+function ecToInsta(){
+  ecSave();
+  var wish=document.getElementById('ecWishInput').value.trim();
+  _igTag = '#texasroadhouse #텍사스로드하우스 @texasroadhouse_kr #TxRH크리스마스 #크리스마스엔딩크레딧'+(wish?' #내년소원':'');
+  document.getElementById('copyTagBox').textContent=_igTag;
+  document.getElementById('mInsta').style.display='flex';
+}
+
+// ══════════════════════════════
+// 음악 시스템
+// ══════════════════════════════
+var _musicStarted = false;   // 첫 터치 후 테마 재생 시작 여부
+var _ecBgmId = null;         // 현재 선택된 엔딩크레딧 BGM 오디오 id
+var _ecBgmActive = false;    // 엔딩크레딧 BGM 활성 여부
+
+// BGM 선택값 → 오디오 id + 다운로드 파일명
+var ecBgmAudioMap = {
+  '재즈 크리스마스':  { id:'audioJazz',    file:'music/jazz.mp3',    name:'Jazz_Christmas.mp3' },
+  '컨트리 홀리데이':  { id:'audioCountry', file:'music/country.mp3', name:'Country_Holiday.mp3' },
+  '따뜻한 캐럴':     { id:'audioCarol',   file:'music/carol.mp3',   name:'Warm_Carol.mp3' },
+  '파티 모드':       { id:'audioParty',   file:'music/party.mp3',   name:'Party_Mode.mp3' }
+};
+
+// 첫 사용자 인터랙션 시 테마 음악 시작 (자동재생 정책 우회)
+function _startThemeIfNeeded(){
+  if(_musicStarted) return;
+  _musicStarted = true;
+  var th = document.getElementById('audioTheme');
+  th.volume = 0.45;
+  th.play().catch(function(){});
+}
+
+// 엔딩크레딧 BGM 전환: 테마 페이드아웃 → BGM 페이드인
+function ecPlayBgm(bgmKey){
+  _ecBgmId = bgmKey;
+  var info = ecBgmAudioMap[bgmKey];
+  if(!info) return;
+  _ecBgmActive = true;
+
+  // 테마 페이드아웃
+  var th = document.getElementById('audioTheme');
+  _fadeOut(th, 1200, function(){ th.pause(); });
+
+  // BGM 재생
+  var bgm = document.getElementById(info.id);
+  bgm.currentTime = 0;
+  bgm.volume = 0;
+  bgm.play().catch(function(){});
+  _fadeIn(bgm, 1200, 0.75);
+}
+
+// 엔딩크레딧 BGM 종료 → 테마 복귀
+function ecStopBgm(){
+  if(!_ecBgmActive) return;
+  _ecBgmActive = false;
+  if(_ecBgmId && ecBgmAudioMap[_ecBgmId]){
+    var bgm = document.getElementById(ecBgmAudioMap[_ecBgmId].id);
+    _fadeOut(bgm, 1000, function(){ bgm.pause(); bgm.currentTime=0; });
+  }
+  _ecBgmId = null;
+  if(_musicStarted){
+    var th = document.getElementById('audioTheme');
+    th.play().catch(function(){});
+    _fadeIn(th, 1200, 0.45);
+  }
+}
+
+function _fadeOut(audio, ms, cb){
+  var steps = 20, interval = ms/steps, vol = audio.volume;
+  var t = setInterval(function(){
+    vol = Math.max(0, vol - audio.volume/steps);
+    audio.volume = vol;
+    if(vol<=0){ clearInterval(t); if(cb) cb(); }
+  }, interval);
+}
+
+function _fadeIn(audio, ms, target){
+  audio.volume = 0;
+  var steps = 20, interval = ms/steps, step = target/steps;
+  var t = setInterval(function(){
+    audio.volume = Math.min(target, audio.volume + step);
+    if(audio.volume >= target) clearInterval(t);
+  }, interval);
+}
+
+// 음악 다운로드
+function ecDownloadMusic(){
+  if(!_ecBgmId || !ecBgmAudioMap[_ecBgmId]) return;
+  var info = ecBgmAudioMap[_ecBgmId];
+  var a = document.createElement('a');
+  a.href = info.file;
+  a.download = info.name;
+  a.click();
+}
+
+// 첫 터치 이벤트 등록
+document.addEventListener('touchstart', _startThemeIfNeeded, {once:true});
+document.addEventListener('click',      _startThemeIfNeeded, {once:true});
+
+</script>
+
+<!-- 음악 -->
+<audio id="audioTheme" src="music/theme.mp3" loop preload="none"></audio>
+<audio id="audioJazz"  src="music/jazz.mp3"  loop preload="none"></audio>
+<audio id="audioCountry" src="music/country.mp3" loop preload="none"></audio>
+<audio id="audioCarol"  src="music/carol.mp3"  loop preload="none"></audio>
+<audio id="audioParty"  src="music/party.mp3"  loop preload="none"></audio>
+
+</body>
+</html>
