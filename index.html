@@ -255,37 +255,44 @@ html,body{ width:100%; height:100%; background:var(--dark); overflow:hidden; }
   background-image:url('ec_assets/ec_mid.png');
   background-color:#0d0a08;
   background-repeat:repeat-y; background-size:100% auto;
-  padding:8px 7% 8px;
-  display:flex; flex-direction:column; gap:6px;
+  padding:5px 6% 5px;
+  display:flex; flex-direction:column; gap:4px; justify-content:center;
 }
-/* 무드 이미지 전체폭 블록 */
-.ec-moodblock{ text-align:center; flex-shrink:0; }
-.ec-moodimg-full{
-  width:100%; aspect-ratio:1/1; border-radius:8px; overflow:hidden;
-  border:1.5px solid rgba(180,90,20,.45); box-shadow:0 3px 10px rgba(0,0,0,.4);
-}
-.ec-moodimg-full img{ width:100%; height:100%; object-fit:cover; display:block; }
-/* 2열 그리드 */
-.ec-grid2{ display:grid; grid-template-columns:1fr 1fr; gap:5px; flex-shrink:0; }
-.ec-sectioncard{
+/* 무드 이미지: 좌측 작게 + 우측 텍스트 */
+.ec-moodblock{
+  display:flex; align-items:center; gap:8px; flex-shrink:0;
   background:radial-gradient(ellipse at center, rgba(40,20,8,.82) 0%, rgba(10,5,2,.88) 70%);
   border:1px solid rgba(180,90,20,.45); border-radius:8px;
-  padding:7px 8px; box-shadow:0 2px 8px rgba(0,0,0,.4);
-  display:flex; flex-direction:column; gap:3px; align-items:center; text-align:center;
+  padding:6px 8px; box-shadow:0 2px 8px rgba(0,0,0,.4);
 }
-.ec-row{ display:flex; flex-direction:column; align-items:center; gap:3px; }
-.ec-rlabel{ font-size:5.5px; letter-spacing:2px; color:#c87030; font-family:'Press Start 2P',monospace; }
-.ec-rvalue{ font-size:10px; color:#f0d8a0; font-weight:700; line-height:1.4; font-family:'Noto Sans KR',sans-serif; }
+.ec-moodimg-sm{
+  flex-shrink:0; width:25%; aspect-ratio:1; border-radius:6px; overflow:hidden;
+  border:1.5px solid rgba(180,90,20,.5);
+}
+.ec-moodimg-sm img{ width:100%; height:100%; object-fit:cover; display:block; }
+.ec-moodtext{ flex:1; text-align:left; }
+.ec-moodtext .ec-rlabel{ margin-bottom:3px; }
+/* 2열 그리드 */
+.ec-grid2{ display:grid; grid-template-columns:1fr 1fr; gap:4px; flex-shrink:0; }
+.ec-sectioncard{
+  background:radial-gradient(ellipse at center, rgba(40,20,8,.82) 0%, rgba(10,5,2,.88) 70%);
+  border:1px solid rgba(180,90,20,.45); border-radius:7px;
+  padding:5px 6px; box-shadow:0 2px 8px rgba(0,0,0,.4);
+  display:flex; flex-direction:column; gap:2px; align-items:center; text-align:center;
+}
+.ec-row{ display:flex; flex-direction:column; align-items:center; gap:2px; }
+.ec-rlabel{ font-size:5px; letter-spacing:1.5px; color:#c87030; font-family:'Press Start 2P',monospace; }
+.ec-rvalue{ font-size:8.5px; color:#f0d8a0; font-weight:700; line-height:1.3; font-family:'Noto Sans KR',sans-serif; }
 .ec-rvalue.it{ font-style:italic; }
-.ec-divider{ width:30px; height:1px; background:rgba(180,90,20,.4); }
+.ec-divider{ width:26px; height:1px; background:rgba(180,90,20,.4); }
 .ec-wishcard{
   background:radial-gradient(ellipse at center, rgba(40,20,8,.82) 0%, rgba(10,5,2,.88) 70%);
-  border:1.5px solid rgba(200,110,30,.5); border-radius:8px;
-  padding:7px 10px; text-align:center; flex-shrink:0;
+  border:1.5px solid rgba(200,110,30,.5); border-radius:7px;
+  padding:5px 8px; text-align:center; flex-shrink:0;
 }
-.ec-wishcard .ec-rlabel{ margin-bottom:2px; }
-.ec-wishcard .ec-rvalue{ color:#e8a030; font-size:10px; }
-.ec-finalline{ color:rgba(220,170,80,.7); font-size:9px; font-style:italic; text-align:center; font-family:'Noto Sans KR',sans-serif; flex-shrink:0; }
+.ec-wishcard .ec-rlabel{ margin-bottom:1px; }
+.ec-wishcard .ec-rvalue{ color:#e8a030; font-size:8.5px; }
+.ec-finalline{ color:rgba(220,170,80,.7); font-size:7.5px; font-style:italic; text-align:center; font-family:'Noto Sans KR',sans-serif; flex-shrink:0; }
 
 .ec-rend{ font-size:15px; color:var(--gold); margin:6px 0; font-style:italic; font-family:Georgia,'Noto Serif KR',serif; letter-spacing:1px; }
 .ec-rfoot{ font-size:8px; color:#9a7a3a; letter-spacing:2px; font-family:'Press Start 2P',monospace; }
@@ -625,13 +632,15 @@ html,body{ width:100%; height:100%; background:var(--dark); overflow:hidden; }
         <div class="ec-rtop"></div>
         <div class="ec-rcontent">
 
-          <!-- 무드 이미지: 전체폭 + MOOD OF THE YEAR 라벨 -->
+          <!-- 무드 이미지: 좌측 작게 + 우측 텍스트 -->
           <div class="ec-moodblock">
-            <div class="ec-rlabel" style="margin-bottom:8px;">MOOD OF THE YEAR</div>
-            <div class="ec-moodimg-full" id="ecMoodImgWrap">
+            <div class="ec-moodimg-sm" id="ecMoodImgWrap">
               <img id="ecMoodImg" src="" alt="">
             </div>
-            <div class="ec-rvalue" id="ecR_mood" style="margin-top:8px;font-size:11.5px;">—</div>
+            <div class="ec-moodtext">
+              <div class="ec-rlabel">MOOD OF THE YEAR</div>
+              <div class="ec-rvalue" id="ecR_mood">—</div>
+            </div>
           </div>
 
           <!-- 2열 텍스트 그리드 -->
@@ -655,18 +664,18 @@ html,body{ width:100%; height:100%; background:var(--dark); overflow:hidden; }
           </div>
 
           <!-- SPECIAL THANKS - 1열 (길어서) -->
-          <div class="ec-sectioncard" style="width:100%;margin-top:8px;">
+          <div class="ec-sectioncard" style="width:100%;">
             <div class="ec-rlabel">SPECIAL THANKS TO</div>
             <div class="ec-rvalue" id="ecR_thanks">오늘 함께한 당신에게</div>
           </div>
 
           <!-- 나에게 한마디 -->
-          <div class="ec-wishcard" style="margin-top:8px;">
+          <div class="ec-wishcard">
             <div class="ec-rlabel">A MESSAGE TO MYSELF</div>
-            <div class="ec-rlabel" style="font-size:7px;opacity:.7;letter-spacing:1px;margin-bottom:8px;margin-top:3px;">연말까지 고생한 나에게</div>
+            <div class="ec-rlabel" style="font-size:6px;opacity:.7;letter-spacing:1px;margin-bottom:5px;margin-top:2px;">연말까지 고생한 나에게</div>
             <div class="ec-rvalue" id="ecR_wish">—</div>
           </div>
-          <div class="ec-finalline" id="ecR_final" style="margin-top:10px;">올 한 해 정말 수고했어요.</div>
+          <div class="ec-finalline" id="ecR_final">올 한 해 정말 수고했어요.</div>
         </div>
         <div class="ec-rbottom"></div>
       </div>
@@ -1659,25 +1668,29 @@ function ecRenderCanvas(){
       return y2;
     }
 
-    // ── MOOD OF THE YEAR 라벨 ──
-    y = lbl('MOOD OF THE YEAR', cx, y); y+=4;
-
-    // ── 무드 이미지 전체폭 ──
+    // ── 무드 블록: 좌측 이미지 + 우측 텍스트 ──
+    var moodImgSz = areaW * 0.25;
+    var moodBlockH = Math.max(moodImgSz, 80) + cp*2;
+    drawCard(y, pad, areaW, moodBlockH);
     if(moodImg){
+      var mix = pad+cp, miy = y+cp+(moodBlockH-cp*2-moodImgSz)/2;
       ctx.save();
-      roundRect(ctx, pad, y, areaW, areaW, 10); ctx.clip();
-      ctx.drawImage(moodImg, pad, y, areaW, areaW);
+      roundRect(ctx, mix, miy, moodImgSz, moodImgSz, 8); ctx.clip();
+      ctx.drawImage(moodImg, mix, miy, moodImgSz, moodImgSz);
       ctx.restore();
-      ctx.strokeStyle='rgba(180,90,20,.45)'; ctx.lineWidth=2;
-      roundRect(ctx, pad, y, areaW, areaW, 10); ctx.stroke();
-      y += areaW + 8;
+      ctx.strokeStyle='rgba(180,90,20,.5)'; ctx.lineWidth=2;
+      roundRect(ctx, mix, miy, moodImgSz, moodImgSz, 8); ctx.stroke();
     }
-
-    // 무드 설명 텍스트
-    ctx.fillStyle='#f0d8a0'; ctx.font='bold 15px "Noto Sans KR", sans-serif';
+    var mtx = pad+cp+moodImgSz+16;
+    var mtxW = areaW - cp*2 - moodImgSz - 16;
+    var mty = y + cp + 16;
+    ctx.textAlign='left';
+    ctx.fillStyle='#c87030'; ctx.font='8px "Press Start 2P", monospace';
+    ctx.fillText('MOOD OF THE YEAR', mtx, mty); mty+=20;
+    ctx.fillStyle='#f0d8a0'; ctx.font='bold 16px "Noto Sans KR", sans-serif';
+    ecWrapText(ctx, document.getElementById('ecR_mood').textContent, mtxW).forEach(function(l){ ctx.fillText(l,mtx,mty); mty+=22; });
+    y += moodBlockH + 8;
     ctx.textAlign='center';
-    ecWrapText(ctx, document.getElementById('ecR_mood').textContent, areaW).forEach(function(l){ ctx.fillText(l,cx,y); y+=20; });
-    y += 8;
 
     // ── 2열 카드 ──
     var colW = (areaW-8)/2;
@@ -1793,7 +1806,14 @@ function _startThemeIfNeeded(){
   _musicStarted = true;
   var th = document.getElementById('audioTheme');
   th.volume = 0.45;
-  th.play().catch(function(){});
+  var p = th.play();
+  if(p && p.catch){
+    p.catch(function(err){
+      console.warn('테마 음악 재생 실패:', err);
+      // 재생 실패 시 플래그를 되돌려 다음 인터랙션에서 재시도 가능하게
+      _musicStarted = false;
+    });
+  }
 }
 
 // 엔딩크레딧 BGM 전환: 테마 페이드아웃 → BGM 페이드인
@@ -1886,11 +1906,11 @@ document.addEventListener('click',      _startThemeIfNeeded, {once:true});
 </script>
 
 <!-- 음악 -->
-<audio id="audioTheme" src="music/theme.mp3" loop preload="none"></audio>
-<audio id="audioJazz"  src="music/jazz.mp3"  loop preload="none"></audio>
-<audio id="audioCountry" src="music/country.mp3" loop preload="none"></audio>
-<audio id="audioCarol"  src="music/carol.mp3"  loop preload="none"></audio>
-<audio id="audioParty"  src="music/party.mp3"  loop preload="none"></audio>
+<audio id="audioTheme" src="music/theme.mp3" loop preload="auto"></audio>
+<audio id="audioJazz"  src="music/jazz.mp3"  loop preload="auto"></audio>
+<audio id="audioCountry" src="music/country.mp3" loop preload="auto"></audio>
+<audio id="audioCarol"  src="music/carol.mp3"  loop preload="auto"></audio>
+<audio id="audioParty"  src="music/party.mp3"  loop preload="auto"></audio>
 
 </body>
 </html>
