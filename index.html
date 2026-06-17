@@ -245,7 +245,7 @@ html,body{ width:100%; height:100%; background:var(--dark); overflow:hidden; }
 }
 .ec-rbottom{
   flex-shrink:0;
-  width:100%; aspect-ratio:1080/422;
+  width:100%; aspect-ratio:1080/364;
   background-image:url('ec_assets/ec_bottom.png');
   background-color:#0d0a08;
   background-size:cover; background-position:top center;
@@ -255,8 +255,8 @@ html,body{ width:100%; height:100%; background:var(--dark); overflow:hidden; }
   background-image:url('ec_assets/ec_mid.png');
   background-color:#0d0a08;
   background-repeat:repeat-y; background-size:100% auto;
-  padding:10px 6% 10px;
-  display:flex; flex-direction:column; gap:8px; justify-content:center;
+  padding:6px 6% 6px;
+  display:flex; flex-direction:column; gap:6px; justify-content:center;
 }
 /* 무드 이미지: 좌측 작게 + 우측 텍스트 */
 .ec-moodblock{
@@ -1657,20 +1657,20 @@ function ecRenderCanvas(){
       ctx.fill(); ctx.stroke();
     }
     function lbl(text, cx2, y2){
-      ctx.fillStyle='#c87030'; ctx.font='14px "Press Start 2P", monospace';
-      ctx.textAlign='center'; ctx.fillText(text, cx2, y2); return y2+28;
+      ctx.fillStyle='#c87030'; ctx.font='23px "Press Start 2P", monospace';
+      ctx.textAlign='center'; ctx.fillText(text, cx2, y2); return y2+38;
     }
     function val(text, cx2, y2, italic, maxW){
       ctx.fillStyle='#f0d8a0';
-      ctx.font='bold '+(italic?'italic ':'')+'26px "Noto Sans KR", sans-serif';
+      ctx.font='bold '+(italic?'italic ':'')+'39px "Noto Sans KR", sans-serif';
       ctx.textAlign='center';
-      ecWrapText(ctx,text,maxW||areaW-cp*2).forEach(function(l){ ctx.fillText(l,cx2,y2); y2+=33; });
+      ecWrapText(ctx,text,maxW||areaW-cp*2).forEach(function(l){ ctx.fillText(l,cx2,y2); y2+=48; });
       return y2;
     }
 
     // ── 무드 블록: 좌측 이미지 + 우측 텍스트 ──
     var moodImgSz = areaW * 0.27;
-    var moodBlockH = Math.max(moodImgSz, 120) + cp*2;
+    var moodBlockH = Math.max(moodImgSz, 170) + cp*2;
     drawCard(y, pad, areaW, moodBlockH);
     if(moodImg){
       var mix = pad+cp, miy = y+cp+(moodBlockH-cp*2-moodImgSz)/2;
@@ -1683,18 +1683,18 @@ function ecRenderCanvas(){
     }
     var mtx = pad+cp+moodImgSz+24;
     var mtxW = areaW - cp*2 - moodImgSz - 24;
-    var mty = y + cp + 26;
+    var mty = y + cp + 30;
     ctx.textAlign='left';
-    ctx.fillStyle='#c87030'; ctx.font='13px "Press Start 2P", monospace';
-    ctx.fillText('MOOD OF THE YEAR', mtx, mty); mty+=32;
-    ctx.fillStyle='#f0d8a0'; ctx.font='bold 24px "Noto Sans KR", sans-serif';
-    ecWrapText(ctx, document.getElementById('ecR_mood').textContent, mtxW).forEach(function(l){ ctx.fillText(l,mtx,mty); mty+=32; });
+    ctx.fillStyle='#c87030'; ctx.font='23px "Press Start 2P", monospace';
+    ctx.fillText('MOOD OF THE YEAR', mtx, mty); mty+=38;
+    ctx.fillStyle='#f0d8a0'; ctx.font='bold 39px "Noto Sans KR", sans-serif';
+    ecWrapText(ctx, document.getElementById('ecR_mood').textContent, mtxW).forEach(function(l){ ctx.fillText(l,mtx,mty); mty+=48; });
     y += moodBlockH + 14;
     ctx.textAlign='center';
 
     // ── 2열 카드 ──
     var colW = (areaW-14)/2;
-    var rowH = 168;
+    var rowH = 260;
     var rowY = y;
 
     // 왼쪽: STARRING + GENRE
@@ -1717,7 +1717,7 @@ function ecRenderCanvas(){
     y = rowY + rowH + 14;
 
     // ── SPECIAL THANKS TO ──
-    var c3H = cp*2 + 28 + 33;
+    var c3H = cp*2 + 38 + 48*2;
     drawCard(y, pad, areaW, c3H);
     var c3y = y+cp+6;
     c3y = lbl('SPECIAL THANKS TO', cx, c3y);
@@ -1727,20 +1727,20 @@ function ecRenderCanvas(){
     // ── A MESSAGE TO MYSELF ──
     var wish = document.getElementById('ecR_wish').textContent;
     var wishLines = ecWrapText(ctx, wish, areaW-cp*2);
-    var c4H = cp*2 + 28 + 28 + wishLines.length*33;
+    var c4H = cp*2 + 36 + 36 + wishLines.length*48;
     drawCard(y, pad, areaW, c4H);
     var c4y = y+cp+6;
     c4y = lbl('A MESSAGE TO MYSELF', cx, c4y);
-    ctx.fillStyle='rgba(200,150,60,.7)'; ctx.font='italic 19px "Noto Sans KR", sans-serif';
-    ctx.fillText('연말까지 고생한 나에게', cx, c4y); c4y+=30;
-    ctx.fillStyle='#e8a030'; ctx.font='bold 26px "Noto Sans KR", sans-serif';
-    wishLines.forEach(function(l){ ctx.fillText(l,cx,c4y); c4y+=33; });
+    ctx.fillStyle='rgba(200,150,60,.7)'; ctx.font='italic 18px "Noto Sans KR", sans-serif';
+    ctx.fillText('연말까지 고생한 나에게', cx, c4y); c4y+=36;
+    ctx.fillStyle='#e8a030'; ctx.font='bold 39px "Noto Sans KR", sans-serif';
+    wishLines.forEach(function(l){ ctx.fillText(l,cx,c4y); c4y+=48; });
     y += c4H + 16;
 
     // 마지막 문구
     var finalLine = document.getElementById('ecR_final').textContent;
-    ctx.fillStyle='rgba(220,170,80,.8)'; ctx.font='italic 21px "Noto Sans KR", sans-serif';
-    ecWrapText(ctx, finalLine, areaW).forEach(function(l){ ctx.fillText(l,cx,y); y+=28; });
+    ctx.fillStyle='rgba(220,170,80,.8)'; ctx.font='italic 33px "Noto Sans KR", sans-serif';
+    ecWrapText(ctx, finalLine, areaW).forEach(function(l){ ctx.fillText(l,cx,y); y+=40; });
 
     return cv.toDataURL('image/jpeg', 0.93);
   });
