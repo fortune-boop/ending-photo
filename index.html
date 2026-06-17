@@ -17,8 +17,8 @@ html,body{ width:100%; height:100%; background:var(--dark); overflow:hidden; }
 #sMain{ background:var(--dark); overflow-y:auto; padding:24px 16px 40px; justify-content:flex-start; }
 .main-top{ color:var(--gold); font-size:10.5px; letter-spacing:3px; opacity:.6; margin-top:9px; }
 .main-logo{ color:var(--gold); font-size:clamp(21px,6vw,33px); text-align:center; line-height:1.5; text-shadow:4px 4px 0 var(--red); margin:6px 0; }
-.main-banner-logo{ width:min(86%, 380px); max-width:100%; margin:14px auto 4px; display:block; filter:drop-shadow(0 4px 14px rgba(0,0,0,.5)); }
-.main-sub{ color:var(--gold); opacity:.75; font-size:9.5px; letter-spacing:2px; margin-bottom:22px; text-align:center; }
+.main-banner-logo{ width:min(43%, 190px); max-width:100%; margin:14px auto 6px; display:block; filter:drop-shadow(0 4px 14px rgba(0,0,0,.5)); }
+.main-sub{ color:var(--gold); opacity:.85; font-size:14px; letter-spacing:2px; margin-bottom:22px; text-align:center; line-height:1.9; }
 .main-cards{ display:flex; flex-direction:column; gap:16px; width:100%; max-width:420px; }
 .main-card{
   position:relative; border-radius:18px; overflow:hidden; cursor:pointer;
@@ -350,7 +350,7 @@ html,body{ width:100%; height:100%; background:var(--dark); overflow:hidden; }
 <!-- ══ 메인 선택 ══ -->
 <div id="sMain" class="screen px" onclick="_startThemeIfNeeded()">
   <img src="ec_assets/logo_texas_roadhouse.png" alt="Texas Roadhouse" class="main-banner-logo">
-  <div class="main-sub">★ CHRISTMAS · CHOOSE YOUR EXPERIENCE ★</div>
+  <div class="main-sub">★ CHRISTMAS ★<br>CHOOSE YOUR EXPERIENCE</div>
 
   <div class="main-cards">
 
@@ -1488,6 +1488,7 @@ var ecBgmSearchMap = {
 
 function ecSelect(step, value, el){
   ecAnswers[step] = value;
+  console.log('[ecSelect] step=', step, 'value=', value, 'ecAnswers=', JSON.stringify(ecAnswers));
   document.querySelectorAll('#ecStep'+step+' .ec-opt').forEach(function(o){ o.classList.remove('on'); });
   el.classList.add('on');
   document.getElementById('ecNext'+step).classList.add('visible');
@@ -1512,6 +1513,7 @@ function ecGoStep(toStep){
 
 function ecGenerate(){
   var cast=ecAnswers[1], mood=ecAnswers[2], bgm=ecAnswers[3];
+  console.log('[ecGenerate] cast=', cast, 'mood=', mood, 'bgm=', bgm, 'ecBgmMap[bgm]=', ecBgmMap[bgm]);
   var wish=document.getElementById('ecWishInput').value.trim();
 
   document.getElementById('ecR_starring').textContent =
