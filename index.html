@@ -17,7 +17,8 @@ html,body{ width:100%; height:100%; background:var(--dark); overflow:hidden; }
 #sMain{ background:var(--dark); overflow-y:auto; padding:24px 16px 40px; justify-content:flex-start; }
 .main-top{ color:var(--gold); font-size:10.5px; letter-spacing:3px; opacity:.6; margin-top:9px; }
 .main-logo{ color:var(--gold); font-size:clamp(21px,6vw,33px); text-align:center; line-height:1.5; text-shadow:4px 4px 0 var(--red); margin:6px 0; }
-.main-sub{ color:var(--red); font-size:10.5px; letter-spacing:3px; margin-bottom:24px; }
+.main-banner-logo{ width:min(86%, 380px); max-width:100%; margin:14px auto 4px; display:block; filter:drop-shadow(0 4px 14px rgba(0,0,0,.5)); }
+.main-sub{ color:var(--gold); opacity:.75; font-size:9.5px; letter-spacing:2px; margin-bottom:22px; text-align:center; }
 .main-cards{ display:flex; flex-direction:column; gap:16px; width:100%; max-width:420px; }
 .main-card{
   position:relative; border-radius:18px; overflow:hidden; cursor:pointer;
@@ -237,14 +238,14 @@ html,body{ width:100%; height:100%; background:var(--dark); overflow:hidden; }
 }
 .ec-rtop{
   flex-shrink:0;
-  width:100%; aspect-ratio:1080/383;
+  width:100%; aspect-ratio:941/334;
   background-image:url('ec_assets/ec_top.png');
   background-color:#0d0a08;
   background-size:cover; background-position:top center;
 }
 .ec-rbottom{
   flex-shrink:0;
-  width:100%; aspect-ratio:1080/364;
+  width:100%; aspect-ratio:941/318;
   background-image:url('ec_assets/ec_bottom.png');
   background-color:#0d0a08;
   background-size:cover; background-position:top center;
@@ -348,9 +349,8 @@ html,body{ width:100%; height:100%; background:var(--dark); overflow:hidden; }
 
 <!-- ══ 메인 선택 ══ -->
 <div id="sMain" class="screen px" onclick="_startThemeIfNeeded()">
-  <div class="main-top">★ TEXAS ROADHOUSE ★</div>
-  <div class="main-logo">CHRISTMAS</div>
-  <div class="main-sub">CHOOSE YOUR EXPERIENCE</div>
+  <img src="ec_assets/logo_texas_roadhouse.png" alt="Texas Roadhouse" class="main-banner-logo">
+  <div class="main-sub">★ CHRISTMAS · CHOOSE YOUR EXPERIENCE ★</div>
 
   <div class="main-cards">
 
@@ -1613,11 +1613,14 @@ function loadImg(src){
 function ecRenderCanvas(){
   // 화면에 보이는 카드(#ecCard)를 그대로 캡처 (html2canvas)
   var card = document.getElementById('ecCard');
+  var dpr = window.devicePixelRatio || 1;
+  var captureScale = Math.max(3, dpr * 2); // 고해상도 보장 (최소 3배, 기기 배율 고려)
   return html2canvas(card, {
     backgroundColor: '#0d0a08',
-    scale: 3,            // 고해상도 저장 (실제 화면의 3배 해상도)
+    scale: captureScale,
     useCORS: true,
-    allowTaint: false
+    allowTaint: false,
+    imageTimeout: 15000
   }).then(function(canvas){
     return canvas.toDataURL('image/jpeg', 0.95);
   });
