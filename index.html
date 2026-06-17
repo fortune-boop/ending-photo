@@ -342,6 +342,7 @@ html,body{ width:100%; height:100%; background:var(--dark); overflow:hidden; }
   color:var(--gold); font-size:11px; cursor:pointer; margin-top:14px; font-family:'Press Start 2P',monospace;
 }
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
 
@@ -1610,189 +1611,18 @@ function loadImg(src){
 }
 
 function ecRenderCanvas(){
-  var cv=document.getElementById('canvas');
-  var W=1080;
-  var ctx=cv.getContext('2d');
-  var cx=W/2;
-
-  var mood=ecAnswers[2];
-  var moodSrc=ecMoodImgMap[mood] || '';
-
-  return Promise.all([
-    loadImg('ec_assets/ec_top.png'),
-    loadImg('ec_assets/ec_bottom.png'),
-    loadImg('ec_assets/ec_mid.png'),
-    moodSrc?loadImg(moodSrc):Promise.resolve(null)
-  ]).then(function(imgs){
-    var topImg=imgs[0], bottomImg=imgs[1], midImg=imgs[2], moodImg=imgs[3];
-
-    var topH    = topImg.height;
-    var bottomH = bottomImg.height;
-    var midH    = midImg.height;
-
-    var pad = W * 0.06;
-    var areaW = W - pad*2;
-    var cp = 26;
-    var sectionGap = 26;
-
-    // ── 1차 패스: 실제 필요한 콘텐츠 높이를 먼저 계산 ──
-    // (임시 캔버스 크기로 측정용 컨텍스트 폰트 세팅만 가능하게 충분히 크게 잡음)
-    cv.width = W; cv.height = 4000;
-    var contentH = renderContent(topH + 44, true);
-    var H = Math.ceil(topH + contentH + bottomH + 40); // 여유분 40px
-
-    // ── 2차 패스: 실제 캔버스 크기로 재설정 후 그리기 ──
-    cv.width = W; cv.height = H;
-    var ctx = cv.getContext('2d');
-    cx = W/2;
-
-    // mid 타일링으로 콘텐츠 영역 채우기
-    for(var ty0=topH; ty0<H-bottomH+midH; ty0+=midH){
-      ctx.drawImage(midImg, 0, ty0, W, midH);
-    }
-    ctx.drawImage(topImg,    0, 0,        W, topH);
-    ctx.drawImage(bottomImg, 0, H-bottomH, W, bottomH);
-
-    renderContent(topH + 44, false);
-
-    return cv.toDataURL('image/jpeg', 0.93);
-
-    // ══ 콘텐츠 렌더링 (measureOnly=true면 그리지 않고 최종 y만 리턴) ══
-    function renderContent(startY, measureOnly){
-    var y = startY;
-
-    var LBL_H = 38, LBL_GAP = 14;
-    var VAL_LH = 48;
-    var BLOCK_GAP = 28;
-
-    function drawCard(yTop, xLeft, cardW, cardH){
-      if(measureOnly) return;
-      ctx.fillStyle='rgba(20,8,3,.85)';
-      ctx.strokeStyle='rgba(180,90,20,.45)'; ctx.lineWidth=2;
-      roundRect(ctx, xLeft, yTop, cardW, cardH, 10);
-      ctx.fill(); ctx.stroke();
-    }
-    function measureBlock(text, maxW, fontSize){
-      ctx.font='bold '+fontSize+'px "Noto Sans KR", sans-serif';
-      var lines = ecWrapText(ctx, text, maxW);
-      return LBL_H + lines.length*VAL_LH;
-    }
-    function drawBlock(label, text, cx2, yTop, italic, maxW){
-      if(measureOnly) return yTop + LBL_H + LBL_GAP + ecWrapText(ctx,text,maxW).length*VAL_LH;
-      ctx.textAlign='center';
-      ctx.fillStyle='#c87030'; ctx.font='23px "Press Start 2P", monospace';
-      ctx.fillText(label, cx2, yTop+24);
-      var y2 = yTop + LBL_H + LBL_GAP;
-      ctx.fillStyle='#f0d8a0'; ctx.font='bold '+(italic?'italic ':'')+'39px "Noto Sans KR", sans-serif';
-      ecWrapText(ctx,text,maxW).forEach(function(l){ ctx.fillText(l,cx2,y2); y2+=VAL_LH; });
-      return y2;
-    }
-
-    ctx.textAlign='center';
-
-    // ── 무드 블록: 좌측 이미지 + 우측 텍스트(수직 중앙정렬) ──
-    var moodImgSz = areaW * 0.27;
-    var mtxW = areaW - cp*2 - moodImgSz - 28;
-    ctx.font='bold 39px "Noto Sans KR", sans-serif';
-    var moodLines = ecWrapText(ctx, document.getElementById('ecR_mood').textContent, mtxW);
-    var moodTextH = LBL_H + LBL_GAP + moodLines.length*VAL_LH;
-    var moodBlockH = Math.max(moodImgSz, moodTextH) + cp*2;
-    drawCard(y, pad, areaW, moodBlockH);
-
-    if(!measureOnly){
-      if(moodImg){
-        var mix = pad+cp, miy = y+(moodBlockH-moodImgSz)/2;
-        ctx.save();
-        roundRect(ctx, mix, miy, moodImgSz, moodImgSz, 10); ctx.clip();
-        ctx.drawImage(moodImg, mix, miy, moodImgSz, moodImgSz);
-        ctx.restore();
-        ctx.strokeStyle='rgba(180,90,20,.5)'; ctx.lineWidth=3;
-        roundRect(ctx, mix, miy, moodImgSz, moodImgSz, 10); ctx.stroke();
-      }
-      var mtx = pad+cp+moodImgSz+28;
-      var mty = y + (moodBlockH-moodTextH)/2 + 24;
-      ctx.textAlign='left';
-      ctx.fillStyle='#c87030'; ctx.font='23px "Press Start 2P", monospace';
-      ctx.fillText('MOOD OF THE YEAR', mtx, mty);
-      mty += LBL_H + LBL_GAP;
-      ctx.fillStyle='#f0d8a0'; ctx.font='bold 39px "Noto Sans KR", sans-serif';
-      moodLines.forEach(function(l){ ctx.fillText(l,mtx,mty); mty+=VAL_LH; });
-    }
-    y += moodBlockH + sectionGap;
-    ctx.textAlign='center';
-
-    // ── 2x2 카드: 화면(STARRING/GENRE/BEST SCENE/SOUNDTRACK 각각 독립 카드)와 동일 구조 ──
-    var colW = (areaW-20)/2;
-    var innerW = colW - cp*2;
-
-    var hStarring = measureBlock(document.getElementById('ecR_starring').textContent, innerW, 39);
-    var hGenre    = measureBlock(document.getElementById('ecR_genre').textContent, innerW, 39);
-    var hScene    = measureBlock(document.getElementById('ecR_scene').textContent, innerW, 39);
-    var hBgm      = measureBlock(document.getElementById('ecR_bgm').textContent, innerW, 39);
-
-    // 첫 행(STARRING/BEST SCENE)과 둘째 행(GENRE/SOUNDTRACK)을 각각 같은 높이로
-    var row1H = Math.max(hStarring, hScene) + cp*2;
-    var row2H = Math.max(hGenre, hBgm) + cp*2;
-
-    var row1Y = y;
-    drawCard(row1Y, pad, colW, row1H);
-    drawCard(row1Y, pad+colW+20, colW, row1H);
-    var lx = pad + colW/2, rx = pad+colW+20+colW/2;
-    drawBlock('STARRING', document.getElementById('ecR_starring').textContent, lx, row1Y + (row1H-hStarring)/2, false, innerW);
-    drawBlock('BEST SCENE', document.getElementById('ecR_scene').textContent, rx, row1Y + (row1H-hScene)/2, false, innerW);
-
-    var row2Y = row1Y + row1H + 16;
-    drawCard(row2Y, pad, colW, row2H);
-    drawCard(row2Y, pad+colW+20, colW, row2H);
-    drawBlock('GENRE', document.getElementById('ecR_genre').textContent, lx, row2Y + (row2H-hGenre)/2, true, innerW);
-    drawBlock('SOUNDTRACK', document.getElementById('ecR_bgm').textContent, rx, row2Y + (row2H-hBgm)/2, true, innerW);
-
-    y = row2Y + row2H + sectionGap;
-
-    // ── SPECIAL THANKS TO ──
-    var thanksInnerW = areaW - cp*2;
-    var thanksH = measureBlock(document.getElementById('ecR_thanks').textContent, thanksInnerW, 39);
-    var c3H = thanksH + cp*2;
-    drawCard(y, pad, areaW, c3H);
-    drawBlock('SPECIAL THANKS TO', document.getElementById('ecR_thanks').textContent, cx, y+cp, false, thanksInnerW);
-    y += c3H + sectionGap;
-
-    // ── A MESSAGE TO MYSELF ──
-    var wish = document.getElementById('ecR_wish').textContent;
-    var wishInnerW = areaW - cp*2;
-    ctx.font='bold 39px "Noto Sans KR", sans-serif';
-    var wishLines = ecWrapText(ctx, wish, wishInnerW);
-    var wishTextH = LBL_H + 26 + 10 + wishLines.length*VAL_LH; // 라벨 + 부제(26) + 간격(10) + 값
-    var c4H = wishTextH + cp*2;
-    drawCard(y, pad, areaW, c4H);
-    if(!measureOnly){
-      var c4y = y + cp;
-      ctx.textAlign='center';
-      ctx.fillStyle='#c87030'; ctx.font='23px "Press Start 2P", monospace';
-      ctx.fillText('A MESSAGE TO MYSELF', cx, c4y+24); c4y += LBL_H;
-      ctx.fillStyle='rgba(200,150,60,.7)'; ctx.font='italic 18px "Noto Sans KR", sans-serif';
-      ctx.fillText('연말까지 고생한 나에게', cx, c4y+18); c4y += 26 + 10;
-      ctx.fillStyle='#e8a030'; ctx.font='bold 39px "Noto Sans KR", sans-serif';
-      wishLines.forEach(function(l){ ctx.fillText(l,cx,c4y+30); c4y+=VAL_LH; });
-    }
-    y += c4H + sectionGap;
-
-    // 마지막 문구
-    var finalLine = document.getElementById('ecR_final').textContent;
-    ctx.font='italic 33px "Noto Sans KR", sans-serif';
-    var finalLines = ecWrapText(ctx, finalLine, areaW);
-    if(!measureOnly){
-      ctx.fillStyle='rgba(220,170,80,.8)';
-      ctx.textAlign='center';
-      var fy = y;
-      finalLines.forEach(function(l){ ctx.fillText(l,cx,fy); fy+=44; });
-    }
-    y += finalLines.length*44;
-
-    return y - startY; // measureOnly일 때 전체 콘텐츠 높이 리턴
-    } // renderContent 끝
+  // 화면에 보이는 카드(#ecCard)를 그대로 캡처 (html2canvas)
+  var card = document.getElementById('ecCard');
+  return html2canvas(card, {
+    backgroundColor: '#0d0a08',
+    scale: 3,            // 고해상도 저장 (실제 화면의 3배 해상도)
+    useCORS: true,
+    allowTaint: false
+  }).then(function(canvas){
+    return canvas.toDataURL('image/jpeg', 0.95);
   });
 }
+
 
 function roundRect(ctx,x,y,w,h,r){
   ctx.beginPath();
@@ -1802,18 +1632,6 @@ function roundRect(ctx,x,y,w,h,r){
   ctx.arcTo(x,y+h,x,y,r);
   ctx.arcTo(x,y,x+w,y,r);
   ctx.closePath();
-}
-
-function ecWrapText(ctx, text, maxWidth){
-  var words=text.split(''); // 한글 줄바꿈은 글자 단위로
-  var lines=[], cur='';
-  for(var i=0;i<words.length;i++){
-    var test=cur+words[i];
-    if(ctx.measureText(test).width>maxWidth && cur){ lines.push(cur); cur=words[i]; }
-    else cur=test;
-  }
-  if(cur) lines.push(cur);
-  return lines.length?lines:[''];
 }
 
 function ecSave(){
