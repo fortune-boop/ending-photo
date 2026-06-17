@@ -981,25 +981,40 @@ function shoot() {
   ctx.drawImage(v, hX+(hW-dw)/2, hY+(hH-dh)/2, dw, dh);
   ctx.restore();
 
-  // 스티커
+  // 스티커 (화면의 CSS transform은 center 피벗 회전/스케일이므로, 캔버스도 동일하게 중심 기준으로 맞춤)
   var fbW=fb.offsetWidth||1, fbH=fb.offsetHeight||1;
   document.getElementById('sl').querySelectorAll('.si').forEach(function(s){
-    var ex=parseFloat(s.dataset.x||0)*(CW/fbW), ey=parseFloat(s.dataset.y||0)*(CH/fbH);
+    var sx=parseFloat(s.dataset.x||0), sy=parseFloat(s.dataset.y||0); // 좌상단(화면 px)
     var sc2=parseFloat(s.dataset.s||1), rot=parseFloat(s.dataset.r||0)*Math.PI/180;
-    ctx.save(); ctx.translate(ex,ey); ctx.rotate(rot); ctx.scale(sc2*(CW/fbW),sc2*(CH/fbH));
+    var elW=s.offsetWidth||34, elH=s.offsetHeight||34; // 스티커 실제 표시 크기(화면 px, scale 전 기준)
+    // 화면상 중심점(스티커 박스 중심) - CSS transform-origin:center와 동일 기준
+    var cxScreen = sx + elW/2, cyScreen = sy + elH/2;
+    var ex = cxScreen*(CW/fbW), ey = cyScreen*(CH/fbH);
+    var scX = sc2*(CW/fbW), scY = sc2*(CH/fbH);
+
+    ctx.save();
+    ctx.translate(ex,ey); ctx.rotate(rot); ctx.scale(scX,scY);
     var sp=s.querySelector('span');
-    if(sp){ ctx.font='34px serif'; ctx.fillText(sp.textContent,0,34); }
-    else {
+    if(sp){
+      ctx.font='34px serif';
+      ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillText(sp.textContent,0,0);
+    } else {
       var d=s.querySelector('div');
       if(d){
         var t=(d.firstChild&&d.firstChild.nodeValue)?d.firstChild.nodeValue.trim():d.textContent.trim();
         ctx.font='bold 14px sans-serif';
         var tw=ctx.measureText(t).width;
-        ctx.fillStyle='rgba(255,248,238,.94)'; ctx.fillRect(0,0,tw+24,30);
-        ctx.strokeStyle='#c0392b'; ctx.lineWidth=2.5; ctx.strokeRect(0,0,tw+24,30);
-        ctx.fillStyle='#1a0a00'; ctx.fillText(t,12,19);
+        var boxW=tw+24, boxH=30;
+        var bx=-boxW/2, by=-boxH/2; // 중심 기준 좌상단 오프셋
+        ctx.fillStyle='rgba(255,248,238,.94)'; ctx.fillRect(bx,by,boxW,boxH);
+        ctx.strokeStyle='#c0392b'; ctx.lineWidth=2.5; ctx.strokeRect(bx,by,boxW,boxH);
+        ctx.fillStyle='#1a0a00';
+        ctx.textAlign='left'; ctx.textBaseline='alphabetic';
+        ctx.fillText(t,bx+12,by+19);
         ctx.fillStyle='#c0392b';
-        ctx.beginPath(); ctx.moveTo(16,30); ctx.lineTo(8,41); ctx.lineTo(32,30); ctx.fill();
+        ctx.beginPath();
+        ctx.moveTo(bx+16,by+boxH); ctx.lineTo(bx+8,by+boxH+11); ctx.lineTo(bx+32,by+boxH); ctx.fill();
       }
     }
     ctx.restore();
